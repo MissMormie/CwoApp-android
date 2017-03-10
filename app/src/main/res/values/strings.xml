@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">CwoApp</string>
+    <string name="action_settings">Settings</string>
+    <string name="nieuwe_cursist">Nieuwe cursist</string>
+    <string name="cursisten_lijst">Overzicht cursisten</string>
+    <string name="nieuwe_training">Training</string>
+    <string name="error_message">Er is iets fout gegaan, probeer het later opnieuw.</string>
+
+    <!-- Preferences -->
+    <string name="pref_show_already_completed_label">Laat al gehaald zien.</string>
+    <string name="pref_show_already_completed_key" translatable="false">show_already_completed</string>
+    <string name="pref_show_already_completed_summary_off">Je ziet geen cursisten die al hebben geleerd wat er in de training gedaan is.</string>
+    <string name="pref_show_already_completed_summary_on">Je ziet wel cursisten die al hebben geleerd wat er in de training gedaan is.</string>
+
+    <!-- Cursist detail -->
+    <string name="ja">Ja</string>
+    <string name="nee">Nee</string>
+
+    <!-- Cursist form -->
+    <string name="voornaam">Voornaam</string>
+    <string name="tussenvoegsel">Tussenvoegsel</string>
+    <string name="achternaam">Achternaam</string>
+    <string name="opmerkingen">Opmerkingen</string>
+    <string name="paspoort">Paspoort uitgegeven: </string>
+    <string name="opslaan">Opslaan</string>
+
+
+
+</resources>

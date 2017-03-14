@@ -15,6 +15,7 @@
     <!-- Cursist detail -->
     <string name="ja">Ja</string>
     <string name="nee">Nee</string>
+    <string name="cursist">Cursist</string>
 
     <!-- Cursist form -->
     <string name="voornaam">Voornaam</string>
@@ -23,7 +24,5 @@
     <string name="opmerkingen">Opmerkingen</string>
     <string name="paspoort">Paspoort uitgegeven: </string>
     <string name="opslaan">Opslaan</string>
-
-
 
 </resources>

@@ -7,7 +7,7 @@ import java.util.Date;
  */
 
 public class Cursist {
-
+    private Long id;
     private String voornaam;
     private String tussenvoegsel;
     private String achternaam;
@@ -61,9 +61,17 @@ public class Cursist {
         this.paspoort = paspoort;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String nameToString() {
         String tussenstuk = "";
-        if(tussenvoegsel != null || tussenvoegsel != "")
+        if(tussenvoegsel != null && tussenvoegsel != "")
             tussenstuk = tussenvoegsel + "";
 
         return voornaam + " " + tussenstuk + achternaam;

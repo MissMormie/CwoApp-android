@@ -1,6 +1,7 @@
 package cwoapp.nl.cwoapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,14 +10,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import cwoapp.nl.cwoapp.entity.Cursist;
-import cwoapp.nl.cwoapp.utility.NetworkUtils;
 
 public class CursistListActivity extends AppCompatActivity implements CursistListAdapater.CursistListAdapterOnClickHandler {
     private static final String TAG = CursistListActivity.class.getSimpleName();
@@ -55,13 +53,15 @@ public class CursistListActivity extends AppCompatActivity implements CursistLis
 
     @Override
     public void onClick(Cursist cursist) {
-        System.out.println("onclick " + TAG);
         Context context = this;
-        Toast.makeText(context, cursist.nameToString(), Toast.LENGTH_SHORT).show();
+        Class destinationClass = CursistDetailActivity.class;
+        Intent intent = new Intent(context, destinationClass);
+        intent.putExtra("cursistId",cursist.getId());
+        startActivity(intent);
     }
 
 
-    public class FetchCursistListTask extends AsyncTask<String, Void, List<Cursist>> {
+    class FetchCursistListTask extends AsyncTask<String, Void, List<Cursist>> {
 
         @Override
         protected void onPreExecute() {

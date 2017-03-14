@@ -19,11 +19,17 @@
             </intent-filter>
         </activity>
         <!-- TODO uitzoeken of ik launchmode nodig heb hier -->
-        <activity android:name=".CursistListActivity" />
+        <activity android:name=".CursistListActivity"
+            android:label="@string/cursisten_lijst"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
         <!-- TODO Change label once i know what it does ;) -->
         <activity
-            android:name=".CursistDetail"
-            android:label="@string/action_settings"
+            android:name=".CursistDetailActivity"
+            android:label="@string/cursist"
             android:parentActivityName=".CursistListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -37,7 +43,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-        <activity android:name=".utility.CursistFormActivity"></activity>
+        <activity android:name=".utility.CursistFormActivity"
+            android:label="@string/nieuwe_cursist"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
     </application>
 
 </manifest>

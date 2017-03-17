@@ -1,84 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="cwoapp.nl.cwoapp.CursistDetailActivity"
-    tools:layout_editor_absoluteY="81dp"
-    tools:layout_editor_absoluteX="0dp">
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="cwoapp.nl.cwoapp.CursistDetailActivity"
+        tools:layout_editor_absoluteY="81dp"
+        tools:layout_editor_absoluteX="0dp">
 
 
-    <TextView
-        android:id="@+id/textViewOpmerkingenLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/opmerkingen"
-        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="0dp"
-        app:layout_constraintTop_toBottomOf="@+id/imageView3"
-        android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        <TextView
+            android:id="@+id/textViewOpmerkingenLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/opmerkingen"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="0dp"
+            app:layout_constraintTop_toBottomOf="@+id/imageViewFoto"
+            android:layout_marginLeft="8dp"
+            app:layout_constraintLeft_toLeftOf="parent" />
 
-    <TextView
-        android:id="@+id/textViewOpmerking"
-        android:layout_width="344dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="7dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewOpmerkingenLabel"
-        tools:text="Sonja surft alleen als het erg warm is, wind maakt minder uit." />
+        <TextView
+            android:id="@+id/textViewOpmerking"
+            android:layout_width="344dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="7dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewOpmerkingenLabel"
+            tools:text="Sonja surft alleen als het erg warm is, wind maakt minder uit." />
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        <TextView
+            android:id="@+id/textViewPaspoortLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
 
-        android:text="@string/paspoort"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/textviewVoornaam"
-        android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        tools:ignore="RtlHardcoded" />
+            android:text="@string/paspoort"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/textviewNaam"
+            android:layout_marginLeft="8dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            tools:ignore="RtlHardcoded" />
 
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_user_image"
-        tools:layout_editor_absoluteY="-4dp"
-        android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent"
-        tools:ignore="ContentDescription,MissingConstraints,RtlHardcoded" />
+        <ImageView
+            android:id="@+id/imageViewFoto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_user_image"
+            tools:layout_editor_absoluteY="-4dp"
+            android:layout_marginRight="8dp"
+            app:layout_constraintRight_toRightOf="parent"
+            tools:ignore="ContentDescription,MissingConstraints,RtlHardcoded" />
 
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toRightOf="@+id/textView3"
-        tools:text="ja"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/textviewVoornaam"
-        tools:ignore="RtlHardcoded" />
+        <TextView
+            android:id="@+id/textViewPaspoort"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintLeft_toRightOf="@+id/textViewPaspoortLabel"
+            app:layout_constraintTop_toBottomOf="@+id/textviewNaam"
+            tools:ignore="RtlHardcoded"
+            tools:text="ja" />
 
-    <TextView
-        android:id="@+id/textviewVoornaam"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="0dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-        app:layout_constraintHorizontal_bias="0.25"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/imageView3"
-        tools:text="Sonja Duijvesteijn"
-        tools:ignore="RtlHardcoded"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="26dp" />
+        <TextView
+            android:id="@+id/textviewNaam"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="0dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+            app:layout_constraintHorizontal_bias="0.25"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/imageViewFoto"
+            tools:text="Sonja Duijvesteijn"
+            tools:ignore="RtlHardcoded"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="26dp" />
 
 
-</android.support.constraint.ConstraintLayout>
+    </android.support.constraint.ConstraintLayout>
+</layout>

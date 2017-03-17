@@ -25,4 +25,7 @@
     <string name="paspoort">Paspoort uitgegeven: </string>
     <string name="opslaan">Opslaan</string>
 
+    <!-- Training list -->
+    <string name="volgende">Volgende</string>
+
 </resources>

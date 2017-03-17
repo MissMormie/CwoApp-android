@@ -3,18 +3,18 @@ package cwoapp.nl.cwoapp;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import cwoapp.nl.cwoapp.entity.Cursist;
+import cwoapp.nl.cwoapp.utility.MockEntityGenerator;
 
 public class CursistListActivity extends AppCompatActivity implements CursistListAdapater.CursistListAdapterOnClickHandler {
     private static final String TAG = CursistListActivity.class.getSimpleName();
@@ -56,7 +56,7 @@ public class CursistListActivity extends AppCompatActivity implements CursistLis
         Context context = this;
         Class destinationClass = CursistDetailActivity.class;
         Intent intent = new Intent(context, destinationClass);
-        intent.putExtra("cursistId",cursist.getId());
+        intent.putExtra("cursistId", cursist.id);
         startActivity(intent);
     }
 
@@ -72,11 +72,7 @@ public class CursistListActivity extends AppCompatActivity implements CursistLis
         @Override
         protected List<Cursist> doInBackground(String... params) {
 
-            List<Cursist> cursistList = new ArrayList<>();
-            for(int i = 0; i < 30; i++) {
-                Cursist cursist = new Cursist("sonja" + i, "", "duijvesteijn", "foto");
-                cursistList.add(cursist);
-            }
+            List<Cursist> cursistList = MockEntityGenerator.createCursistList(25);
             return cursistList;
 /*
             if (params.length == 0) {
@@ -125,4 +121,5 @@ public class CursistListActivity extends AppCompatActivity implements CursistLis
         /* Then, hide the error */
         mErrorMessageDisplay.setVisibility(View.INVISIBLE);
     }
+
 }

@@ -9,8 +9,39 @@ import java.util.Date;
 public class CursistBehaaldEisen {
     private Long id;
     private Cursist cursist;
-    private CwoEisen cwoEisen;
+    private CwoEis cwoEis;
     private Date datum = new Date();
 
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Cursist getCursist() {
+        return cursist;
+    }
+
+    public void setCursist(Cursist cursist) {
+        this.cursist = cursist;
+    }
+
+    public CwoEis getCwoEis() {
+        return cwoEis;
+    }
+
+    public void setCwoEis(CwoEis cwoEis) {
+        this.cwoEis = cwoEis;
+    }
+
+    public Date getDatum() {
+        return datum;
+    }
+
+    public void setDatum(Date datum) {
+        this.datum = datum;
+    }
 }

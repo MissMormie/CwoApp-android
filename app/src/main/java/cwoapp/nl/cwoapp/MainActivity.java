@@ -6,10 +6,10 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
-import android.view.MenuInflater;
-import android.view.View;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -59,6 +59,21 @@ public class MainActivity extends AppCompatActivity {
     public void onClickCursistenLijst(View view) {
         Context context = this;
         Class destinationClass = CursistListActivity.class;
+        Intent intent = new Intent(context, destinationClass);
+        startActivity(intent);
+    }
+
+    public void onClickNieuweTraining(View view) {
+        Context context = this;
+        Class destinationClass = TrainingActivity.class;
+        Intent intent = new Intent(context, destinationClass);
+        startActivity(intent);
+
+    }
+
+    public void onClickNieuweCursist(View view) {
+        Context context = this;
+        Class destinationClass = CursistFormActivity.class;
         Intent intent = new Intent(context, destinationClass);
         startActivity(intent);
     }

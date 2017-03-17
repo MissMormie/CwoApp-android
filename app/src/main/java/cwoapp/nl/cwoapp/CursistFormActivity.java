@@ -1,9 +1,7 @@
-package cwoapp.nl.cwoapp.utility;
+package cwoapp.nl.cwoapp;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-
-import cwoapp.nl.cwoapp.R;
+import android.support.v7.app.AppCompatActivity;
 
 public class CursistFormActivity extends AppCompatActivity {
 

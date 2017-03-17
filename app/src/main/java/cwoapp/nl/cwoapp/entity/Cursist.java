@@ -1,73 +1,53 @@
 package cwoapp.nl.cwoapp.entity;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Sonja on 3/9/2017.
  */
 
 public class Cursist {
-    private Long id;
-    private String voornaam;
-    private String tussenvoegsel;
-    private String achternaam;
-    private String foto;
-    private Date paspoort;
+    public Long id;
+    public String voornaam;
+    public String tussenvoegsel;
+    public String achternaam;
+    public String foto;
+    public Date paspoort;
+    public String opmerking;
+    public List<CursistBehaaldEisen> cursistBehaaldEisen;
 
-    public Cursist(String voornaam, String tussenvoegsel, String achternaam, String foto) {
-        this.voornaam = voornaam;
-        this.tussenvoegsel = tussenvoegsel;
-        this.achternaam = achternaam;
-        this.foto = foto;
-    }
+    private Set<CursistHeeftDiploma> cursistHeeftDiplomas;
 
-    public String getVoornaam() {
-        return voornaam;
-    }
 
-    public void setVoornaam(String voornaam) {
-        this.voornaam = voornaam;
-    }
-
-    public String getTussenvoegsel() {
-        return tussenvoegsel;
-    }
-
-    public void setTussenvoegsel(String tussenvoegsel) {
-        this.tussenvoegsel = tussenvoegsel;
-    }
-
-    public String getAchternaam() {
-        return achternaam;
-    }
-
-    public void setAchternaam(String achternaam) {
-        this.achternaam = achternaam;
-    }
-
-    public String getFoto() {
-        return foto;
-    }
-
-    public void setFoto(String foto) {
-        this.foto = foto;
-    }
-
-    public Date getPaspoort() {
-        return paspoort;
-    }
-
-    public void setPaspoort(Date paspoort) {
+    public Cursist(long id, String voornaam, String tussenvoegsel, String achternaam, String opmerking, String foto, Date paspoort) {
+        this.opmerking = opmerking;
         this.paspoort = paspoort;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
         this.id = id;
+        this.voornaam = voornaam;
+        this.tussenvoegsel = tussenvoegsel;
+        this.achternaam = achternaam;
+        this.foto = foto;
     }
+
+
+    public List<CursistBehaaldEisen> getCursistBehaaldEisen() {
+        return cursistBehaaldEisen;
+    }
+
+    public void setCursistBehaaldEisen(List<CursistBehaaldEisen> cursistBehaaldEisen) {
+        this.cursistBehaaldEisen = cursistBehaaldEisen;
+    }
+
+    public Set<CursistHeeftDiploma> getCursistHeeftDiplomas() {
+        return cursistHeeftDiplomas;
+    }
+
+    public void setCursistHeeftDiplomas(Set<CursistHeeftDiploma> cursistHeeftDiplomas) {
+        this.cursistHeeftDiplomas = cursistHeeftDiplomas;
+    }
+
 
     public String nameToString() {
         String tussenstuk = "";
@@ -75,5 +55,16 @@ public class Cursist {
             tussenstuk = tussenvoegsel + "";
 
         return voornaam + " " + tussenstuk + achternaam;
+    }
+
+    public boolean isEisBehaald(CwoEis cwoEis) {
+        if (cursistBehaaldEisen == null)
+            return false;
+        for (CursistBehaaldEisen cbe : cursistBehaaldEisen) {
+            if (cbe.getCwoEis() != null && cbe.getCwoEis().getId() == cwoEis.getId()) {
+                return true;
+            }
+        }
+        return false;
     }
 }

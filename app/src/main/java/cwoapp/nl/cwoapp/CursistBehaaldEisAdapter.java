@@ -10,14 +10,14 @@ import android.widget.CheckBox;
 import java.util.List;
 
 import cwoapp.nl.cwoapp.entity.Cursist;
-import cwoapp.nl.cwoapp.entity.CwoEis;
+import cwoapp.nl.cwoapp.entity.DiplomaEis;
 
 /**
  * Created by sonja on 3/15/2017.
  */
 
 public class CursistBehaaldEisAdapter extends RecyclerView.Adapter<CursistBehaaldEisAdapter.CursistBehaaldEisViewHolder> {
-    private List<CwoEis> cwoEisList;
+    private List<DiplomaEis> diplomaEisList;
     private Cursist cursist;
 //    private final CursistBehaaldEisAdapterOnClickHandler clickHandler;
 
@@ -50,13 +50,13 @@ public class CursistBehaaldEisAdapter extends RecyclerView.Adapter<CursistBehaal
 
     @Override
     public int getItemCount() {
-        if (cwoEisList == null)
+        if (diplomaEisList == null)
             return 0;
-        return cwoEisList.size();
+        return diplomaEisList.size();
     }
 
-    public void setCwoListData(List<CwoEis> cwoEisList) {
-        this.cwoEisList = cwoEisList;
+    public void setCwoListData(List<DiplomaEis> diplomaEisList) {
+        this.diplomaEisList = diplomaEisList;
     }
 
     public void setCursist(Cursist cursist) {
@@ -79,16 +79,16 @@ public class CursistBehaaldEisAdapter extends RecyclerView.Adapter<CursistBehaal
         }
 
         void bind(int position) {
-            CwoEis cwoEis = cwoEisList.get(position);
-            cbCwoEis.setText(cwoEis.getTitel());
-            boolean eisBehaald = cursist.isEisBehaald(cwoEis);
+            DiplomaEis diplomaEis = diplomaEisList.get(position);
+            cbCwoEis.setText(diplomaEis.getTitel());
+            boolean eisBehaald = cursist.isEisBehaald(diplomaEis);
             cbCwoEis.setChecked(eisBehaald);
         }
     }
 
 
     public interface CursistBehaaldEisAdapterOnClickHandler {
-        void onClick(CwoEis cwoEis, boolean selected);
+        void onClick(DiplomaEis diplomaEis, boolean selected);
     }
 
 }

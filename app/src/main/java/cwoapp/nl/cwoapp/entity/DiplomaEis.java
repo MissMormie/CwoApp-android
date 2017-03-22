@@ -9,13 +9,13 @@ import java.util.Set;
  * Created by sonja on 3/14/2017.
  */
 
-public class CwoEis implements Parcelable {
+public class DiplomaEis implements Parcelable {
 
     private Long id;
     private Diploma diploma;
     private String titel;
     private String omschrijving;
-    private Set<CursistBehaaldEisen> cursistBehaaldEisen;
+    private Set<CursistBehaaldEis> cursistBehaaldEis;
 
     // Used to save whether the checkbox for this eis is checked.
     // TODO determine if this belongs here or should move to a seperate class that holds this info.
@@ -23,7 +23,7 @@ public class CwoEis implements Parcelable {
     private boolean checked;
 
 
-    public CwoEis(Long id, String titel, String omschrijving) {
+    public DiplomaEis(Long id, String titel, String omschrijving) {
         this.id = id;
         this.titel = titel;
         this.omschrijving = omschrijving;
@@ -61,12 +61,12 @@ public class CwoEis implements Parcelable {
         this.omschrijving = omschrijving;
     }
 
-    public Set<CursistBehaaldEisen> getCursistBehaaldEisen() {
-        return cursistBehaaldEisen;
+    public Set<CursistBehaaldEis> getCursistBehaaldEis() {
+        return cursistBehaaldEis;
     }
 
-    public void setCursistBehaaldEisen(Set<CursistBehaaldEisen> cursistBehaaldEisen) {
-        this.cursistBehaaldEisen = cursistBehaaldEisen;
+    public void setCursistBehaaldEis(Set<CursistBehaaldEis> cursistBehaaldEis) {
+        this.cursistBehaaldEis = cursistBehaaldEis;
     }
 
     public boolean getChecked() {
@@ -88,19 +88,19 @@ public class CwoEis implements Parcelable {
         return 0;
     }
 
-    public static final Parcelable.Creator<CwoEis> CREATOR = new Parcelable.Creator<CwoEis>() {
+    public static final Parcelable.Creator<DiplomaEis> CREATOR = new Parcelable.Creator<DiplomaEis>() {
         @Override
-        public CwoEis createFromParcel(Parcel source) {
-            return new CwoEis(source);
+        public DiplomaEis createFromParcel(Parcel source) {
+            return new DiplomaEis(source);
         }
 
         @Override
-        public CwoEis[] newArray(int size) {
-            return new CwoEis[size];
+        public DiplomaEis[] newArray(int size) {
+            return new DiplomaEis[size];
         }
     };
 
-    public CwoEis(Parcel parcel) {
+    public DiplomaEis(Parcel parcel) {
         id = parcel.readLong();
         titel = parcel.readString();
         omschrijving = parcel.readString();

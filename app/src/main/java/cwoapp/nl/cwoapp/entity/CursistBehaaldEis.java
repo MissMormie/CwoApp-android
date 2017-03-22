@@ -6,12 +6,20 @@ import java.util.Date;
  * Created by sonja on 3/14/2017.
  */
 
-public class CursistBehaaldEisen {
+public class CursistBehaaldEis {
     private Long id;
     private Cursist cursist;
-    private CwoEis cwoEis;
+    private DiplomaEis diplomaEis;
     private Date datum = new Date();
 
+
+    public CursistBehaaldEis() {
+    }
+
+    public CursistBehaaldEis(Long id, DiplomaEis diplomaEis) {
+        this.id = id;
+        this.diplomaEis = diplomaEis;
+    }
 
     public Long getId() {
         return id;
@@ -29,12 +37,12 @@ public class CursistBehaaldEisen {
         this.cursist = cursist;
     }
 
-    public CwoEis getCwoEis() {
-        return cwoEis;
+    public DiplomaEis getDiplomaEis() {
+        return diplomaEis;
     }
 
-    public void setCwoEis(CwoEis cwoEis) {
-        this.cwoEis = cwoEis;
+    public void setDiplomaEis(DiplomaEis diplomaEis) {
+        this.diplomaEis = diplomaEis;
     }
 
     public Date getDatum() {

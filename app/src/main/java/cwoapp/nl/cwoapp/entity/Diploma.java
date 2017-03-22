@@ -9,13 +9,13 @@ import java.util.List;
 public class Diploma {
     private Long id;
     private String titel;
-    private List<CwoEis> cwoEis;
+    private List<DiplomaEis> diplomaEis;
     private int nivo;
 
-    public Diploma(Long id, String titel, int nivo, List<CwoEis> cwoEis) {
+    public Diploma(Long id, String titel, int nivo, List<DiplomaEis> diplomaEis) {
         this.id = id;
         this.titel = titel;
-        this.cwoEis = cwoEis;
+        this.diplomaEis = diplomaEis;
         this.nivo = nivo;
     }
 
@@ -35,12 +35,12 @@ public class Diploma {
         this.titel = titel;
     }
 
-    public List<CwoEis> getCwoEis() {
-        return cwoEis;
+    public List<DiplomaEis> getDiplomaEis() {
+        return diplomaEis;
     }
 
-    public void setCwoEis(List<CwoEis> cwoEis) {
-        this.cwoEis = cwoEis;
+    public void setDiplomaEis(List<DiplomaEis> diplomaEis) {
+        this.diplomaEis = diplomaEis;
     }
 
     public int getNivo() {

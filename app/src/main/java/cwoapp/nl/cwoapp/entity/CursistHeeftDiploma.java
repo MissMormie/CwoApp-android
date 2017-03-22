@@ -9,14 +9,15 @@ import java.util.Date;
 public class CursistHeeftDiploma {
     private Long id;
 
-    private Cursist cursist;
+    private Long cursist;
 
     private Diploma cwoDiscipline;
 
-    private Date theorieBehaald;
-
-    private Date praktijkBehaald;
-
     private Date diplomaBehaald;
 
+    public CursistHeeftDiploma(Long id, Long cursist, Diploma cwoDiscipline) {
+        this.id = id;
+        this.cursist = cursist;
+        this.cwoDiscipline = cwoDiscipline;
+    }
 }

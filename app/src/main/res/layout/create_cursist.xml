@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="cwoapp.nl.cwoapp.CursistFormActivity">
+    tools:context="cwoapp.nl.cwoapp.CreateCursistActivity">
 
     <EditText
         android:id="@+id/editTextVoornaam"
@@ -95,12 +95,13 @@
         app:layout_constraintLeft_toLeftOf="parent" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/buttonSave"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
         android:text="@string/opslaan"
+        android:onClick="onClickSaveCursist"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextOpmerkingen"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -117,7 +118,8 @@
         app:layout_constraintTop_toBottomOf="@+id/textView"
         app:srcCompat="@drawable/ic_user_image"
         app:layout_constraintLeft_toRightOf="@+id/editTextTussenvoegsel"
-        android:layout_marginLeft="8dp" />
+        android:layout_marginLeft="8dp"
+        app:layout_constraintHorizontal_bias="1.0" />
 
     <ImageButton
         android:id="@+id/imageButtonPhoto"
@@ -126,6 +128,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginRight="8dp"
+        android:onClick="dispatchTakePictureIntent"
         app:layout_constraintBottom_toBottomOf="@+id/imageViewFoto"
         app:layout_constraintRight_toRightOf="@+id/imageViewFoto"
         app:srcCompat="@android:drawable/ic_menu_edit" />

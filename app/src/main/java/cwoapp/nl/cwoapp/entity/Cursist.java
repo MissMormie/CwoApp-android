@@ -2,7 +2,6 @@ package cwoapp.nl.cwoapp.entity;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by Sonja on 3/9/2017.
@@ -16,10 +15,21 @@ public class Cursist {
     public String foto;
     public Date paspoort;
     public String opmerking;
-    public List<CursistBehaaldEisen> cursistBehaaldEisen;
+    public List<CursistBehaaldEis> cursistBehaaldEis;
 
-    private Set<CursistHeeftDiploma> cursistHeeftDiplomas;
+    private List<CursistHeeftDiploma> cursistHeeftDiplomas;
 
+    public Cursist(Long id, String voornaam, String tussenvoegsel, String achternaam, String foto, Date paspoort, String opmerking, List<CursistBehaaldEis> cursistBehaaldEis, List<CursistHeeftDiploma> cursistHeeftDiplomas) {
+        this.id = id;
+        this.voornaam = voornaam;
+        this.tussenvoegsel = tussenvoegsel;
+        this.achternaam = achternaam;
+        this.foto = foto;
+        this.paspoort = paspoort;
+        this.opmerking = opmerking;
+        this.cursistBehaaldEis = cursistBehaaldEis;
+        this.cursistHeeftDiplomas = cursistHeeftDiplomas;
+    }
 
     public Cursist(long id, String voornaam, String tussenvoegsel, String achternaam, String opmerking, String foto, Date paspoort) {
         this.opmerking = opmerking;
@@ -32,19 +42,19 @@ public class Cursist {
     }
 
 
-    public List<CursistBehaaldEisen> getCursistBehaaldEisen() {
-        return cursistBehaaldEisen;
+    public List<CursistBehaaldEis> getCursistBehaaldEis() {
+        return cursistBehaaldEis;
     }
 
-    public void setCursistBehaaldEisen(List<CursistBehaaldEisen> cursistBehaaldEisen) {
-        this.cursistBehaaldEisen = cursistBehaaldEisen;
+    public void setCursistBehaaldEis(List<CursistBehaaldEis> cursistBehaaldEis) {
+        this.cursistBehaaldEis = cursistBehaaldEis;
     }
 
-    public Set<CursistHeeftDiploma> getCursistHeeftDiplomas() {
+    public List<CursistHeeftDiploma> getCursistHeeftDiplomas() {
         return cursistHeeftDiplomas;
     }
 
-    public void setCursistHeeftDiplomas(Set<CursistHeeftDiploma> cursistHeeftDiplomas) {
+    public void setCursistHeeftDiplomas(List<CursistHeeftDiploma> cursistHeeftDiplomas) {
         this.cursistHeeftDiplomas = cursistHeeftDiplomas;
     }
 
@@ -57,11 +67,11 @@ public class Cursist {
         return voornaam + " " + tussenstuk + achternaam;
     }
 
-    public boolean isEisBehaald(CwoEis cwoEis) {
-        if (cursistBehaaldEisen == null)
+    public boolean isEisBehaald(DiplomaEis diplomaEis) {
+        if (cursistBehaaldEis == null)
             return false;
-        for (CursistBehaaldEisen cbe : cursistBehaaldEisen) {
-            if (cbe.getCwoEis() != null && cbe.getCwoEis().getId() == cwoEis.getId()) {
+        for (CursistBehaaldEis cbe : cursistBehaaldEis) {
+            if (cbe.getDiplomaEis() != null && cbe.getDiplomaEis().getId() == diplomaEis.getId()) {
                 return true;
             }
         }

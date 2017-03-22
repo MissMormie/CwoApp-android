@@ -10,7 +10,7 @@ import android.widget.CheckBox;
 
 import java.util.List;
 
-import cwoapp.nl.cwoapp.entity.CwoEis;
+import cwoapp.nl.cwoapp.entity.DiplomaEis;
 
 /**
  * Created by sonja on 3/15/2017.
@@ -19,7 +19,7 @@ import cwoapp.nl.cwoapp.entity.CwoEis;
 public class TrainingsListAdapter extends RecyclerView.Adapter<TrainingsListAdapter.TrainingsListAdapterViewHolder> {
     private static final String TAG = TrainingsListAdapter.class.getSimpleName();
 
-    List<CwoEis> cwoEisList = null;
+    List<DiplomaEis> diplomaEisList = null;
     private final TrainingListAdapterOnClickHandler clickHandler;
 
     public TrainingsListAdapter(TrainingListAdapterOnClickHandler clickHandler) {
@@ -38,8 +38,8 @@ public class TrainingsListAdapter extends RecyclerView.Adapter<TrainingsListAdap
         return viewHolder;
     }
 
-    public void setCwoData(List<CwoEis> cwoEis) {
-        this.cwoEisList = cwoEis;
+    public void setCwoData(List<DiplomaEis> diplomaEis) {
+        this.diplomaEisList = diplomaEis;
         notifyDataSetChanged();
     }
 
@@ -50,9 +50,9 @@ public class TrainingsListAdapter extends RecyclerView.Adapter<TrainingsListAdap
 
     @Override
     public int getItemCount() {
-        if (cwoEisList == null)
+        if (diplomaEisList == null)
             return 0;
-        return cwoEisList.size();
+        return diplomaEisList.size();
     }
 
     class TrainingsListAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -69,20 +69,20 @@ public class TrainingsListAdapter extends RecyclerView.Adapter<TrainingsListAdap
             Log.v(TAG, "onClick triggered");
 
             int adapterPosition = getAdapterPosition();
-            CwoEis cwoEis = cwoEisList.get(adapterPosition);
+            DiplomaEis diplomaEis = diplomaEisList.get(adapterPosition);
 
             // Using !cboEis.isSelected because checkbox is only toggled AFTER this is called. So this makes it use the intended position rather than the current one.
-            clickHandler.onClick(cwoEis, !cbCwoEis.isSelected());
+            clickHandler.onClick(diplomaEis, !cbCwoEis.isSelected());
 
         }
 
         void bind(int position) {
-            CwoEis cwoEis = cwoEisList.get(position);
-            cbCwoEis.setText(cwoEis.getTitel());
+            DiplomaEis diplomaEis = diplomaEisList.get(position);
+            cbCwoEis.setText(diplomaEis.getTitel());
         }
     }
 
     public interface TrainingListAdapterOnClickHandler {
-        void onClick(CwoEis cwoEis, boolean selected);
+        void onClick(DiplomaEis diplomaEis, boolean selected);
     }
 }

@@ -13,11 +13,11 @@ import android.widget.TextView;
 import java.util.List;
 
 import cwoapp.nl.cwoapp.entity.Cursist;
-import cwoapp.nl.cwoapp.entity.CwoEis;
+import cwoapp.nl.cwoapp.entity.DiplomaEis;
 import cwoapp.nl.cwoapp.utility.MockEntityGenerator;
 
 public class CursistBehaaldEisActivity extends AppCompatActivity implements CursistBehaaldEisAdapter.CursistBehaaldEisAdapterOnClickHandler {
-    private List<CwoEis> cwoEisList;
+    private List<DiplomaEis> diplomaEisList;
     private ProgressBar loadingIndicator;
     private List<Cursist> cursistList;
     private TextView textViewNaam;
@@ -30,7 +30,8 @@ public class CursistBehaaldEisActivity extends AppCompatActivity implements Curs
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cursist_behaald_eis);
-        cwoEisList = getIntent().getParcelableArrayListExtra("selectedCwoEisList");
+        Intent intent = getIntent();
+        diplomaEisList = intent.getParcelableArrayListExtra("selectedCwoEisList");
 
         // get variables for elements in layout.
         textViewNaam = (TextView) findViewById(R.id.textViewNaam);
@@ -54,7 +55,7 @@ public class CursistBehaaldEisActivity extends AppCompatActivity implements Curs
     }
 
     private void showFirstCursist() {
-        cursistBehaaldEisAdapter.setCwoListData(cwoEisList);
+        cursistBehaaldEisAdapter.setCwoListData(diplomaEisList);
         showNextCursist();
     }
 
@@ -84,8 +85,8 @@ public class CursistBehaaldEisActivity extends AppCompatActivity implements Curs
     }
 
     @Override
-    public void onClick(CwoEis cwoEis, boolean behaald) {
-        new SaveEisBehaaldTask().execute(currentCursist.id, cwoEis.getId(), behaald);
+    public void onClick(DiplomaEis diplomaEis, boolean behaald) {
+        new SaveEisBehaaldTask().execute(currentCursist.id, diplomaEis.getId(), behaald);
     }
 
 

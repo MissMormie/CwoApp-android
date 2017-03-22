@@ -2,12 +2,29 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="cwoapp.nl.cwoapp">
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.example.android.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
@@ -45,7 +62,7 @@
                 android:value=".MainActivity" />
         </activity>
         <activity
-            android:name=".CursistFormActivity"
+            android:name=".CreateCursistActivity"
             android:label="@string/nieuwe_cursist"
             android:parentActivityName=".MainActivity">
             <meta-data
@@ -53,7 +70,8 @@
                 android:value=".MainActivity" />
         </activity>
         <activity android:name=".TrainingActivity" />
-        <activity android:name=".CursistBehaaldEisActivity"></activity>
+        <activity android:name=".CursistBehaaldEisActivity" />
+        <activity android:name=".EditCursistActivity"></activity>
     </application>
 
 </manifest>

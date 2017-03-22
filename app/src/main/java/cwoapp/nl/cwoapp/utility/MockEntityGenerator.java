@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cwoapp.nl.cwoapp.entity.Cursist;
-import cwoapp.nl.cwoapp.entity.CursistBehaaldEisen;
-import cwoapp.nl.cwoapp.entity.CwoEis;
+import cwoapp.nl.cwoapp.entity.CursistBehaaldEis;
 import cwoapp.nl.cwoapp.entity.Diploma;
+import cwoapp.nl.cwoapp.entity.DiplomaEis;
 
 /**
  * Created by sonja on 3/14/2017.
@@ -28,8 +28,8 @@ public class MockEntityGenerator {
 
     public static Cursist createFullCursist(int id) {
         Cursist cursist = createSimpleCursist(id);
-        List<CursistBehaaldEisen> cbe = createCursistBehaaldEisenLijst(3);
-        cursist.setCursistBehaaldEisen(cbe);
+        List<CursistBehaaldEis> cbe = createCursistBehaaldEisenLijst(3);
+        cursist.setCursistBehaaldEis(cbe);
         return cursist;
     }
 
@@ -42,33 +42,33 @@ public class MockEntityGenerator {
     }
 
     public static Diploma createDiploma(int id) {
-        List<CwoEis> cwoEis = createCwoEisenList(10);
-        Diploma diploma = new Diploma((long) id, "Windsurfen", id, cwoEis);
-        diploma.setCwoEis(cwoEis);
+        List<DiplomaEis> diplomaEis = createCwoEisenList(10);
+        Diploma diploma = new Diploma((long) id, "Windsurfen", id, diplomaEis);
+        diploma.setDiplomaEis(diplomaEis);
         return diploma;
     }
 
-    public static List<CwoEis> createCwoEisenList(int aantal) {
-        List<CwoEis> cwoEis = new ArrayList();
+    public static List<DiplomaEis> createCwoEisenList(int aantal) {
+        List<DiplomaEis> diplomaEis = new ArrayList();
         for (int i = 0; i < aantal; i++) {
-            cwoEis.add(createCwoEis(i));
+            diplomaEis.add(createCwoEis(i));
         }
-        return cwoEis;
+        return diplomaEis;
     }
 
-    public static CwoEis createCwoEis(int id) {
-        return new CwoEis((long) id, "Oploeven" + id, "Naar de wind toe draaien en nog wat meer tekst en nog een regeltje en er staat nog meer zelfs.");
+    public static DiplomaEis createCwoEis(int id) {
+        return new DiplomaEis((long) id, "Oploeven" + id, "Naar de wind toe draaien en nog wat meer tekst en nog een regeltje en er staat nog meer zelfs.");
     }
 
-    public static List<CursistBehaaldEisen> createCursistBehaaldEisenLijst(int aantal) {
-        List<CursistBehaaldEisen> cursistBehaaldEisen = new ArrayList();
+    public static List<CursistBehaaldEis> createCursistBehaaldEisenLijst(int aantal) {
+        List<CursistBehaaldEis> cursistBehaaldEis = new ArrayList();
         for (int i = 0; i < aantal; i++) {
-            cursistBehaaldEisen.add(cursistBehaaldEisen(i));
+            cursistBehaaldEis.add(cursistBehaaldEisen(i));
         }
-        return cursistBehaaldEisen;
+        return cursistBehaaldEis;
     }
 
-    public static CursistBehaaldEisen cursistBehaaldEisen(int id) {
-        return new CursistBehaaldEisen();
+    public static CursistBehaaldEis cursistBehaaldEisen(int id) {
+        return new CursistBehaaldEis();
     }
 }

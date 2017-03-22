@@ -4,6 +4,7 @@
     <string name="nieuwe_cursist">Nieuwe cursist</string>
     <string name="cursisten_lijst">Overzicht cursisten</string>
     <string name="nieuwe_training">Training</string>
+    <string name="diploma_uitgeven">Diploma uitgeven</string>
     <string name="error_message">Er is iets fout gegaan, probeer het later opnieuw.</string>
 
     <!-- Preferences -->
@@ -27,5 +28,12 @@
 
     <!-- Training list -->
     <string name="volgende">Volgende</string>
+
+    <!-- cursist menu -->
+    <string name="edit">Edit</string>
+    <string name="search">Zoeken</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

@@ -4,17 +4,23 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.net.URL;
 import java.util.List;
 
 import cwoapp.nl.cwoapp.entity.Cursist;
-import cwoapp.nl.cwoapp.utility.MockEntityGenerator;
+import cwoapp.nl.cwoapp.utility.NetworkUtils;
+import cwoapp.nl.cwoapp.utility.OpenJsonUtils;
 
 public class CursistListActivity extends AppCompatActivity implements CursistListAdapater.CursistListAdapterOnClickHandler {
     private static final String TAG = CursistListActivity.class.getSimpleName();
@@ -23,6 +29,8 @@ public class CursistListActivity extends AppCompatActivity implements CursistLis
     private RecyclerView mRecyclerView;
     private TextView mErrorMessageDisplay;
     private CursistListAdapater cursistListAdapater;
+    private MenuItem searchItem;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +53,33 @@ public class CursistListActivity extends AppCompatActivity implements CursistLis
         mRecyclerView.setAdapter(cursistListAdapater);
 
         loadCursistListData();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.cursist_lijst_menu, menu);
+        searchItem = menu.findItem(R.id.action_search);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemThatWasClickedId = item.getItemId();
+        if (itemThatWasClickedId == R.id.action_search) {
+            // TODO do something searchy ;)
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        if (!searchView.isIconified()) {
+            searchView.setIconified(true);
+        } else {
+            super.onBackPressed();
+        }
     }
 
     private void loadCursistListData() {
@@ -71,30 +106,20 @@ public class CursistListActivity extends AppCompatActivity implements CursistLis
 
         @Override
         protected List<Cursist> doInBackground(String... params) {
-
-            List<Cursist> cursistList = MockEntityGenerator.createCursistList(25);
-            return cursistList;
-/*
-            if (params.length == 0) {
-                return null;
-            }
-
-            String location = params[0];
-            URL weatherRequestUrl = NetworkUtils.buildUrl(location);
+            URL diplomaListUrl = NetworkUtils.buildUrl("cursist", "lijst");
 
             try {
-                String jsonWeatherResponse = NetworkUtils
-                        .getResponseFromHttpUrl(weatherRequestUrl);
-
-                String[] simpleJsonWeatherData = OpenWeatherJsonUtils
-                        .getSimpleWeatherStringsFromJson(MainActivity.this, jsonWeatherResponse);
-
-                return simpleJsonWeatherData;
+                String jsonCursistLijstResponse = NetworkUtils.getResponseFromHttpUrl(diplomaListUrl);
+                List<Cursist> cursistList = OpenJsonUtils.getCursistLijst(jsonCursistLijstResponse);
+                return cursistList;
 
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;
-            } */
+            }
+//            List<Cursist> cursistList = MockEntityGenerator.createCursistList(25);
+//            return cursistList;
+
         }
 
         @Override

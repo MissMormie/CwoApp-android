@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void onClickNieuweCursist(View view) {
         Context context = this;
-        Class destinationClass = CursistFormActivity.class;
+        Class destinationClass = CreateCursistActivity.class;
         Intent intent = new Intent(context, destinationClass);
         startActivity(intent);
     }

@@ -48,15 +48,18 @@
             android:layout_weight="1" />
 
         <Button
-            android:id="@+id/button_volgende"
-            android:background="@color/colorPrimary"
+            android:id="@+id/buttonVolgende"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:enabled="true"
+            android:layout_marginBottom="8dp"
+            android:layout_marginRight="8dp"
             android:onClick="onClickShowVolgende"
             android:text="@string/volgende" />
+
+
         <!-- change enabled, see java for details -->
     </LinearLayout>
 

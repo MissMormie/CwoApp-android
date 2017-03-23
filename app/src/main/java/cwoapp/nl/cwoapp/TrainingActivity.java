@@ -119,12 +119,10 @@ public class TrainingActivity extends AppCompatActivity implements TrainingsList
                 String jsonDiplomaLijstResponse = NetworkUtils.getResponseFromHttpUrl(diplomaListUrl);
                 List<Diploma> diplomaList = OpenJsonUtils.getDiplomaLijst(jsonDiplomaLijstResponse);
                 return diplomaList;
-
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;
             }
-
         }
 
         @Override

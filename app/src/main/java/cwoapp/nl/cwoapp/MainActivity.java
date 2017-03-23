@@ -77,4 +77,11 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(context, destinationClass);
         startActivity(intent);
     }
+
+    public void onClickUitgevenDiploma(View view) {
+        Context context = this;
+        Class destinationClass = DiplomaUitgevenActivity.class;
+        Intent intent = new Intent(context, destinationClass);
+        startActivity(intent);
+    }
 }

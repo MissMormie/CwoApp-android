@@ -71,7 +71,8 @@
         </activity>
         <activity android:name=".TrainingActivity" />
         <activity android:name=".CursistBehaaldEisActivity" />
-        <activity android:name=".EditCursistActivity"></activity>
+        <activity android:name=".EditCursistActivity" />
+        <activity android:name=".DiplomaUitgevenActivity"></activity>
     </application>
 
 </manifest>

@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:text="Selecteer welke onderdelen geoefend zijn."
-        android:textSize="20sp" />
+        android:textSize="@dimen/text_size_large" />
 
     <!-- Error message -->
     <TextView
@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:padding="16dp"
         android:text="@string/error_message"
-        android:textSize="20sp"
+        android:textSize="@dimen/text_size"
         android:visibility="gone" />
 
     <!-- Loading circle -->
@@ -54,8 +54,8 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:enabled="true"
-            android:layout_marginBottom="8dp"
-            android:layout_marginRight="8dp"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_vertical_margin"
             android:onClick="onClickShowVolgende"
             android:text="@string/volgende" />
 

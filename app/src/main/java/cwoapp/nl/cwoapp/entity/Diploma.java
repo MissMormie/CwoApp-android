@@ -50,4 +50,9 @@ public class Diploma {
     public void setNivo(int nivo) {
         this.nivo = nivo;
     }
+
+    @Override
+    public String toString() {
+        return titel + " " + nivo;
+    }
 }

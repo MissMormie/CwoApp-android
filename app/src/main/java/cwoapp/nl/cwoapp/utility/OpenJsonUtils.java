@@ -137,7 +137,7 @@ public final class OpenJsonUtils {
     }
 
     public static List<Diploma> getDiplomaLijst(String diplomaLijstString) throws JSONException {
-        // TODO see if i can do some extra error checking here?
+        // TODO see if i should do some extra error checking here?
         if (diplomaLijstString == null || diplomaLijstString == "")
             return null;
 
@@ -150,6 +150,7 @@ public final class OpenJsonUtils {
 
             diplomaList.add(diploma);
         }
+        int a = 1;
         return diplomaList;
     }
 

@@ -4,6 +4,7 @@ import android.net.Uri;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -63,5 +64,53 @@ public class NetworkUtils {
         } finally {
             urlConnection.disconnect();
         }
+    }
+
+    /**
+     * Return server response code.
+     *
+     * @param url
+     * @param jsonString
+     * @param requestMethod
+     * @return
+     * @throws IOException
+     */
+    public static int uploadToServer(URL url, String jsonString, String requestMethod) throws IOException {
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setConnectTimeout(5000);
+        conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+        conn.setDoOutput(true);
+        conn.setRequestMethod(requestMethod);
+
+        OutputStream os = conn.getOutputStream();
+        os.write(jsonString.getBytes("UTF-8"));
+        os.close();
+
+        if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
+            throw new RuntimeException("Failed : HTTP error code : "
+                    + conn.getResponseCode());
+        }
+        int responseCode = conn.getResponseCode();
+
+        conn.disconnect();
+        return responseCode;
+    }
+
+    /**
+     * Connects to server on the given url, Return response code
+     *
+     * @param url
+     * @param requestMethod
+     * @return
+     * @throws IOException
+     */
+    public static int sendToServer(URL url, String requestMethod) throws IOException {
+        HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();
+        httpCon.setDoOutput(true);
+        httpCon.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+        httpCon.setRequestMethod(requestMethod);
+        httpCon.connect();
+        int responseCode = httpCon.getResponseCode();
+        return responseCode;
     }
 }

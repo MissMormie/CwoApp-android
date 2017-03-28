@@ -1,46 +1,62 @@
 package cwoapp.nl.cwoapp;
 
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.ImageView;
+import android.widget.Toast;
 
-public class CreateCursistActivity extends AppCompatActivity {
-    static final int REQUEST_IMAGE_CAPTURE = 1;
-    static final int REQUEST_TAKE_PHOTO = 1;
+import java.io.IOException;
+import java.net.URL;
 
-    private ImageView imageViewFoto;
-    private String currentPhotoPath;
+import cwoapp.nl.cwoapp.entity.Cursist;
+import cwoapp.nl.cwoapp.utility.NetworkUtils;
+
+public class CreateCursistActivity extends AppCompatActivity implements CursistFormFragment.OnFragmentInteractionListener {
+    CursistFormFragment cursistFormFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_cursist);
-        imageViewFoto = (ImageView) findViewById(R.id.imageViewFoto);
-    }
-
-    public void onClickSaveCursist(View view) {
+        cursistFormFragment = (CursistFormFragment) getSupportFragmentManager().findFragmentById(R.id.cursist_form_fragment);
+        Cursist cursist = new Cursist();
+        cursistFormFragment.setCursist(cursist);
 
     }
 
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            imageViewFoto.setImageBitmap(imageBitmap);
-        }
+    public void saveCursist(Cursist cursist) {
+        String cursistJson = cursist.simpleCursistToJson();
+        new SaveCursistAsyncTask().execute(cursist);
     }
 
-    class SaveCursistTask extends AsyncTask<String, Void, Boolean> {
+
+    void cursistSaved() {
+        Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.cursist_opgeslagen), Toast.LENGTH_SHORT);
+        toast.show();
+        finish();
+    }
+
+    class SaveCursistAsyncTask extends AsyncTask<Cursist, Void, Integer> {
 
         @Override
-        protected Boolean doInBackground(String... params) {
+        protected Integer doInBackground(Cursist... cursist) {
+
+            URL url = NetworkUtils.buildUrl("cursist");
+            try {
+                return NetworkUtils.uploadToServer(url, cursist[0].simpleCursistToJson(), "POST");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Integer s) {
+            cursistSaved();
+            super.onPostExecute(s);
+
         }
     }
 

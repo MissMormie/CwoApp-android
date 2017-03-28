@@ -9,7 +9,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URL;
 
 import cwoapp.nl.cwoapp.databinding.ActivityCursistDetailBinding;
@@ -37,23 +40,51 @@ public class CursistDetailActivity extends AppCompatActivity {
         return true;
     }
 
+    // TODO at the moment when you come back here after editing the cursist, all info is downloaded again, should be able to pass this back.
+    @Override
+    public void onRestart() {
+        super.onRestart();
+    }
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemThatWasClickedId = item.getItemId();
         if (itemThatWasClickedId == R.id.action_edit) {
             showEditCursist();
-            // TODO go to edit cursist.
+            return true;
+        } else if (itemThatWasClickedId == R.id.action_verbergen) {
+            hideCursist();
+            return true;
+        } else if (itemThatWasClickedId == R.id.action_delete) {
+            deleteCursist();
             return true;
         }
+
         return super.onOptionsItemSelected(item);
+    }
+
+    private void hideCursist() {
+        // TODO
+    }
+
+    private void deleteCursist() {
+        new DeleteCursistTask().execute();
+    }
+
+    private void cursistDeleted() {
+        Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.cursist_verwijderd), Toast.LENGTH_SHORT);
+        toast.show();
+
+        finish();
     }
 
     private void showEditCursist() {
         Context context = this;
         Class destinationClass = EditCursistActivity.class;
         Intent intent = new Intent(context, destinationClass);
+        intent.putExtra("cursist", cursist);
         startActivity(intent);
-
     }
 
 
@@ -101,6 +132,34 @@ public class CursistDetailActivity extends AppCompatActivity {
             activityCursistDetailBinding.pbLoadingIndicator.setVisibility(View.INVISIBLE);
             cursist = cursistObject;
             displayCursistInfo();
+        }
+    }
+
+    class DeleteCursistTask extends AsyncTask<Long, Void, Integer> {
+
+        @Override
+        protected Integer doInBackground(Long... params) {
+            URL url = NetworkUtils.buildUrl("cursist", cursist.id.toString());
+            int resultCode = 0;
+            try {
+                resultCode = NetworkUtils.sendToServer(url, "DELETE");
+                return resultCode;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return resultCode;
+        }
+
+        /**
+         * @param resultCode
+         */
+        @Override
+        protected void onPostExecute(Integer resultCode) {
+            if (resultCode == HttpURLConnection.HTTP_OK) {
+                cursistDeleted();
+            } else {
+                // Handle error
+            }
         }
     }
 }

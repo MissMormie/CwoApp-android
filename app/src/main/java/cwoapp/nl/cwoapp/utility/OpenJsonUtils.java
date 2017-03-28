@@ -72,8 +72,9 @@ public final class OpenJsonUtils {
             foto = cursistJson.getString("foto");
         }
         // TODO get date from json.
-//        Date paspoort = cursistJson.
-        Date paspoort = new Date();
+        Date paspoort = null;
+        if (!cursistJson.isNull("paspoort"))
+            paspoort = DateUtil.stringToDate(cursistJson.getString("paspoort"));
 
         // Get the cursistbehaaldeis objecten if they exist.
         List<CursistBehaaldEis> cursistBehaaldEisList = null;

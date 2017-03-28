@@ -6,10 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 
 import java.util.List;
 
 import cwoapp.nl.cwoapp.entity.Cursist;
+import cwoapp.nl.cwoapp.entity.CursistBehaaldEis;
 import cwoapp.nl.cwoapp.entity.DiplomaEis;
 
 /**
@@ -19,15 +21,14 @@ import cwoapp.nl.cwoapp.entity.DiplomaEis;
 public class CursistBehaaldEisAdapter extends RecyclerView.Adapter<CursistBehaaldEisAdapter.CursistBehaaldEisViewHolder> {
     private List<DiplomaEis> diplomaEisList;
     private Cursist cursist;
-//    private final CursistBehaaldEisAdapterOnClickHandler clickHandler;
+    private final CursistBehaaldEisAdapter.CursistBehaaldEisAdapterOnClickHandler clickHandler;
+    private boolean saveData = true; // OnChangeChecklistener saves date when checkbox is clicked, but also when data is refeshed. Using to as workaround.
 
     public CursistBehaaldEisAdapter(CursistBehaaldEisAdapterOnClickHandler clickHandler) {
-        //    this.clickHandler = clickHandler;
-    }
-
-    public CursistBehaaldEisAdapter() {
+        this.clickHandler = clickHandler;
 
     }
+
 
     @Override
     public CursistBehaaldEisViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
@@ -64,31 +65,43 @@ public class CursistBehaaldEisAdapter extends RecyclerView.Adapter<CursistBehaal
         notifyDataSetChanged();
     }
 
-    class CursistBehaaldEisViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class CursistBehaaldEisViewHolder extends RecyclerView.ViewHolder {
         CheckBox cbCwoEis;
 
-        public CursistBehaaldEisViewHolder(View itemView) {
+        public CursistBehaaldEisViewHolder(final View itemView) {
             super(itemView);
             cbCwoEis = (CheckBox) itemView.findViewById(R.id.checkBoxTrainingsEis);
-            cbCwoEis.setOnClickListener(this);
+            cbCwoEis.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (!saveData)
+                        return;
+
+                    int adapterPosition = getAdapterPosition();
+                    DiplomaEis de = diplomaEisList.get(adapterPosition);
+
+                    CursistBehaaldEis cbe = new CursistBehaaldEis(cursist, de, isChecked);
+                    clickHandler.onClick(cbe);
+                }
+            });
+
         }
 
-        @Override
-        public void onClick(View v) {
-
-        }
 
         void bind(int position) {
             DiplomaEis diplomaEis = diplomaEisList.get(position);
             cbCwoEis.setText(diplomaEis.getTitel());
             boolean eisBehaald = cursist.isEisBehaald(diplomaEis);
+            saveData = false;
             cbCwoEis.setChecked(eisBehaald);
+            saveData = true;
         }
     }
 
 
     public interface CursistBehaaldEisAdapterOnClickHandler {
-        void onClick(DiplomaEis diplomaEis, boolean selected);
+        void onClick(CursistBehaaldEis cursistBehaaldEis);
     }
 
 }

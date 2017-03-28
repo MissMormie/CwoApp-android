@@ -12,7 +12,7 @@
         android:layout_marginLeft="8dp"
         android:ems="10"
         android:hint="@string/voornaam"
-        android:inputType="textPersonName"
+        android:inputType="textCapSentences"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginTop="8dp"
         android:layout_marginStart="8dp"
@@ -39,7 +39,7 @@
         android:layout_marginTop="2dp"
         android:ems="10"
         android:hint="@string/achternaam"
-        android:inputType="textPersonName"
+        android:inputType="textCapSentences"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextTussenvoegsel"
         android:layout_marginStart="8dp" />

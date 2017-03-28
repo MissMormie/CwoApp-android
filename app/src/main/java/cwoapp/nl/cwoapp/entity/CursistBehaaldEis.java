@@ -1,5 +1,8 @@
 package cwoapp.nl.cwoapp.entity;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Date;
 
 /**
@@ -11,6 +14,7 @@ public class CursistBehaaldEis {
     private Cursist cursist;
     private DiplomaEis diplomaEis;
     private Date datum = new Date();
+    private boolean behaald;
 
 
     public CursistBehaaldEis() {
@@ -19,6 +23,12 @@ public class CursistBehaaldEis {
     public CursistBehaaldEis(Long id, DiplomaEis diplomaEis) {
         this.id = id;
         this.diplomaEis = diplomaEis;
+    }
+
+    public CursistBehaaldEis(Cursist cursist, DiplomaEis diplomaEis, boolean behaald) {
+        this.cursist = cursist;
+        this.diplomaEis = diplomaEis;
+        this.behaald = behaald;
     }
 
     public Long getId() {
@@ -51,5 +61,27 @@ public class CursistBehaaldEis {
 
     public void setDatum(Date datum) {
         this.datum = datum;
+    }
+
+    public boolean isBehaald() {
+        return behaald;
+    }
+
+    public void setBehaald(boolean behaald) {
+        this.behaald = behaald;
+    }
+
+    public String toJson() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("eisId", diplomaEis.getId());
+            jsonObject.put("cursistId", cursist.id);
+            return jsonObject.toString();
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return "";
+
     }
 }

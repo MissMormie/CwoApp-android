@@ -2,11 +2,11 @@ package cwoapp.nl.cwoapp;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 
 import java.util.List;
 
@@ -55,15 +55,25 @@ public class TrainingsListAdapter extends RecyclerView.Adapter<TrainingsListAdap
         return diplomaEisList.size();
     }
 
-    class TrainingsListAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class TrainingsListAdapterViewHolder extends RecyclerView.ViewHolder /* implements View.OnClickListener */ {
         CheckBox cbCwoEis;
 
         public TrainingsListAdapterViewHolder(View itemView) {
             super(itemView);
             cbCwoEis = (CheckBox) itemView.findViewById(R.id.checkBoxTrainingsEis);
-            cbCwoEis.setOnClickListener(this);
+            cbCwoEis.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    int adapterPosition = getAdapterPosition();
+                    DiplomaEis diplomaEis = diplomaEisList.get(adapterPosition);
+
+                    clickHandler.onClick(diplomaEis, isChecked);
+                }
+            });
         }
 
+        /*
         @Override
         public void onClick(View v) {
             Log.v(TAG, "onClick triggered");
@@ -71,10 +81,12 @@ public class TrainingsListAdapter extends RecyclerView.Adapter<TrainingsListAdap
             int adapterPosition = getAdapterPosition();
             DiplomaEis diplomaEis = diplomaEisList.get(adapterPosition);
 
+
+
             // Using !cboEis.isSelected because checkbox is only toggled AFTER this is called. So this makes it use the intended position rather than the current one.
             clickHandler.onClick(diplomaEis, !cbCwoEis.isSelected());
 
-        }
+        }*/
 
         void bind(int position) {
             DiplomaEis diplomaEis = diplomaEisList.get(position);

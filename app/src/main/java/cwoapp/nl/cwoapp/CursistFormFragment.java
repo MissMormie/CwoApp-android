@@ -2,6 +2,7 @@ package cwoapp.nl.cwoapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -23,6 +24,9 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import cwoapp.nl.cwoapp.entity.Cursist;
+
+import static android.app.Activity.RESULT_OK;
+import static cwoapp.nl.cwoapp.R.id.imageViewFoto;
 
 
 /**
@@ -50,6 +54,7 @@ public class CursistFormFragment extends Fragment {
     private EditText opmerkingenEditText;
     private CheckBox paspoortCheckbox;
     private ImageView fotoImageView;
+    private Button saveButton;
 
 
     public CursistFormFragment() {
@@ -62,7 +67,8 @@ public class CursistFormFragment extends Fragment {
         achternaamEditText = (EditText) getActivity().findViewById(R.id.editTextAchternaam);
         opmerkingenEditText = (EditText) getActivity().findViewById(R.id.editTextOpmerkingen);
         paspoortCheckbox = (CheckBox) getActivity().findViewById(R.id.checkBoxPaspoort);
-        fotoImageView = (ImageView) getActivity().findViewById(R.id.imageViewFoto);
+        fotoImageView = (ImageView) getActivity().findViewById(imageViewFoto);
+        saveButton = (Button) getActivity().findViewById(R.id.buttonSave);
     }
 
     /**
@@ -126,11 +132,12 @@ public class CursistFormFragment extends Fragment {
     }
 
     private void populateFields() {
+
         if (voornaamEditText == null) {
             setupFields();
         }
         // Check if we're working with an existing cursist or a new empty one.
-        if (cursist.id != 0) {
+        if (cursist.id != null && cursist.id != 0) {
             voornaamEditText.setText(cursist.voornaam);
             tussenvoegselEditText.setText(cursist.tussenvoegsel);
             achternaamEditText.setText(cursist.achternaam);
@@ -164,6 +171,7 @@ public class CursistFormFragment extends Fragment {
     }
 
     public void onClickSaveCursist(View view) {
+        saveButton.setEnabled(false);
         readCursist();
         mListener.saveCursist(cursist);
     }
@@ -228,4 +236,15 @@ public class CursistFormFragment extends Fragment {
         currentPhotoPath = image.getAbsolutePath();
         return image;
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            fotoImageView.setImageBitmap(imageBitmap);
+        }
+    }
+
+
 }

@@ -1,5 +1,6 @@
 package cwoapp.nl.cwoapp.entity;
 
+
 import java.util.List;
 
 /**
@@ -54,5 +55,9 @@ public class Diploma {
     @Override
     public String toString() {
         return titel + " " + nivo;
+    }
+
+    public boolean equals(Diploma diploma) {
+        return (id == diploma.id);
     }
 }

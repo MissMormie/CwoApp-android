@@ -25,12 +25,17 @@
     <string name="opmerkingen">Opmerkingen</string>
     <string name="paspoort">Paspoort uitgegeven: </string>
     <string name="opslaan">Opslaan</string>
+    <string name="cursist_opgeslagen">Curist opgeslagen</string>
+    <string name="cursist_verwijderd">Cursist verwijderd</string>
+    <string name="cursist_verborgen">Cursist verborgen</string>
 
     <!-- Training list -->
     <string name="volgende">Volgende</string>
 
     <!-- cursist menu -->
     <string name="edit">Edit</string>
+    <string name="delete">Verwijderen</string>
+    <string name="verbergen">Verbergen</string>
     <string name="search">Zoeken</string>
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -38,5 +43,8 @@
 
     <!-- Diploma uitgeven -->
     <string name="diploma_uitgeven_tekst">Kies welk diploma je wil uitgeven.</string>
+
+    <!-- Error tekst -->
+    <string name="opslaan_mislukt">Opslaan mislukt, probeer het later opnieuw.</string>
 
 </resources>

@@ -1,5 +1,6 @@
 package cwoapp.nl.cwoapp;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import cwoapp.nl.cwoapp.entity.DiplomaEis;
 import cwoapp.nl.cwoapp.utility.NetworkUtils;
 import cwoapp.nl.cwoapp.utility.OpenJsonUtils;
 
+// TODO when deselecting a trainingseis remove it from the list.
 public class TrainingActivity extends AppCompatActivity implements TrainingsListAdapter.TrainingListAdapterOnClickHandler {
     private ProgressBar mLoadingIndicator;
     private RecyclerView mRecyclerView;
@@ -64,17 +66,12 @@ public class TrainingActivity extends AppCompatActivity implements TrainingsList
     }
 
     private void showCursistBehaaldEisenActivity() {
-/*        Context context = this;
+        Context context = this;
         Class destinationClass = CursistBehaaldEisActivity.class;
         Intent intent = new Intent(context, destinationClass);
-        intent.putParcelableArrayListExtra("selectedDiplomaEisList", selectedDiplomaEisList); */
-        Intent intent = new Intent(TrainingActivity.this, CursistBehaaldEisActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putParcelableArrayList("data", selectedDiplomaEisList); // Be sure con is not null here
-        intent.putExtras(bundle);
+        intent.putParcelableArrayListExtra("selectedDiplomaEisList", selectedDiplomaEisList);
 
         startActivity(intent);
-
     }
 
     private void loadCwoEisData() {

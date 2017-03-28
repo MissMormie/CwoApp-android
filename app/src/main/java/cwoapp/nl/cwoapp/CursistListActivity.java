@@ -96,6 +96,15 @@ public class CursistListActivity extends AppCompatActivity implements CursistLis
     }
 
 
+    // TODO at the moment when you come back here after editing the cursist, all info is downloaded again, should be able to pass this back. -- is it?
+    @Override
+    public void onRestart() {
+        super.onRestart();
+    }
+
+
+
+
     class FetchCursistListTask extends AsyncTask<String, Void, List<Cursist>> {
 
         @Override
@@ -117,8 +126,6 @@ public class CursistListActivity extends AppCompatActivity implements CursistLis
                 e.printStackTrace();
                 return null;
             }
-//            List<Cursist> cursistList = MockEntityGenerator.createCursistList(25);
-//            return cursistList;
 
         }
 

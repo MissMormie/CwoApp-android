@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void onClickUitgevenDiploma(View view) {
         Context context = this;
-        Class destinationClass = DiplomaUitgevenActivity.class;
+        Class destinationClass = CreateDiplomaActivity.class;
         Intent intent = new Intent(context, destinationClass);
         startActivity(intent);
     }

@@ -11,13 +11,21 @@ public class CursistHeeftDiploma {
 
     private Long cursist;
 
-    private Diploma cwoDiscipline;
+    private Diploma diploma;
 
     private Date diplomaBehaald;
 
-    public CursistHeeftDiploma(Long id, Long cursist, Diploma cwoDiscipline) {
+    public CursistHeeftDiploma(Long id, Long cursist, Diploma diploma) {
         this.id = id;
         this.cursist = cursist;
-        this.cwoDiscipline = cwoDiscipline;
+        this.diploma = diploma;
+    }
+
+    public Diploma getDiploma() {
+        return diploma;
+    }
+
+    public void setDiploma(Diploma diploma) {
+        this.diploma = diploma;
     }
 }

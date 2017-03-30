@@ -22,7 +22,7 @@ import cwoapp.nl.cwoapp.entity.DiplomaEis;
 import cwoapp.nl.cwoapp.utility.NetworkUtils;
 import cwoapp.nl.cwoapp.utility.OpenJsonUtils;
 
-public class CursistBehaaldEisActivity extends AppCompatActivity implements CursistBehaaldEisAdapter.CursistBehaaldEisAdapterOnClickHandler {
+public class CursistBehaaldEisActivity extends AppCompatActivity {
     // Lijst met diploma eisen die getraind zijn.
     private List<DiplomaEis> diplomaEisList;
     private ProgressBar loadingIndicator;
@@ -51,7 +51,7 @@ public class CursistBehaaldEisActivity extends AppCompatActivity implements Curs
         recyclerView.setLayoutManager(layoutManager);
         // Not all items in list have the same size
         recyclerView.setHasFixedSize(true);
-        cursistBehaaldEisAdapter = new CursistBehaaldEisAdapter(this);
+        cursistBehaaldEisAdapter = new CursistBehaaldEisAdapter();
         recyclerView.setAdapter(cursistBehaaldEisAdapter);
 
         // Get preference for showing cursisten who already met all eisen.
@@ -84,7 +84,6 @@ public class CursistBehaaldEisActivity extends AppCompatActivity implements Curs
                 cursistBehaaldEisAdapter.setCursist(currentCursist);
                 textViewNaam.setText(currentCursist.nameToString());
             }
-
         }
     }
 
@@ -99,10 +98,6 @@ public class CursistBehaaldEisActivity extends AppCompatActivity implements Curs
     }
 
 
-    @Override
-    public void onClick(CursistBehaaldEis cursistBehaaldEis) {
-        new SaveEisBehaaldTask().execute(cursistBehaaldEis);
-    }
 
 
     /**
@@ -185,7 +180,7 @@ public class CursistBehaaldEisActivity extends AppCompatActivity implements Curs
         protected void onPostExecute(Boolean success) {
             if (!success) {
                 String error = getString(R.string.opslaan_mislukt);
-                Toast.makeText(getApplication(), "" + error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplication(), "" + error, Toast.LENGTH_LONG).show();
 
             }
             // TODO determine what needs to happen when this is finished. Especially in case of errors.

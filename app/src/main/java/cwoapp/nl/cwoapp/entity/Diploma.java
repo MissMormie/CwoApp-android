@@ -1,13 +1,16 @@
 package cwoapp.nl.cwoapp.entity;
 
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 
 /**
  * Created by sonja on 3/14/2017.
  */
 
-public class Diploma {
+public class Diploma implements Parcelable {
     private Long id;
     private String titel;
     private List<DiplomaEis> diplomaEis;
@@ -59,5 +62,39 @@ public class Diploma {
 
     public boolean equals(Diploma diploma) {
         return (id == diploma.id);
+    }
+
+
+    // ---------------------------- Support for Parcelable --------------------------------------- //
+
+    public static final Parcelable.Creator<Diploma> CREATOR = new Parcelable.Creator<Diploma>() {
+        @Override
+        public Diploma createFromParcel(Parcel source) {
+            return new Diploma(source);
+        }
+
+        @Override
+        public Diploma[] newArray(int size) {
+            return new Diploma[size];
+        }
+    };
+
+    public Diploma(Parcel parcel) {
+        id = parcel.readLong();
+        titel = parcel.readString();
+        nivo = parcel.readInt();
+
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int flags) {
+        parcel.writeLong(id);
+        parcel.writeString(titel);
+        parcel.writeInt(nivo);
     }
 }

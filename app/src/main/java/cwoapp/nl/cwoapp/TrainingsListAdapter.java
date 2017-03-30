@@ -90,7 +90,7 @@ public class TrainingsListAdapter extends RecyclerView.Adapter<TrainingsListAdap
 
         void bind(int position) {
             DiplomaEis diplomaEis = diplomaEisList.get(position);
-            cbCwoEis.setText(diplomaEis.getTitel());
+            cbCwoEis.setText(diplomaEis.getDiploma().getTitel() + " " + diplomaEis.getDiploma().getNivo() + " " + diplomaEis.getTitel());
         }
     }
 

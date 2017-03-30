@@ -3,27 +3,31 @@ package cwoapp.nl.cwoapp;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 import cwoapp.nl.cwoapp.entity.Cursist;
+import cwoapp.nl.cwoapp.utility.DateUtil;
 
 import static android.app.Activity.RESULT_OK;
 import static cwoapp.nl.cwoapp.R.id.imageViewFoto;
@@ -39,11 +43,6 @@ import static cwoapp.nl.cwoapp.R.id.imageViewFoto;
  */
 public class CursistFormFragment extends Fragment {
 
-    // Variables for taking foto
-    static final int REQUEST_IMAGE_CAPTURE = 1;
-    static final int REQUEST_TAKE_PHOTO = 1;
-    private String currentPhotoPath;
-
     private OnFragmentInteractionListener mListener;
     private Cursist cursist;
 
@@ -54,6 +53,7 @@ public class CursistFormFragment extends Fragment {
     private EditText opmerkingenEditText;
     private CheckBox paspoortCheckbox;
     private ImageView fotoImageView;
+    private ImageButton takeImageButton;
     private Button saveButton;
 
 
@@ -69,6 +69,15 @@ public class CursistFormFragment extends Fragment {
         paspoortCheckbox = (CheckBox) getActivity().findViewById(R.id.checkBoxPaspoort);
         fotoImageView = (ImageView) getActivity().findViewById(imageViewFoto);
         saveButton = (Button) getActivity().findViewById(R.id.buttonSave);
+        takeImageButton = (ImageButton) getActivity().findViewById(R.id.imageButtonPhoto);
+        takeImageButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                dispatchTakePictureIntent(v);
+            }
+        });
+
     }
 
     /**
@@ -168,6 +177,19 @@ public class CursistFormFragment extends Fragment {
         } else {
             cursist.paspoort = null;
         }
+        // Check if picture was taken, if so, path to the photo is not null.
+        if (mCurrentPhotoPath != null && mCurrentPhotoPath != "") {
+            //Bitmap bm = BitmapFactory.decodeFile(mCurrentPhotoPath);
+            BitmapDrawable drawable = (BitmapDrawable) fotoImageView.getDrawable();
+            Bitmap bm = drawable.getBitmap();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bm.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
+            byte[] b = baos.toByteArray();
+
+            String image = Base64.encodeToString(b, Base64.NO_WRAP);
+            cursist.setFotoFileBase64(image);
+
+        }
     }
 
     public void onClickSaveCursist(View view) {
@@ -188,6 +210,10 @@ public class CursistFormFragment extends Fragment {
 
     }
 
+    // ------------------------------------ PHOTO SUPPORT -----------------------------------------------
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+    static final int REQUEST_TAKE_PHOTO = 1;
+    String mCurrentPhotoPath;
 
     public void dispatchTakePictureIntent(View view) {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -199,12 +225,11 @@ public class CursistFormFragment extends Fragment {
                 photoFile = createImageFile();
             } catch (IOException ex) {
                 // Error occurred while creating the File
-                // TODO what when errors occur? Show toast with message??
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
                 Uri photoURI = FileProvider.getUriForFile(getActivity(),
-                        "com.example.android.fileprovider",
+                        "cwoapp.nl.cwoapp.fileprovider",
                         photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
@@ -212,18 +237,9 @@ public class CursistFormFragment extends Fragment {
         }
     }
 
-
     private File createImageFile() throws IOException {
         // Create an image file name
-        Date date = new Date();
-        GregorianCalendar cal = new GregorianCalendar();
-
-        // Pretty date formatting isn't yet supported in android version 15, so using the long way.
-        //String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        // In theory this might f up for cases like 1:31:25 and 13:12:05, unlikely that will actually happen though.
-        String timeStamp = "" + cal.get(Calendar.YEAR) + cal.get(Calendar.MONTH) + cal.get(Calendar.DATE)
-                + cal.get(Calendar.HOUR_OF_DAY) + cal.get(Calendar.MINUTE) + cal.get(Calendar.SECOND);
-
+        String timeStamp = DateUtil.dateTo_yyyyMMdd_HHmmsString(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
@@ -233,18 +249,43 @@ public class CursistFormFragment extends Fragment {
         );
 
         // Save a file: path for use with ACTION_VIEW intents
-        currentPhotoPath = image.getAbsolutePath();
+        mCurrentPhotoPath = image.getAbsolutePath();
         return image;
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            fotoImageView.setImageBitmap(imageBitmap);
-        }
+    private void setPic() {
+        // Get the dimensions of the View
+        int targetW = fotoImageView.getWidth();
+        int targetH = fotoImageView.getHeight();
+
+        // Get the dimensions of the bitmap
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        bmOptions.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
+        int photoW = bmOptions.outWidth;
+        int photoH = bmOptions.outHeight;
+
+        // Determine how much to scale down the image
+        int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
+
+        // Decode the image file into a Bitmap sized to fill the View
+        bmOptions.inJustDecodeBounds = false;
+        bmOptions.inSampleSize = scaleFactor;
+
+        Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
+        fotoImageView.setImageBitmap(bitmap);
     }
 
 
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+
+            setPic();
+/*            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            fotoImageView.setImageBitmap(imageBitmap);*/
+        }
+    }
 }

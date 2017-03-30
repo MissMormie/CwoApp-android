@@ -6,6 +6,8 @@ import android.databinding.DataBindingUtil;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,9 +16,13 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import cwoapp.nl.cwoapp.databinding.ActivityCursistDetailBinding;
 import cwoapp.nl.cwoapp.entity.Cursist;
+import cwoapp.nl.cwoapp.entity.Diploma;
+import cwoapp.nl.cwoapp.entity.DiplomaEis;
 import cwoapp.nl.cwoapp.utility.NetworkUtils;
 import cwoapp.nl.cwoapp.utility.OpenJsonUtils;
 
@@ -24,11 +30,23 @@ public class CursistDetailActivity extends AppCompatActivity {
 
     ActivityCursistDetailBinding activityCursistDetailBinding;
     Cursist cursist;
+    private RecyclerView recyclerView;
+    private CursistBehaaldEisAdapter cursistBehaaldEisAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activityCursistDetailBinding = DataBindingUtil.setContentView(this, R.layout.activity_cursist_detail);
+
+        // Set up of the recycler view and adapter.
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerview_training_lijst);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+        // Not all items in list have the same size
+        recyclerView.setHasFixedSize(true);
+        cursistBehaaldEisAdapter = new CursistBehaaldEisAdapter();
+        recyclerView.setAdapter(cursistBehaaldEisAdapter);
 
         Long cursistId = getIntent().getLongExtra("cursistId", 0);
         loadCursistData(cursistId);
@@ -69,6 +87,8 @@ public class CursistDetailActivity extends AppCompatActivity {
     }
 
     private void deleteCursist() {
+
+        // TODO make popup 'are you sure'
         new DeleteCursistTask().execute();
     }
 
@@ -90,6 +110,7 @@ public class CursistDetailActivity extends AppCompatActivity {
 
     private void loadCursistData(Long cursistId) {
         new FetchCursistTask().execute(cursistId);
+        new FetchCwoEisData().execute();
     }
 
     private void displayCursistInfo() {
@@ -102,6 +123,14 @@ public class CursistDetailActivity extends AppCompatActivity {
             activityCursistDetailBinding.textViewPaspoort.setText("nee");
         else
             activityCursistDetailBinding.textViewPaspoort.setText("ja");
+
+        // Pass information to adapter for eisen met.
+        cursistBehaaldEisAdapter.setCursist(cursist);
+    }
+
+    private void displayDiplomaEisInfo(List<DiplomaEis> diplomaEisList) {
+        cursistBehaaldEisAdapter.setCwoListData(diplomaEisList);
+
     }
 
     class FetchCursistTask extends AsyncTask<Long, Void, Cursist> {
@@ -159,6 +188,44 @@ public class CursistDetailActivity extends AppCompatActivity {
                 cursistDeleted();
             } else {
                 // Handle error
+            }
+        }
+    }
+
+    class FetchCwoEisData extends AsyncTask<String, Void, List<Diploma>> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+//            mLoadingIndicator.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected List<Diploma> doInBackground(String... params) {
+            URL diplomaListUrl = NetworkUtils.buildUrl("diplomas");
+
+            try {
+                String jsonDiplomaLijstResponse = NetworkUtils.getResponseFromHttpUrl(diplomaListUrl);
+                List<Diploma> diplomaList = OpenJsonUtils.getDiplomaLijst(jsonDiplomaLijstResponse);
+                return diplomaList;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(List<Diploma> diplomaList) {
+//            mLoadingIndicator.setVisibility(View.GONE);
+            if (diplomaList != null) {
+                List<DiplomaEis> diplomaEisenLijst = new ArrayList<>();
+                for (int i = 0; i < diplomaList.size(); i++) {
+                    diplomaEisenLijst.addAll(diplomaList.get(i).getDiplomaEis());
+                }
+
+                displayDiplomaEisInfo(diplomaEisenLijst);
+            } else {
+                //showErrorMessage();
             }
         }
     }

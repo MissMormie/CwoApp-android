@@ -95,8 +95,8 @@
 
     <ImageView
         android:id="@+id/imageViewFoto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
         android:scaleType="fitEnd"
@@ -114,7 +114,6 @@
         android:layout_height="30dp"
         android:layout_marginBottom="8dp"
         android:layout_marginRight="8dp"
-        android:onClick="dispatchTakePictureIntent"
         app:layout_constraintBottom_toBottomOf="@+id/imageViewFoto"
         app:layout_constraintRight_toRightOf="@+id/imageViewFoto"
         app:srcCompat="@android:drawable/ic_menu_edit"

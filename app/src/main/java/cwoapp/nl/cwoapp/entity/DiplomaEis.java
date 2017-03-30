@@ -104,14 +104,16 @@ public class DiplomaEis implements Parcelable {
         id = parcel.readLong();
         titel = parcel.readString();
         omschrijving = parcel.readString();
+        diploma = parcel.readParcelable(Diploma.class.getClassLoader());
 
     }
 
     @Override
     public void writeToParcel(Parcel parcel, int flags) {
-        // TODO make this completely parcelable, now it only saves part of the data.
         parcel.writeLong(id);
         parcel.writeString(titel);
         parcel.writeString(omschrijving);
+        // not great solution because now every diplomaEis will have it's own diploma object..
+        parcel.writeParcelable(diploma, flags);
     }
 }

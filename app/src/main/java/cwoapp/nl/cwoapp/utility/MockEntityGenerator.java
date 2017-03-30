@@ -12,6 +12,12 @@ import cwoapp.nl.cwoapp.entity.DiplomaEis;
  * Created by sonja on 3/14/2017.
  */
 
+// TODO list
+// TODO Info knop activeren bij diplomaEisen
+// TODO Diploma's uitgeven
+// TODO foto's maken en opslaan toevoegen
+
+
 public class MockEntityGenerator {
 
     public static List<Cursist> createCursistList(int aantal) {

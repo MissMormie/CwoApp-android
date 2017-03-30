@@ -84,8 +84,8 @@ public final class OpenJsonUtils {
         }
 
         List<CursistHeeftDiploma> cursistHeeftDiplomaList = null;
-        if (cursistJson.has("cursistHeeftDiploma") && !cursistJson.isNull("cursistBehaaldEis")) {
-            JSONArray diplomaBehaaldArray = cursistJson.getJSONArray("cursistBehaaldEis");
+        if (cursistJson.has("cursistHeeftDiplomas") && !cursistJson.isNull("cursistHeeftDiplomas")) {
+            JSONArray diplomaBehaaldArray = cursistJson.getJSONArray("cursistHeeftDiplomas");
             cursistHeeftDiplomaList = getCursistHeeftDiplomaLijst(diplomaBehaaldArray);
         }
 
@@ -176,6 +176,11 @@ public final class OpenJsonUtils {
         }
 
         Diploma diploma = new Diploma(id, titel, nivo, diplomaEisList);
+        if (diplomaEisList != null) {
+            for (DiplomaEis de : diplomaEisList) {
+                de.setDiploma(diploma);
+            }
+        }
         return diploma;
     }
 

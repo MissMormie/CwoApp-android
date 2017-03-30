@@ -23,6 +23,7 @@ public class Cursist implements Parcelable {
     public String foto;
     public Date paspoort;
     public String opmerking;
+    private String fotoFileBase64;
     public List<CursistBehaaldEis> cursistBehaaldEis;
 
     private List<CursistHeeftDiploma> cursistHeeftDiplomas;
@@ -61,6 +62,14 @@ public class Cursist implements Parcelable {
         this.cursistBehaaldEis = cursistBehaaldEis;
     }
 
+    public String getFotoFileBase64() {
+        return fotoFileBase64;
+    }
+
+    public void setFotoFileBase64(String fotoFileBase64) {
+        this.fotoFileBase64 = fotoFileBase64;
+    }
+
     public List<CursistHeeftDiploma> getCursistHeeftDiplomas() {
         return cursistHeeftDiplomas;
     }
@@ -92,6 +101,8 @@ public class Cursist implements Parcelable {
             } else {
                 jsonObject.put("paspoort", null);
             }
+            if (fotoFileBase64 != null && fotoFileBase64 != "")
+                jsonObject.put("fotoFileBase64", fotoFileBase64);
 
 
             String jsonString = jsonObject.toString();
@@ -119,10 +130,20 @@ public class Cursist implements Parcelable {
     public boolean isAlleEisenBehaald(List<DiplomaEis> diplomaEisList) {
         for (DiplomaEis diplomaEis : diplomaEisList) {
             // Als 1 eis niet is behaald, is niet alles behaald, dus return false.
-            if (!isEisBehaald(diplomaEis))
+            if (!hasDiploma(diplomaEis.getDiploma().getId()) && !isEisBehaald(diplomaEis))
                 return false;
         }
         return true;
+    }
+
+    public boolean hasDiploma(Long diplomaId) {
+        if (cursistHeeftDiplomas == null)
+            return false;
+        for (CursistHeeftDiploma cursistHeeftDiploma : cursistHeeftDiplomas) {
+            if (cursistHeeftDiploma.getDiploma().getId() == diplomaId)
+                return true;
+        }
+        return false;
     }
 
 

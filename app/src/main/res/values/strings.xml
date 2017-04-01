@@ -13,10 +13,13 @@
     <string name="pref_show_already_completed_summary_off">Je ziet geen cursisten die al hebben geleerd wat er in de training gedaan is.</string>
     <string name="pref_show_already_completed_summary_on">Je ziet wel cursisten die al hebben geleerd wat er in de training gedaan is.</string>
 
-    <!-- Cursist detail -->
-    <string name="ja">Ja</string>
+    <!-- Knoppen -->
     <string name="nee">Nee</string>
+    <string name="ja">Ja</string>
+
+    <!-- Cursist detail -->
     <string name="cursist">Cursist</string>
+    <string name="echt_verwijderen">Weet je zeker dat je deze cursist wil verwijderen?</string>
 
     <!-- Cursist form -->
     <string name="voornaam">Voornaam</string>
@@ -28,9 +31,12 @@
     <string name="cursist_opgeslagen">Curist opgeslagen</string>
     <string name="cursist_verwijderd">Cursist verwijderd</string>
     <string name="cursist_verborgen">Cursist verborgen</string>
+    <string name="cursist_niet_verborgen">Cursist niet meer verborgen</string>
 
     <!-- Training list -->
     <string name="volgende">Volgende</string>
+    <string name="ok">Ok</string>
+    <string name="wat_geoefend">Welke onderdelen zijn getraind?</string>
 
     <!-- cursist menu -->
     <string name="edit">Edit</string>

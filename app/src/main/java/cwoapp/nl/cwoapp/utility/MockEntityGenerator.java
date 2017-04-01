@@ -10,6 +10,8 @@ import cwoapp.nl.cwoapp.entity.DiplomaEis;
 
 /**
  * Created by sonja on 3/14/2017.
+ * Mock entity generator
+ *
  */
 
 // TODO list
@@ -29,7 +31,7 @@ public class MockEntityGenerator {
     }
 
     public static Cursist createSimpleCursist(int id) {
-        return new Cursist((long) id, "Sonja" + id, "", "Duijvesteijn", "opmerking iets over koud water en wind en zon.", "foto", null);
+        return new Cursist((long) id, "Sonja" + id, "", "Duijvesteijn", "opmerking iets over koud water en wind en zon.", null);
     }
 
     public static Cursist createFullCursist(int id) {

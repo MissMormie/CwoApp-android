@@ -49,7 +49,7 @@ public class CursistListActivity extends AppCompatActivity implements CursistLis
         mRecyclerView.setLayoutManager(layoutManager);
         // All items in list have the same size
         mRecyclerView.setHasFixedSize(true);
-        cursistListAdapater = new CursistListAdapater(this);
+        cursistListAdapater = new CursistListAdapater(this, this);
         mRecyclerView.setAdapter(cursistListAdapater);
 
         loadCursistListData();

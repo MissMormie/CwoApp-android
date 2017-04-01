@@ -1,12 +1,15 @@
 package cwoapp.nl.cwoapp;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 
 import java.util.List;
 
@@ -19,11 +22,13 @@ import cwoapp.nl.cwoapp.entity.DiplomaEis;
 public class TrainingsListAdapter extends RecyclerView.Adapter<TrainingsListAdapter.TrainingsListAdapterViewHolder> {
     private static final String TAG = TrainingsListAdapter.class.getSimpleName();
 
-    List<DiplomaEis> diplomaEisList = null;
+    private List<DiplomaEis> diplomaEisList = null;
     private final TrainingListAdapterOnClickHandler clickHandler;
+    private final Context context;
 
-    public TrainingsListAdapter(TrainingListAdapterOnClickHandler clickHandler) {
+    public TrainingsListAdapter(TrainingListAdapterOnClickHandler clickHandler, Context context) {
         this.clickHandler = clickHandler;
+        this.context = context;
     }
 
     @Override
@@ -31,9 +36,8 @@ public class TrainingsListAdapter extends RecyclerView.Adapter<TrainingsListAdap
         Context context = viewGroup.getContext();
         int layoutIdForListItem = R.layout.training_list_item;
         LayoutInflater inflater = LayoutInflater.from(context);
-        boolean shouldAttachToParentImmediately = false;
 
-        View view = inflater.inflate(layoutIdForListItem, viewGroup, shouldAttachToParentImmediately);
+        View view = inflater.inflate(layoutIdForListItem, viewGroup, false);
         TrainingsListAdapter.TrainingsListAdapterViewHolder viewHolder = new TrainingsListAdapter.TrainingsListAdapterViewHolder(view);
         return viewHolder;
     }
@@ -57,10 +61,18 @@ public class TrainingsListAdapter extends RecyclerView.Adapter<TrainingsListAdap
 
     class TrainingsListAdapterViewHolder extends RecyclerView.ViewHolder /* implements View.OnClickListener */ {
         CheckBox cbCwoEis;
+        ImageButton imgButtonInfo;
 
         public TrainingsListAdapterViewHolder(View itemView) {
             super(itemView);
             cbCwoEis = (CheckBox) itemView.findViewById(R.id.checkBoxTrainingsEis);
+            imgButtonInfo = (ImageButton) itemView.findViewById(R.id.imageButtonInfo);
+
+            setListeners();
+
+        }
+
+        private void setListeners() {
             cbCwoEis.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
                 @Override
@@ -71,30 +83,39 @@ public class TrainingsListAdapter extends RecyclerView.Adapter<TrainingsListAdap
                     clickHandler.onClick(diplomaEis, isChecked);
                 }
             });
+
+            imgButtonInfo.setOnClickListener(new ImageButton.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    int adapterPosition = getAdapterPosition();
+                    DiplomaEis diplomaEis = diplomaEisList.get(adapterPosition);
+
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+                    alertDialogBuilder.setMessage(diplomaEis.getOmschrijving())
+                            .setTitle(diplomaEis.getTitel())
+                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    // We doen niets, maar je moet deze hebben om eruit te komen.
+                                }
+                            });
+                    AlertDialog alertDialog = alertDialogBuilder.create();
+                    alertDialog.show();
+                }
+            });
         }
 
-        /*
-        @Override
-        public void onClick(View v) {
-            Log.v(TAG, "onClick triggered");
-
-            int adapterPosition = getAdapterPosition();
-            DiplomaEis diplomaEis = diplomaEisList.get(adapterPosition);
-
-
-
-            // Using !cboEis.isSelected because checkbox is only toggled AFTER this is called. So this makes it use the intended position rather than the current one.
-            clickHandler.onClick(diplomaEis, !cbCwoEis.isSelected());
-
-        }*/
 
         void bind(int position) {
             DiplomaEis diplomaEis = diplomaEisList.get(position);
+            cbCwoEis.setChecked(clickHandler.isSelectedDiplomaEis(diplomaEis));
             cbCwoEis.setText(diplomaEis.getDiploma().getTitel() + " " + diplomaEis.getDiploma().getNivo() + " " + diplomaEis.getTitel());
         }
     }
 
     public interface TrainingListAdapterOnClickHandler {
         void onClick(DiplomaEis diplomaEis, boolean selected);
+
+        boolean isSelectedDiplomaEis(DiplomaEis eis);
     }
 }

@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
-import java.io.IOException;
 import java.net.URL;
 
 import cwoapp.nl.cwoapp.entity.Cursist;
@@ -21,13 +20,12 @@ public class CreateCursistActivity extends AppCompatActivity implements CursistF
         cursistFormFragment = (CursistFormFragment) getSupportFragmentManager().findFragmentById(R.id.cursist_form_fragment);
         Cursist cursist = new Cursist();
         cursistFormFragment.setCursist(cursist);
-
     }
 
 
     @Override
     public void saveCursist(Cursist cursist) {
-        String cursistJson = cursist.simpleCursistToJson();
+
         new SaveCursistAsyncTask().execute(cursist);
     }
 
@@ -39,6 +37,7 @@ public class CreateCursistActivity extends AppCompatActivity implements CursistF
     }
 
     class SaveCursistAsyncTask extends AsyncTask<Cursist, Void, Integer> {
+        // TODO add loading bar
 
         @Override
         protected Integer doInBackground(Cursist... cursist) {
@@ -46,7 +45,8 @@ public class CreateCursistActivity extends AppCompatActivity implements CursistF
             URL url = NetworkUtils.buildUrl("cursist");
             try {
                 return NetworkUtils.uploadToServer(url, cursist[0].simpleCursistToJson(), "POST");
-            } catch (IOException e) {
+            } catch (Exception e) {
+                // check errors
                 e.printStackTrace();
             }
             return null;
@@ -54,6 +54,7 @@ public class CreateCursistActivity extends AppCompatActivity implements CursistF
 
         @Override
         protected void onPostExecute(Integer s) {
+            //check integer = success.
             cursistSaved();
             super.onPostExecute(s);
 

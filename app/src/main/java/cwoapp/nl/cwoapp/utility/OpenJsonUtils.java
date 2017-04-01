@@ -10,6 +10,7 @@ import java.util.List;
 
 import cwoapp.nl.cwoapp.entity.Cursist;
 import cwoapp.nl.cwoapp.entity.CursistBehaaldEis;
+import cwoapp.nl.cwoapp.entity.CursistFoto;
 import cwoapp.nl.cwoapp.entity.CursistHeeftDiploma;
 import cwoapp.nl.cwoapp.entity.Diploma;
 import cwoapp.nl.cwoapp.entity.DiplomaEis;
@@ -53,27 +54,27 @@ public final class OpenJsonUtils {
         String voornaam = cursistJson.getString("voornaam");
 
         String tussenvoegsel = null;
-        if (!cursistJson.isNull("tussenvoegsel")) {
+        if (cursistJson.has("tussenvoegsel") && !cursistJson.isNull("tussenvoegsel")) {
             tussenvoegsel = cursistJson.getString("tussenvoegsel");
         }
 
         String achternaam = null;
-        if (!cursistJson.isNull("achternaam")) {
+        if (cursistJson.has("achternaam") && !cursistJson.isNull("achternaam")) {
             achternaam = cursistJson.getString("achternaam");
         }
 
         String opmerking = null;
-        if (!cursistJson.isNull("opmerkingen")) {
+        if (cursistJson.has("opmerkingen") && !cursistJson.isNull("opmerkingen")) {
             opmerking = cursistJson.getString("opmerkingen");
         }
 
-        String foto = null;
-        if (!cursistJson.isNull("foto")) {
-            foto = cursistJson.getString("foto");
-        }
+        boolean verborgen = false;
+        if (cursistJson.has("verborgen") && !cursistJson.isNull("verborgen"))
+            verborgen = cursistJson.getBoolean("verborgen");
+
         // TODO get date from json.
         Date paspoort = null;
-        if (!cursistJson.isNull("paspoort"))
+        if (cursistJson.has("paspoort") && !cursistJson.isNull("paspoort"))
             paspoort = DateUtil.stringToDate(cursistJson.getString("paspoort"));
 
         // Get the cursistbehaaldeis objecten if they exist.
@@ -89,9 +90,22 @@ public final class OpenJsonUtils {
             cursistHeeftDiplomaList = getCursistHeeftDiplomaLijst(diplomaBehaaldArray);
         }
 
-        Cursist cursist = new Cursist(id, voornaam, tussenvoegsel, achternaam, foto, paspoort, opmerking, cursistBehaaldEisList, cursistHeeftDiplomaList);
+        CursistFoto cursistFoto = null;
+        if (cursistJson.has("cursistFoto") && !cursistJson.isNull("cursistFoto")) {
+            JSONObject cursistFotoOjbect = cursistJson.getJSONObject("cursistFoto");
+            cursistFoto = getCursistFoto(cursistFotoOjbect);
+        }
+
+        Cursist cursist = new Cursist(id, voornaam, tussenvoegsel, achternaam, paspoort, opmerking, cursistBehaaldEisList, cursistHeeftDiplomaList, cursistFoto, verborgen);
 
         return cursist;
+    }
+
+    public static CursistFoto getCursistFoto(JSONObject cursistFotoJson) throws JSONException {
+        Long id = cursistFotoJson.getLong("id");
+        String thumbString = cursistFotoJson.getString("thumbnail");
+//        byte[] thumbnail = Base64.decode(thumbString, Base64.NO_WRAP);
+        return new CursistFoto(id, thumbString);
     }
 
     public static List<CursistBehaaldEis> getCursistBehaaldEisLijst(JSONArray eisenBehaaldArray) throws JSONException {

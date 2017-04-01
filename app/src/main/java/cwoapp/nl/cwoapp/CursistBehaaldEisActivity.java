@@ -11,13 +11,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.net.URL;
 import java.util.List;
 
 import cwoapp.nl.cwoapp.entity.Cursist;
-import cwoapp.nl.cwoapp.entity.CursistBehaaldEis;
 import cwoapp.nl.cwoapp.entity.DiplomaEis;
 import cwoapp.nl.cwoapp.utility.NetworkUtils;
 import cwoapp.nl.cwoapp.utility.OpenJsonUtils;
@@ -97,9 +95,6 @@ public class CursistBehaaldEisActivity extends AppCompatActivity {
         showNextCursist();
     }
 
-
-
-
     /**
      * Async task for loading external data of cursisten.
      */
@@ -113,7 +108,7 @@ public class CursistBehaaldEisActivity extends AppCompatActivity {
 
         @Override
         protected List<Cursist> doInBackground(String... params) {
-            URL diplomaListUrl = NetworkUtils.buildUrl("cursist", "lijst");
+            URL diplomaListUrl = NetworkUtils.buildUrl("cursist", "lijst", "verborgen", "false");
 
             try {
                 String jsonCursistLijstResponse = NetworkUtils.getResponseFromHttpUrl(diplomaListUrl);
@@ -141,52 +136,8 @@ public class CursistBehaaldEisActivity extends AppCompatActivity {
     }
 
 
-    class SaveEisBehaaldTask extends AsyncTask<CursistBehaaldEis, Void, Boolean> {
-
-        /**
-         * params: Long cursist Id, Long cwoEis id, Boolean behaald.
-         *
-         * @param params
-         * @return
-         */
-        @Override
-        protected Boolean doInBackground(CursistBehaaldEis... params) {
-            CursistBehaaldEis cursistBehaaldEis = params[0];
-            if (cursistBehaaldEis.isBehaald())
-                return saveCursistBehaaldEis(cursistBehaaldEis, "POST");
-            else
-                return saveCursistBehaaldEis(cursistBehaaldEis, "DELETE");
-
-        }
-
-        private boolean saveCursistBehaaldEis(CursistBehaaldEis cursistBehaaldEis, String action) {
-
-            URL url = NetworkUtils.buildUrl("cursistBehaaldEisen");
-            //String json = "{\"eisId\": 1, \"cursistId\": 1}";
-            String json = cursistBehaaldEis.toJson();
-            try {
-                int resultCode = NetworkUtils.uploadToServer(url, json, action);
-                if (resultCode == 200)
-                    return true;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return false;
-
-        }
 
 
-        @Override
-        protected void onPostExecute(Boolean success) {
-            if (!success) {
-                String error = getString(R.string.opslaan_mislukt);
-                Toast.makeText(getApplication(), "" + error, Toast.LENGTH_LONG).show();
-
-            }
-            // TODO determine what needs to happen when this is finished. Especially in case of errors.
-            // Step 1 done, do i need to do something else?
-        }
-    }
 
     public void showErrorMessage() {
         // TODO make error possible.

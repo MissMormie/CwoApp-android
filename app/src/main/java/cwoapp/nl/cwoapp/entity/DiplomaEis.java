@@ -7,6 +7,7 @@ import java.util.Set;
 
 /**
  * Created by sonja on 3/14/2017.
+ * Description of a demand for a diploma
  */
 
 public class DiplomaEis implements Parcelable {
@@ -16,6 +17,7 @@ public class DiplomaEis implements Parcelable {
     private String titel;
     private String omschrijving;
     private Set<CursistBehaaldEis> cursistBehaaldEis;
+
 
     // Used to save whether the checkbox for this eis is checked.
     // TODO determine if this belongs here or should move to a seperate class that holds this info.

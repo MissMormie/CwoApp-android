@@ -8,10 +8,13 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.net.URL;
 
+import javax.net.ssl.HttpsURLConnection;
+
+import cwoapp.nl.cwoapp.asyncLoadingTasks.SaveCursistAsyncTask;
 import cwoapp.nl.cwoapp.entity.Cursist;
 import cwoapp.nl.cwoapp.utility.NetworkUtils;
 
-public class EditCursistActivity extends AppCompatActivity implements CursistFormFragment.OnFragmentInteractionListener {
+public class EditCursistActivity extends AppCompatActivity implements CursistFormFragment.OnFragmentInteractionListener, SaveCursistAsyncTask.SaveCursist {
     Cursist cursist;
     CursistFormFragment cursistFormFragment;
 
@@ -28,16 +31,22 @@ public class EditCursistActivity extends AppCompatActivity implements CursistFor
     public void saveCursist(Cursist cursist) {
         this.cursist = cursist;
         String cursistJson = cursist.simpleCursistToJson();
-        new saveCursistAsyncTask().execute(cursist);
+        new SaveCursistAsyncTask(this).execute(cursist);
     }
 
-    void cursistSaved() {
-        Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.cursist_opgeslagen), Toast.LENGTH_SHORT);
-        toast.show();
+    @Override
+    public void cursistSaved(int resultCode) {
+        if (resultCode == HttpsURLConnection.HTTP_OK) {
+            Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.cursist_opgeslagen), Toast.LENGTH_SHORT);
+            toast.show();
+        } else {
+            Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.error_message), Toast.LENGTH_SHORT);
+            toast.show();
+        }
         finish();
     }
 
-    class saveCursistAsyncTask extends AsyncTask<Cursist, Void, Integer> {
+    class saveCursistAsyncTaska extends AsyncTask<Cursist, Void, Integer> {
 
         @Override
         protected Integer doInBackground(Cursist... params) {
@@ -54,7 +63,7 @@ public class EditCursistActivity extends AppCompatActivity implements CursistFor
         @Override
         protected void onPostExecute(Integer s) {
             super.onPostExecute(s);
-            cursistSaved();
+            cursistSaved(s);
 
         }
     }

@@ -1,64 +1,104 @@
 package cwoapp.nl.cwoapp;
 
-import android.os.AsyncTask;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import cwoapp.nl.cwoapp.asyncLoadingTasks.FetchDiplomaAsyncTask;
 import cwoapp.nl.cwoapp.entity.Diploma;
-import cwoapp.nl.cwoapp.entity.DiplomaEis;
-import cwoapp.nl.cwoapp.utility.NetworkUtils;
-import cwoapp.nl.cwoapp.utility.OpenJsonUtils;
 
-public class DiplomaUitgevenActivity extends AppCompatActivity {
+public class DiplomaUitgevenActivity extends AppCompatActivity implements FetchDiplomaAsyncTask.FetchDiploma, DiplomaListAdapter.DiplomaListAdapterOnClickHandler {
+    private ProgressBar mLoadingIndicator;
+    private RecyclerView mRecyclerView;
+    private TextView mErrorMessageDisplay;
+    private DiplomaListAdapter diplomaListAdapter;
+    private ArrayList<Diploma> selectedDiplomaList = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-        new FetchDiplomaEisData().execute();
+        setContentView(R.layout.activity_diploma_uitgeven);
+
+        // Link the variables to the view items.
+        mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
+        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_diploma_lijst);
+        mErrorMessageDisplay = (TextView) findViewById(R.id.tv_error_message_display);
+
+        // Set up of the recycler view and adapter.
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        mRecyclerView.setLayoutManager(layoutManager);
+        // Not all items in list have the same size
+        mRecyclerView.setHasFixedSize(true);
+        diplomaListAdapter = new DiplomaListAdapter(this);
+        mRecyclerView.setAdapter(diplomaListAdapter);
+
+        loadCwoEisData();
+    }
+
+// ---------------------------- Load data ----------------------------------------------------------
+
+    private void loadCwoEisData() {
+        new FetchDiplomaAsyncTask(this).execute();
     }
 
 
-    class FetchDiplomaEisData extends AsyncTask<String, Void, List<Diploma>> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            //mLoadingIndicator.setVisibility(View.VISIBLE);
+    @Override
+    public void setDiploma(List<Diploma> diplomaList) {
+        mLoadingIndicator.setVisibility(View.GONE);
+        if (diplomaList == null) {
+            showError();
+        } else {
+            diplomaListAdapter.setDiplomaList(diplomaList);
         }
+    }
 
-        @Override
-        protected List<Diploma> doInBackground(String... params) {
-            URL diplomaListUrl = NetworkUtils.buildUrl("diplomas");
+    private void showError() {
+        // TODO
+    }
 
-            try {
-                String jsonDiplomaLijstResponse = NetworkUtils.getResponseFromHttpUrl(diplomaListUrl);
-                List<Diploma> diplomaList = OpenJsonUtils.getDiplomaLijst(jsonDiplomaLijstResponse);
-                return diplomaList;
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
+// ---------------------------- Click ----------------------------------------------------------
+
+    public void onClickShowVolgende(View view) {
+        if (selectedDiplomaList.size() > 0) {
+            showCreateDiplomaActivity();
         }
+    }
 
-        @Override
-        protected void onPostExecute(List<Diploma> diplomaList) {
-            //mLoadingIndicator.setVisibility(View.GONE);
-            if (diplomaList != null) {
-                List<DiplomaEis> diplomaEisenLijst = new ArrayList<>();
-                for (int i = 0; i < diplomaList.size(); i++) {
-                    diplomaEisenLijst.addAll(diplomaList.get(i).getDiplomaEis());
-                }
+    private void showCreateDiplomaActivity() {
+        Context context = this;
+        Class destinationClass = CreateDiplomaActivity.class;
+        Intent intent = new Intent(context, destinationClass);
 
-                //trainingsListAdapter.setCwoData(diplomaEisenLijst);
-            } else {
-                // TODO hide volgende button.
-                // showErrorMessage();
-            }
+        // TODO make diploma parcelable.
+        intent.putParcelableArrayListExtra("selectedDiplomaList", selectedDiplomaList);
+
+        startActivity(intent);
+    }
+
+    // ----------------- DiplomaListAdapterOnClickHandler implementation ---------------------------
+
+    @Override
+    public void onClick(Diploma diploma, boolean selected) {
+        if (selected && !selectedDiplomaList.contains(diploma)) {
+            selectedDiplomaList.add(diploma);
+        } else if (!selected && selectedDiplomaList.contains(diploma)) {
+            selectedDiplomaList.remove(diploma);
         }
+    }
+
+    @Override
+    public boolean isSelectedDiploma(Diploma diploma) {
+        return selectedDiplomaList != null && selectedDiplomaList.contains(diploma);
     }
 }
+

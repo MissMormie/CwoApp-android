@@ -1,10 +1,13 @@
 package cwoapp.nl.cwoapp;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,6 +22,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.net.ssl.HttpsURLConnection;
+
+import cwoapp.nl.cwoapp.asyncLoadingTasks.DownloadAndSetImageTask;
+import cwoapp.nl.cwoapp.asyncLoadingTasks.SaveCursistAsyncTask;
 import cwoapp.nl.cwoapp.databinding.ActivityCursistDetailBinding;
 import cwoapp.nl.cwoapp.entity.Cursist;
 import cwoapp.nl.cwoapp.entity.Diploma;
@@ -26,7 +33,7 @@ import cwoapp.nl.cwoapp.entity.DiplomaEis;
 import cwoapp.nl.cwoapp.utility.NetworkUtils;
 import cwoapp.nl.cwoapp.utility.OpenJsonUtils;
 
-public class CursistDetailActivity extends AppCompatActivity {
+public class CursistDetailActivity extends AppCompatActivity implements SaveCursistAsyncTask.SaveCursist {
 
     ActivityCursistDetailBinding activityCursistDetailBinding;
     Cursist cursist;
@@ -83,13 +90,32 @@ public class CursistDetailActivity extends AppCompatActivity {
     }
 
     private void hideCursist() {
+        toggleLoading(true);
+        cursist.toggleVerborgen();
+        new SaveCursistAsyncTask(this).execute(cursist);
+
         // TODO
     }
 
     private void deleteCursist() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.echt_verwijderen)
+                .setPositiveButton(R.string.ja, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        new DeleteCursistTask().execute();
+                    }
+                })
+                .setNegativeButton(R.string.nee, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                    // Create the AlertDialog object and return it
+                });
+
+        Dialog dialog = builder.create();
+        dialog.show();
 
         // TODO make popup 'are you sure'
-        new DeleteCursistTask().execute();
+
     }
 
     private void cursistDeleted() {
@@ -97,6 +123,16 @@ public class CursistDetailActivity extends AppCompatActivity {
         toast.show();
 
         finish();
+    }
+
+    public void toggleLoading(boolean currentlyLoading) {
+        if (activityCursistDetailBinding.loadingProgressBar == null)
+            return;
+        if (currentlyLoading == true)
+            activityCursistDetailBinding.loadingProgressBar.setVisibility(View.VISIBLE);
+        else
+            activityCursistDetailBinding.loadingProgressBar.setVisibility(View.INVISIBLE);
+
     }
 
     private void showEditCursist() {
@@ -124,6 +160,16 @@ public class CursistDetailActivity extends AppCompatActivity {
         else
             activityCursistDetailBinding.textViewPaspoort.setText("ja");
 
+        if (cursist.getCursistFoto() != null) {
+
+            URL fotoUrl = NetworkUtils.buildUrl("foto", cursist.getCursistFoto().getId().toString());
+
+            new DownloadAndSetImageTask(activityCursistDetailBinding.imageViewFoto, getApplicationContext())
+                    .execute(fotoUrl.toString());
+
+        }
+
+//            activityCursistDetailBinding.imageViewFoto.setImageBitmap();
         // Pass information to adapter for eisen met.
         cursistBehaaldEisAdapter.setCursist(cursist);
     }
@@ -133,11 +179,29 @@ public class CursistDetailActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void cursistSaved(int resultCode) {
+        toggleLoading(false);
+        if (resultCode == HttpsURLConnection.HTTP_OK) {
+            String tekst = "";
+            if (cursist.isVerborgen())
+                tekst = getString(R.string.cursist_verborgen);
+            else
+                tekst = getString(R.string.cursist_niet_verborgen);
+
+            Toast toast = Toast.makeText(getApplicationContext(), tekst, Toast.LENGTH_SHORT);
+            toast.show();
+        } else {
+            Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.error_message), Toast.LENGTH_SHORT);
+            toast.show();
+        }
+    }
+
     class FetchCursistTask extends AsyncTask<Long, Void, Cursist> {
 
         @Override
         protected void onPreExecute() {
-            activityCursistDetailBinding.pbLoadingIndicator.setVisibility(View.VISIBLE);
+            toggleLoading(true);
             super.onPreExecute();
         }
 
@@ -158,13 +222,19 @@ public class CursistDetailActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Cursist cursistObject) {
-            activityCursistDetailBinding.pbLoadingIndicator.setVisibility(View.INVISIBLE);
+            toggleLoading(false);
             cursist = cursistObject;
             displayCursistInfo();
         }
     }
 
     class DeleteCursistTask extends AsyncTask<Long, Void, Integer> {
+
+        @Override
+        protected void onPreExecute() {
+            toggleLoading(true);
+            super.onPreExecute();
+        }
 
         @Override
         protected Integer doInBackground(Long... params) {
@@ -184,10 +254,11 @@ public class CursistDetailActivity extends AppCompatActivity {
          */
         @Override
         protected void onPostExecute(Integer resultCode) {
+            toggleLoading(false);
             if (resultCode == HttpURLConnection.HTTP_OK) {
                 cursistDeleted();
             } else {
-                // Handle error
+                //showErrorMessage();
             }
         }
     }
@@ -196,8 +267,8 @@ public class CursistDetailActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
+            toggleLoading(true);
             super.onPreExecute();
-//            mLoadingIndicator.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -216,7 +287,7 @@ public class CursistDetailActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(List<Diploma> diplomaList) {
-//            mLoadingIndicator.setVisibility(View.GONE);
+            toggleLoading(false);
             if (diplomaList != null) {
                 List<DiplomaEis> diplomaEisenLijst = new ArrayList<>();
                 for (int i = 0; i < diplomaList.size(); i++) {
@@ -229,4 +300,5 @@ public class CursistDetailActivity extends AppCompatActivity {
             }
         }
     }
+
 }

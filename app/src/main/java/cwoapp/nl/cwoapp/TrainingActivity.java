@@ -46,7 +46,7 @@ public class TrainingActivity extends AppCompatActivity implements TrainingsList
         mRecyclerView.setLayoutManager(layoutManager);
         // Not all items in list have the same size
         mRecyclerView.setHasFixedSize(true);
-        trainingsListAdapter = new TrainingsListAdapter(this);
+        trainingsListAdapter = new TrainingsListAdapter(this, this);
         mRecyclerView.setAdapter(trainingsListAdapter);
 
 
@@ -86,6 +86,11 @@ public class TrainingActivity extends AppCompatActivity implements TrainingsList
             selectedDiplomaEisList.remove(diplomaEis);
         }
         toggleVolgendeButton();
+    }
+
+    @Override
+    public boolean isSelectedDiplomaEis(DiplomaEis eis) {
+        return selectedDiplomaEisList.contains(eis);
     }
 
     private void toggleVolgendeButton() {

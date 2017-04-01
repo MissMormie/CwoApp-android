@@ -20,14 +20,18 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Date;
 
+import cwoapp.nl.cwoapp.asyncLoadingTasks.DownloadAndSetImageTask;
 import cwoapp.nl.cwoapp.entity.Cursist;
 import cwoapp.nl.cwoapp.utility.DateUtil;
+import cwoapp.nl.cwoapp.utility.NetworkUtils;
 
 import static android.app.Activity.RESULT_OK;
 import static cwoapp.nl.cwoapp.R.id.imageViewFoto;
@@ -38,8 +42,6 @@ import static cwoapp.nl.cwoapp.R.id.imageViewFoto;
  * Activities that contain this fragment must implement the
  * {@link CursistFormFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link CursistFormFragment#newInstance} factory method to
- * create an instance of this fragment.
  */
 public class CursistFormFragment extends Fragment {
 
@@ -55,6 +57,7 @@ public class CursistFormFragment extends Fragment {
     private ImageView fotoImageView;
     private ImageButton takeImageButton;
     private Button saveButton;
+    private ProgressBar loadingProgressBar;
 
 
     public CursistFormFragment() {
@@ -69,6 +72,7 @@ public class CursistFormFragment extends Fragment {
         paspoortCheckbox = (CheckBox) getActivity().findViewById(R.id.checkBoxPaspoort);
         fotoImageView = (ImageView) getActivity().findViewById(imageViewFoto);
         saveButton = (Button) getActivity().findViewById(R.id.buttonSave);
+        loadingProgressBar = (ProgressBar) getActivity().findViewById(R.id.loadingProgressBar);
         takeImageButton = (ImageButton) getActivity().findViewById(R.id.imageButtonPhoto);
         takeImageButton.setOnClickListener(new View.OnClickListener() {
 
@@ -80,19 +84,7 @@ public class CursistFormFragment extends Fragment {
 
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment CursistFormFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static CursistFormFragment newInstance() {
-        CursistFormFragment fragment = new CursistFormFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -130,8 +122,6 @@ public class CursistFormFragment extends Fragment {
         } else {
             throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
         }
-
-
     }
 
     @Override
@@ -141,7 +131,7 @@ public class CursistFormFragment extends Fragment {
     }
 
     private void populateFields() {
-
+        toggleLoading(false);
         if (voornaamEditText == null) {
             setupFields();
         }
@@ -156,6 +146,13 @@ public class CursistFormFragment extends Fragment {
             } else {
                 paspoortCheckbox.setChecked(true);
             }
+            if (cursist.getCursistFoto() != null) {
+
+                URL fotoUrl = NetworkUtils.buildUrl("foto", cursist.getCursistFoto().getId().toString());
+                new DownloadAndSetImageTask(fotoImageView, getContext()).execute(fotoUrl.toString());
+
+            }
+
             // TODO Set fotoImageview to foto thing somehow.
             //fotoImageView;
         }
@@ -194,9 +191,22 @@ public class CursistFormFragment extends Fragment {
 
     public void onClickSaveCursist(View view) {
         saveButton.setEnabled(false);
+        toggleLoading(true);
         readCursist();
+
         mListener.saveCursist(cursist);
     }
+
+    public void toggleLoading(boolean currentlyLoading) {
+        if (loadingProgressBar == null)
+            return;
+        if (currentlyLoading == true)
+            loadingProgressBar.setVisibility(View.VISIBLE);
+        else
+            loadingProgressBar.setVisibility(View.INVISIBLE);
+
+    }
+
 
     /**
      * This interface must be implemented by activities that contain this
@@ -209,6 +219,7 @@ public class CursistFormFragment extends Fragment {
         void saveCursist(Cursist cursist);
 
     }
+
 
     // ------------------------------------ PHOTO SUPPORT -----------------------------------------------
     static final int REQUEST_IMAGE_CAPTURE = 1;

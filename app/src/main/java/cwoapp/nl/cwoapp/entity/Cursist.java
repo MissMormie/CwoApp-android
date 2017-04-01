@@ -13,6 +13,7 @@ import cwoapp.nl.cwoapp.utility.DateUtil;
 
 /**
  * Created by Sonja on 3/9/2017.
+ * Cursist info.
  */
 
 public class Cursist implements Parcelable {
@@ -20,39 +21,54 @@ public class Cursist implements Parcelable {
     public String voornaam;
     public String tussenvoegsel;
     public String achternaam;
-    public String foto;
+    private CursistFoto cursistFoto;
+    private boolean verborgen = false;
+
+    // TODO: change this holder variable to the CursistFoto class.
+    private String fotoFileBase64;
+
     public Date paspoort;
     public String opmerking;
-    private String fotoFileBase64;
-    public List<CursistBehaaldEis> cursistBehaaldEis;
+    private List<CursistBehaaldEis> cursistBehaaldEis;
 
     private List<CursistHeeftDiploma> cursistHeeftDiplomas;
 
     public Cursist() {
     }
 
-    public Cursist(Long id, String voornaam, String tussenvoegsel, String achternaam, String foto, Date paspoort, String opmerking, List<CursistBehaaldEis> cursistBehaaldEis, List<CursistHeeftDiploma> cursistHeeftDiplomas) {
+    public Cursist(Long id, String voornaam, String tussenvoegsel, String achternaam, Date paspoort, String opmerking, List<CursistBehaaldEis> cursistBehaaldEis, List<CursistHeeftDiploma> cursistHeeftDiplomas, CursistFoto cursistFoto, boolean verborgen) {
         this.id = id;
         this.voornaam = voornaam;
         this.tussenvoegsel = tussenvoegsel;
         this.achternaam = achternaam;
-        this.foto = foto;
         this.paspoort = paspoort;
         this.opmerking = opmerking;
         this.cursistBehaaldEis = cursistBehaaldEis;
         this.cursistHeeftDiplomas = cursistHeeftDiplomas;
+        this.cursistFoto = cursistFoto;
+        this.verborgen = verborgen;
     }
 
-    public Cursist(long id, String voornaam, String tussenvoegsel, String achternaam, String opmerking, String foto, Date paspoort) {
+    public Cursist(long id, String voornaam, String tussenvoegsel, String achternaam, String opmerking, Date paspoort) {
         this.opmerking = opmerking;
         this.paspoort = paspoort;
         this.id = id;
         this.voornaam = voornaam;
         this.tussenvoegsel = tussenvoegsel;
         this.achternaam = achternaam;
-        this.foto = foto;
     }
 
+    public boolean isVerborgen() {
+        return verborgen;
+    }
+
+    public void setVerborgen(boolean verborgen) {
+        this.verborgen = verborgen;
+    }
+
+    public void toggleVerborgen() {
+        verborgen = !verborgen;
+    }
 
     public List<CursistBehaaldEis> getCursistBehaaldEis() {
         return cursistBehaaldEis;
@@ -79,9 +95,17 @@ public class Cursist implements Parcelable {
     }
 
 
+    public CursistFoto getCursistFoto() {
+        return cursistFoto;
+    }
+
+    public void setCursistFoto(CursistFoto cursistFoto) {
+        this.cursistFoto = cursistFoto;
+    }
+
     public String nameToString() {
         String tussenstuk = "";
-        if(tussenvoegsel != null && tussenvoegsel != "")
+        if (tussenvoegsel != null && !tussenvoegsel.equals(""))
             tussenstuk = tussenvoegsel + " ";
 
         return voornaam + " " + tussenstuk + achternaam;
@@ -95,18 +119,17 @@ public class Cursist implements Parcelable {
             jsonObject.put("tussenvoegsel", tussenvoegsel);
             jsonObject.put("achternaam", achternaam);
             jsonObject.put("opmerkingen", opmerking);
-            jsonObject.put("foto", foto);
+            jsonObject.put("verborgen", verborgen);
             if (paspoort != null) {
                 jsonObject.put("paspoort", DateUtil.dateToYYYYMMDDString(paspoort));
             } else {
                 jsonObject.put("paspoort", null);
             }
-            if (fotoFileBase64 != null && fotoFileBase64 != "")
+            if (fotoFileBase64 != null && !fotoFileBase64.equals(""))
                 jsonObject.put("fotoFileBase64", fotoFileBase64);
 
 
-            String jsonString = jsonObject.toString();
-            return jsonString;
+            return jsonObject.toString();
         } catch (JSONException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -120,7 +143,7 @@ public class Cursist implements Parcelable {
         if (cursistBehaaldEis == null)
             return false;
         for (CursistBehaaldEis cbe : cursistBehaaldEis) {
-            if (cbe.getDiplomaEis() != null && cbe.getDiplomaEis().getId() == diplomaEis.getId()) {
+            if (cbe.getDiplomaEis() != null && cbe.getDiplomaEis().getId().equals(diplomaEis.getId())) {
                 return true;
             }
         }
@@ -140,7 +163,7 @@ public class Cursist implements Parcelable {
         if (cursistHeeftDiplomas == null)
             return false;
         for (CursistHeeftDiploma cursistHeeftDiploma : cursistHeeftDiplomas) {
-            if (cursistHeeftDiploma.getDiploma().getId() == diplomaId)
+            if (cursistHeeftDiploma.getDiploma().getId().equals(diplomaId))
                 return true;
         }
         return false;
@@ -161,12 +184,13 @@ public class Cursist implements Parcelable {
         parcel.writeString(tussenvoegsel);
         parcel.writeString(achternaam);
         parcel.writeString(opmerking);
-        parcel.writeString(foto);
         if (paspoort != null) {
             parcel.writeLong(paspoort.getTime());
         } else {
-            parcel.writeLong(0l);
+            parcel.writeLong(0L);
         }
+        parcel.writeParcelable(cursistFoto, 0);
+
     }
 
     public static final Parcelable.Creator<Cursist> CREATOR = new Parcelable.Creator<Cursist>() {
@@ -188,15 +212,16 @@ public class Cursist implements Parcelable {
         tussenvoegsel = parcel.readString();
         achternaam = parcel.readString();
         opmerking = parcel.readString();
-        foto = parcel.readString();
 
         // Get around paspoort sometimes being null.
         Long paspoortTemp = parcel.readLong();
 
-        if (paspoortTemp == 0l) {
+        if (paspoortTemp == 0L) {
             paspoort = null;
         } else {
             paspoort = new Date(paspoortTemp);
         }
+
+        cursistFoto = parcel.readParcelable(CursistFoto.class.getClassLoader());
     }
 }

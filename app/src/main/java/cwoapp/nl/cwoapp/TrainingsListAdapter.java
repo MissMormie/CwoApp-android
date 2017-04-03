@@ -1,8 +1,6 @@
 package cwoapp.nl.cwoapp;
 
 import android.content.Context;
-import android.content.DialogInterface;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,16 +15,17 @@ import cwoapp.nl.cwoapp.entity.DiplomaEis;
 
 /**
  * Created by sonja on 3/15/2017.
+ * Shows list of diploma Eisen.
  */
 
-public class TrainingsListAdapter extends RecyclerView.Adapter<TrainingsListAdapter.TrainingsListAdapterViewHolder> {
+class TrainingsListAdapter extends RecyclerView.Adapter<TrainingsListAdapter.TrainingsListAdapterViewHolder> {
     private static final String TAG = TrainingsListAdapter.class.getSimpleName();
 
     private List<DiplomaEis> diplomaEisList = null;
     private final TrainingListAdapterOnClickHandler clickHandler;
     private final Context context;
 
-    public TrainingsListAdapter(TrainingListAdapterOnClickHandler clickHandler, Context context) {
+    TrainingsListAdapter(TrainingListAdapterOnClickHandler clickHandler, Context context) {
         this.clickHandler = clickHandler;
         this.context = context;
     }
@@ -38,11 +37,10 @@ public class TrainingsListAdapter extends RecyclerView.Adapter<TrainingsListAdap
         LayoutInflater inflater = LayoutInflater.from(context);
 
         View view = inflater.inflate(layoutIdForListItem, viewGroup, false);
-        TrainingsListAdapter.TrainingsListAdapterViewHolder viewHolder = new TrainingsListAdapter.TrainingsListAdapterViewHolder(view);
-        return viewHolder;
+        return new TrainingsListAdapter.TrainingsListAdapterViewHolder(view);
     }
 
-    public void setCwoData(List<DiplomaEis> diplomaEis) {
+    void setCwoData(List<DiplomaEis> diplomaEis) {
         this.diplomaEisList = diplomaEis;
         notifyDataSetChanged();
     }
@@ -63,7 +61,7 @@ public class TrainingsListAdapter extends RecyclerView.Adapter<TrainingsListAdap
         CheckBox cbCwoEis;
         ImageButton imgButtonInfo;
 
-        public TrainingsListAdapterViewHolder(View itemView) {
+        TrainingsListAdapterViewHolder(View itemView) {
             super(itemView);
             cbCwoEis = (CheckBox) itemView.findViewById(R.id.checkBoxTrainingsEis);
             imgButtonInfo = (ImageButton) itemView.findViewById(R.id.imageButtonInfo);
@@ -84,25 +82,7 @@ public class TrainingsListAdapter extends RecyclerView.Adapter<TrainingsListAdap
                 }
             });
 
-            imgButtonInfo.setOnClickListener(new ImageButton.OnClickListener() {
 
-                @Override
-                public void onClick(View v) {
-                    int adapterPosition = getAdapterPosition();
-                    DiplomaEis diplomaEis = diplomaEisList.get(adapterPosition);
-
-                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-                    alertDialogBuilder.setMessage(diplomaEis.getOmschrijving())
-                            .setTitle(diplomaEis.getTitel())
-                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    // We doen niets, maar je moet deze hebben om eruit te komen.
-                                }
-                            });
-                    AlertDialog alertDialog = alertDialogBuilder.create();
-                    alertDialog.show();
-                }
-            });
         }
 
 
@@ -113,7 +93,7 @@ public class TrainingsListAdapter extends RecyclerView.Adapter<TrainingsListAdap
         }
     }
 
-    public interface TrainingListAdapterOnClickHandler {
+    interface TrainingListAdapterOnClickHandler {
         void onClick(DiplomaEis diplomaEis, boolean selected);
 
         boolean isSelectedDiplomaEis(DiplomaEis eis);

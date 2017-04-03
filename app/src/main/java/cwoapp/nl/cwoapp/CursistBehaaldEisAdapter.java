@@ -1,7 +1,9 @@
 package cwoapp.nl.cwoapp;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,16 +23,14 @@ import cwoapp.nl.cwoapp.utility.NetworkUtils;
 
 /**
  * Created by sonja on 3/15/2017.
+ * Cursist Behaald Eis Adapter
  */
 
-public class CursistBehaaldEisAdapter extends RecyclerView.Adapter<CursistBehaaldEisAdapter.CursistBehaaldEisViewHolder> {
+class CursistBehaaldEisAdapter extends RecyclerView.Adapter<CursistBehaaldEisAdapter.CursistBehaaldEisViewHolder> {
     private List<DiplomaEis> diplomaEisList;
     private Cursist cursist;
     private boolean saveData = true; // OnChangeChecklistener saves data when checkbox is clicked, but also when data is refeshed. Using to as workaround.
     Context context;
-
-    public CursistBehaaldEisAdapter() {
-    }
 
 
     @Override
@@ -43,8 +43,7 @@ public class CursistBehaaldEisAdapter extends RecyclerView.Adapter<CursistBehaal
         boolean shouldAttachToParentImmediately = false;
 
         View view = inflater.inflate(layoutIdForListItem, viewGroup, shouldAttachToParentImmediately);
-        CursistBehaaldEisAdapter.CursistBehaaldEisViewHolder viewHolder = new CursistBehaaldEisAdapter.CursistBehaaldEisViewHolder(view);
-        return viewHolder;
+        return new CursistBehaaldEisAdapter.CursistBehaaldEisViewHolder(view);
     }
 
     @Override
@@ -59,7 +58,7 @@ public class CursistBehaaldEisAdapter extends RecyclerView.Adapter<CursistBehaal
         return diplomaEisList.size();
     }
 
-    public void setCwoListData(List<DiplomaEis> diplomaEisList) {
+    void setCwoListData(List<DiplomaEis> diplomaEisList) {
         this.diplomaEisList = diplomaEisList;
         notifyDataSetChanged();
     }
@@ -71,11 +70,18 @@ public class CursistBehaaldEisAdapter extends RecyclerView.Adapter<CursistBehaal
 
     class CursistBehaaldEisViewHolder extends RecyclerView.ViewHolder {
         CheckBox cbCwoEis;
+        ImageButton imgButtonInfo;
 
-        public CursistBehaaldEisViewHolder(final View itemView) {
+        CursistBehaaldEisViewHolder(final View itemView) {
             super(itemView);
             cbCwoEis = (CheckBox) itemView.findViewById(R.id.checkBoxTrainingsEis);
+            imgButtonInfo = (ImageButton) itemView.findViewById(R.id.imageButtonInfo);
 
+            setListeners();
+
+        }
+
+        void setListeners() {
             // set on checked listener for checkbox
             cbCwoEis.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
@@ -92,15 +98,23 @@ public class CursistBehaaldEisAdapter extends RecyclerView.Adapter<CursistBehaal
                 }
             });
 
-            // Set on clicked listener for info button.
-            ImageButton infoButton = (ImageButton) itemView.findViewById(R.id.imageButtonInfo);
-            infoButton.setOnClickListener(new View.OnClickListener() {
+            imgButtonInfo.setOnClickListener(new ImageButton.OnClickListener() {
+
                 @Override
                 public void onClick(View v) {
-                    //change the action here, a toast in your example
-                    DiplomaEis diplomaEis = diplomaEisList.get(getAdapterPosition());
-                    Toast.makeText(context, diplomaEis.getOmschrijving(), Toast.LENGTH_LONG);
+                    int adapterPosition = getAdapterPosition();
+                    DiplomaEis diplomaEis = diplomaEisList.get(adapterPosition);
 
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+                    alertDialogBuilder.setMessage(diplomaEis.getOmschrijving())
+                            .setTitle(diplomaEis.getTitel())
+                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    // We doen niets, maar je moet deze hebben om eruit te komen.
+                                }
+                            });
+                    AlertDialog alertDialog = alertDialogBuilder.create();
+                    alertDialog.show();
                 }
             });
 
@@ -121,7 +135,7 @@ public class CursistBehaaldEisAdapter extends RecyclerView.Adapter<CursistBehaal
         private void setCheckboxIfEisBehaald(DiplomaEis diplomaEis) {
             // Reset cbCwoEis so it's standard enabled.
             cbCwoEis.setEnabled(true);
-            boolean checked = false;
+            boolean checked;
             // als diploma behaald is, is automatisch elke eis voor het diploma ook behaald.
             Long diplomaId = diplomaEis.getDiploma().getId();
             if (cursist.hasDiploma(diplomaId)) {
@@ -137,13 +151,10 @@ public class CursistBehaaldEisAdapter extends RecyclerView.Adapter<CursistBehaal
         }
     }
 
-    class SaveEisBehaaldTask extends AsyncTask<CursistBehaaldEis, Void, Boolean> {
+    private class SaveEisBehaaldTask extends AsyncTask<CursistBehaaldEis, Void, Boolean> {
 
         /**
          * params: Long cursist Id, Long cwoEis id, Boolean behaald.
-         *
-         * @param params
-         * @return
          */
         @Override
         protected Boolean doInBackground(CursistBehaaldEis... params) {

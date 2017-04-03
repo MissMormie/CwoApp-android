@@ -7,6 +7,7 @@ import java.util.Date;
 
 /**
  * Created by sonja on 3/23/2017.
+ * Has methods for creating strings from date and date to string.
  */
 
 public class DateUtil {
@@ -24,9 +25,9 @@ public class DateUtil {
     /**
      * works for strings y*-m*-d*
      *
-     * @return
+     * @return date
      */
-    public static Date stringToDate(String dateString) {
+    static Date stringToDate(String dateString) {
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
         try {

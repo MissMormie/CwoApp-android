@@ -13,19 +13,20 @@
         android:layout_weight="1"
         android:onClick="onClickNieuweTraining"
         android:text="@string/nieuwe_training" />
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:onClick="onClickCursistenLijst"
-        android:text="@string/cursisten_lijst"/>
+        android:text="@string/cursisten_lijst" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:onClick="onClickNieuweCursist"
-        android:text="@string/nieuwe_cursist"/>
+        android:text="@string/nieuwe_cursist" />
 
     <Button
         android:layout_width="match_parent"

@@ -17,13 +17,14 @@ import cwoapp.nl.cwoapp.entity.DiplomaEis;
 
 /**
  * Created by sonja on 3/22/2017.
+ * Changes Json Strings into objects
  */
 
 // TODO check what a final class is exactly.
 public final class OpenJsonUtils {
 
     public static List<Cursist> getCursistLijst(String cursistLijstString) throws JSONException {
-        if (cursistLijstString == null || cursistLijstString == "")
+        if (cursistLijstString == null || cursistLijstString.equals(""))
             return null;
 
         List<Cursist> cursistList = new ArrayList();
@@ -39,7 +40,7 @@ public final class OpenJsonUtils {
     }
 
     public static Cursist getCursist(String cursistString) throws JSONException {
-        if (cursistString == null || cursistString == "")
+        if (cursistString == null || cursistString.equals(""))
             return null;
 
         JSONObject cursistJson = new JSONObject(cursistString);
@@ -96,9 +97,7 @@ public final class OpenJsonUtils {
             cursistFoto = getCursistFoto(cursistFotoOjbect);
         }
 
-        Cursist cursist = new Cursist(id, voornaam, tussenvoegsel, achternaam, paspoort, opmerking, cursistBehaaldEisList, cursistHeeftDiplomaList, cursistFoto, verborgen);
-
-        return cursist;
+        return new Cursist(id, voornaam, tussenvoegsel, achternaam, paspoort, opmerking, cursistBehaaldEisList, cursistHeeftDiplomaList, cursistFoto, verborgen);
     }
 
     public static CursistFoto getCursistFoto(JSONObject cursistFotoJson) throws JSONException {
@@ -153,7 +152,7 @@ public final class OpenJsonUtils {
 
     public static List<Diploma> getDiplomaLijst(String diplomaLijstString) throws JSONException {
         // TODO see if i should do some extra error checking here?
-        if (diplomaLijstString == null || diplomaLijstString == "")
+        if (diplomaLijstString == null || diplomaLijstString.equals(""))
             return null;
 
         List<Diploma> diplomaList = new ArrayList();
@@ -173,9 +172,9 @@ public final class OpenJsonUtils {
     /**
      * Takes a JSONobject with diploma information and returns a corresponding diploma object.
      *
-     * @param diplomaJson
-     * @return
-     * @throws JSONException
+     * @param diplomaJson JsonObject containing a diploma object
+     * @return Diploma object
+     * @throws JSONException ..
      */
     public static Diploma getDiploma(JSONObject diplomaJson) throws JSONException {
         Long id = diplomaJson.getLong("id");
@@ -199,11 +198,7 @@ public final class OpenJsonUtils {
     }
 
     /**
-     * Takes a JSONArray of diplomaEis information and returns a list filled with diplomaEis objects.
-     *
-     * @param diplomaEisJsonArray
-     * @return
-     * @throws JSONException
+     * Takes a JSONArray of diplomaEis information and returns a list filled with diplomaEis objects
      */
     public static List<DiplomaEis> getDiplomaEisLijst(JSONArray diplomaEisJsonArray) throws JSONException {
         List<DiplomaEis> diplomaEisList = new ArrayList();
@@ -218,10 +213,6 @@ public final class OpenJsonUtils {
 
     /**
      * takes a JSONObject with diplomaEis information and returns a filled DiplomaEis object
-     *
-     * @param diplomaEisJson
-     * @return
-     * @throws JSONException
      */
     public static DiplomaEis getDiplomaEis(JSONObject diplomaEisJson) throws JSONException {
         Long id = diplomaEisJson.getLong("id");

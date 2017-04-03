@@ -13,6 +13,11 @@
     <string name="pref_show_already_completed_summary_off">Je ziet geen cursisten die al hebben geleerd wat er in de training gedaan is.</string>
     <string name="pref_show_already_completed_summary_on">Je ziet wel cursisten die al hebben geleerd wat er in de training gedaan is.</string>
 
+    <string name="pref_show_diploma_after_create_label">Diploma na nieuwe cursist</string>
+    <string name="pref_show_diploma_after_create_key" translatable="false">show_diploma_after_create_cursist</string>
+    <string name="pref_show_diploma_after_create_summary_off">Na het maken van een nieuwe cursist kun je geen diploma\'s geven.</string>
+    <string name="pref_show_diploma_after_create_summary_on">Na het maken van een nieuwe cursist kun je direct diploma\'s opgeven.</string>
+
     <!-- Knoppen -->
     <string name="nee">Nee</string>
     <string name="ja">Ja</string>
@@ -35,7 +40,7 @@
 
     <!-- Training list -->
     <string name="volgende">Volgende</string>
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
     <string name="wat_geoefend">Welke onderdelen zijn getraind?</string>
 
     <!-- cursist menu -->

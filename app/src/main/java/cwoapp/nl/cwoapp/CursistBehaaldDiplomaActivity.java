@@ -16,33 +16,39 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import cwoapp.nl.cwoapp.asyncLoadingTasks.DownloadAndSetImageTask;
 import cwoapp.nl.cwoapp.asyncLoadingTasks.FetchCursistListAsyncTask;
 import cwoapp.nl.cwoapp.entity.Cursist;
-import cwoapp.nl.cwoapp.entity.DiplomaEis;
+import cwoapp.nl.cwoapp.entity.Diploma;
 import cwoapp.nl.cwoapp.utility.NetworkUtils;
 
-public class CursistBehaaldEisActivity extends AppCompatActivity implements FetchCursistListAsyncTask.FetchCursistList {
-    // Lijst met diploma eisen die getraind zijn.
-    private List<DiplomaEis> diplomaEisList;
+public class CursistBehaaldDiplomaActivity extends AppCompatActivity implements FetchCursistListAsyncTask.FetchCursistList {
+    List<Diploma> diplomaList;
     private ProgressBar loadingIndicator;
     private List<Cursist> cursistList;
     private TextView textViewNaam;
     private RecyclerView recyclerView;
-    private CursistBehaaldEisAdapter cursistBehaaldEisAdapter;
-    private Cursist currentCursist;
     private ImageView imageViewFoto;
+    private CursistBehaaldDiplomaAdapter cursistBehaaldDiplomaAdapter;
+    private Cursist currentCursist;
     Boolean showAlreadyCompleted = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
+        // Get activity xml
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cursist_checklist);
+
+        // Get parceled info
         Intent intent = getIntent();
-        diplomaEisList = intent.getParcelableArrayListExtra("selectedDiplomaEisList");
+        diplomaList = intent.getParcelableArrayListExtra("selectedDiplomaList");
+        if (intent.hasExtra("cursist")) {
+            cursistList = new ArrayList<>();
+            cursistList.add((Cursist) intent.getExtras().getParcelable("cursist"));
+        }
 
         // get variables for elements in layout.
         textViewNaam = (TextView) findViewById(R.id.textViewNaam);
@@ -55,26 +61,28 @@ public class CursistBehaaldEisActivity extends AppCompatActivity implements Fetc
         recyclerView.setLayoutManager(layoutManager);
         // Not all items in list have the same size
         recyclerView.setHasFixedSize(true);
-        cursistBehaaldEisAdapter = new CursistBehaaldEisAdapter();
-        recyclerView.setAdapter(cursistBehaaldEisAdapter);
+        cursistBehaaldDiplomaAdapter = new CursistBehaaldDiplomaAdapter(diplomaList);
+        recyclerView.setAdapter(cursistBehaaldDiplomaAdapter);
 
         // Get preference for showing cursisten who already met all eisen.
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         showAlreadyCompleted = sharedPreferences.getBoolean(getString(R.string.pref_show_already_completed_key),
                 getResources().getBoolean(R.bool.pref_show_already_completed_default));
 
-        loadCursistListData();
 
+        loadCursistListData();
     }
 
     private void loadCursistListData() {
-        new FetchCursistListAsyncTask(this).execute(showAlreadyCompleted);
+        // Check if info needs to be loaded, if not go straight to showing it.
+        if (cursistList == null)
+            new FetchCursistListAsyncTask(this).execute(showAlreadyCompleted);
+        else {
+            loadingIndicator.setVisibility(View.GONE);
+            showNextCursist();
+        }
     }
 
-    private void showFirstCursist() {
-        cursistBehaaldEisAdapter.setCwoListData(diplomaEisList);
-        showNextCursist();
-    }
 
     private void showNextCursist() {
         if (cursistList.size() == 0) {
@@ -82,28 +90,23 @@ public class CursistBehaaldEisActivity extends AppCompatActivity implements Fetc
         } else {
             currentCursist = cursistList.remove(0);
             // Als deze cursist alle eisen behaald heeft en deze preference is aangegeven, sla deze cursist dan over.
-            if (currentCursist.isAlleEisenBehaald(diplomaEisList) && !showAlreadyCompleted) {
+            if (currentCursist.isAlleDiplomasBehaald(diplomaList)) {
                 showNextCursist();
             } else {
-                setCursistData();
+                cursistBehaaldDiplomaAdapter.setCursist(currentCursist);
+                textViewNaam.setText(currentCursist.nameToString());
+
+                // Set photo if available, else set user mockup.
+                if (currentCursist.getCursistFoto() != null) {
+                    URL fotoUrl = NetworkUtils.buildUrl("foto", currentCursist.getCursistFoto().getId().toString());
+                    new DownloadAndSetImageTask(imageViewFoto, getApplicationContext())
+                            .execute(fotoUrl.toString());
+                } else {
+                    Drawable drawable = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_user_image);
+                    imageViewFoto.setImageDrawable(drawable);
+                }
 
             }
-        }
-    }
-
-
-    private void setCursistData() {
-        cursistBehaaldEisAdapter.setCursist(currentCursist);
-        textViewNaam.setText(currentCursist.nameToString());
-
-        // Set photo if available, else set user mockup.
-        if (currentCursist.getCursistFoto() != null) {
-            URL fotoUrl = NetworkUtils.buildUrl("foto", currentCursist.getCursistFoto().getId().toString());
-            new DownloadAndSetImageTask(imageViewFoto, getApplicationContext())
-                    .execute(fotoUrl.toString());
-        } else {
-            Drawable drawable = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_user_image);
-            imageViewFoto.setImageDrawable(drawable);
         }
     }
 
@@ -117,7 +120,6 @@ public class CursistBehaaldEisActivity extends AppCompatActivity implements Fetc
         showNextCursist();
     }
 
-
     @Override
     public void setCursistList(List<Cursist> cursistList) {
         if (cursistList == null) {
@@ -127,13 +129,11 @@ public class CursistBehaaldEisActivity extends AppCompatActivity implements Fetc
 
         loadingIndicator.setVisibility(View.GONE);
         this.cursistList = cursistList;
-        showFirstCursist();
+        showNextCursist();
     }
 
-
-    public void showErrorMessage() {
+    void showErrorMessage() {
         Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.error_message), Toast.LENGTH_LONG);
         toast.show();
     }
-
 }

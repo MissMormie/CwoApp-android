@@ -76,7 +76,7 @@ public class DiplomaUitgevenActivity extends AppCompatActivity implements FetchD
 
     private void showCreateDiplomaActivity() {
         Context context = this;
-        Class destinationClass = CreateDiplomaActivity.class;
+        Class destinationClass = CursistBehaaldDiplomaActivity.class;
         Intent intent = new Intent(context, destinationClass);
 
         // TODO make diploma parcelable.

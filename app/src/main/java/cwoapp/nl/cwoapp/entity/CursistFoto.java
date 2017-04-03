@@ -30,6 +30,13 @@ public class CursistFoto implements Parcelable {
         return id;
     }
 
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
 
     // ---------------------------- Support for Parcelable --------------------------------------- //
     public static final Parcelable.Creator<CursistFoto> CREATOR = new Parcelable.Creator<CursistFoto>() {

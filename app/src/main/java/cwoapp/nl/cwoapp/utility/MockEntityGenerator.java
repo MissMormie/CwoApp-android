@@ -11,7 +11,6 @@ import cwoapp.nl.cwoapp.entity.DiplomaEis;
 /**
  * Created by sonja on 3/14/2017.
  * Mock entity generator
- *
  */
 
 // TODO list

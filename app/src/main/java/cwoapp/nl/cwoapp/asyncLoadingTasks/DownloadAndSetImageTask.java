@@ -13,6 +13,7 @@ import cwoapp.nl.cwoapp.utility.FotoUtils;
 
 /**
  * Created by sonja on 3/31/2017.
+ * Downloads image from url string and sets it to passed ImageView
  */
 
 public class DownloadAndSetImageTask extends AsyncTask<String, Void, Bitmap> {

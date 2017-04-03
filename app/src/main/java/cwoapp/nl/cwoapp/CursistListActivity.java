@@ -4,11 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,6 +28,7 @@ public class CursistListActivity extends AppCompatActivity implements CursistLis
     private TextView mErrorMessageDisplay;
     private CursistListAdapater cursistListAdapater;
     private MenuItem searchItem;
+    static final int CURSIST_DETAIL = 1;
 
 
     @Override
@@ -58,28 +57,30 @@ public class CursistListActivity extends AppCompatActivity implements CursistLis
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.cursist_lijst_menu, menu);
-        searchItem = menu.findItem(R.id.action_search);
+        //searchItem = menu.findItem(R.id.action_search);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemThatWasClickedId = item.getItemId();
-        if (itemThatWasClickedId == R.id.action_search) {
+        /*if (itemThatWasClickedId == R.id.action_search) {
             // TODO do something searchy ;)
             return true;
-        }
+        }*/
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onBackPressed() {
+        super.onBackPressed();
+        /*
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         if (!searchView.isIconified()) {
             searchView.setIconified(true);
         } else {
             super.onBackPressed();
-        }
+        }*/
     }
 
     private void loadCursistListData() {
@@ -92,9 +93,27 @@ public class CursistListActivity extends AppCompatActivity implements CursistLis
         Class destinationClass = CursistDetailActivity.class;
         Intent intent = new Intent(context, destinationClass);
         intent.putExtra("cursistId", cursist.id);
-        startActivity(intent);
+        intent.putExtra("cursist", cursist);
+        startActivityForResult(intent, CURSIST_DETAIL);
+//        startActivity(intent);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CURSIST_DETAIL)
+
+            if (resultCode == RESULT_OK)
+                cursistListAdapater.updateCursistInList((Cursist) data.getExtras().getParcelable("cursist"));
+                // update cursist
+            else if (resultCode == RESULT_CANCELED) {
+                if (data.hasExtra("cursist")) {
+                    Cursist cursist = data.getExtras().getParcelable("cursist");
+                    cursistListAdapater.deleteCursistFromList(cursist);
+                }
+            }
+
+//       super.onActivityResult(requestCode, resultCode, data);
+    }
 
     // TODO at the moment when you come back here after editing the cursist, all info is downloaded again, should be able to pass this back. -- is it?
     @Override
@@ -103,9 +122,7 @@ public class CursistListActivity extends AppCompatActivity implements CursistLis
     }
 
 
-
-
-    class FetchCursistListTask extends AsyncTask<String, Void, List<Cursist>> {
+    private class FetchCursistListTask extends AsyncTask<String, Void, List<Cursist>> {
 
         @Override
         protected void onPreExecute() {
@@ -119,9 +136,7 @@ public class CursistListActivity extends AppCompatActivity implements CursistLis
 
             try {
                 String jsonCursistLijstResponse = NetworkUtils.getResponseFromHttpUrl(diplomaListUrl);
-                List<Cursist> cursistList = OpenJsonUtils.getCursistLijst(jsonCursistLijstResponse);
-                return cursistList;
-
+                return OpenJsonUtils.getCursistLijst(jsonCursistLijstResponse);
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;
@@ -132,7 +147,7 @@ public class CursistListActivity extends AppCompatActivity implements CursistLis
         @Override
         protected void onPostExecute(List<Cursist> cursistList) {
             mLoadingIndicator.setVisibility(View.INVISIBLE);
-            if (cursistList!= null) {
+            if (cursistList != null) {
                 cursistListAdapater.setCursistListData(cursistList);
             } else {
                 showErrorMessage();

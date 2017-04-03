@@ -150,10 +150,25 @@ public class Cursist implements Parcelable {
         return false;
     }
 
+    /**
+     * Checks if all diplomaEisen in the list are attained by the cursist.
+     */
     public boolean isAlleEisenBehaald(List<DiplomaEis> diplomaEisList) {
         for (DiplomaEis diplomaEis : diplomaEisList) {
             // Als 1 eis niet is behaald, is niet alles behaald, dus return false.
             if (!hasDiploma(diplomaEis.getDiploma().getId()) && !isEisBehaald(diplomaEis))
+                return false;
+        }
+        return true;
+    }
+
+    /**
+     * Checks if all diploma's in the list are attained by the cursist.
+     */
+    public boolean isAlleDiplomasBehaald(List<Diploma> diplomaList) {
+        for (Diploma diploma : diplomaList) {
+            // Als 1 diploma uit de lijst niet is gehaald, zijn ze niet allemaal behaald dus return false.
+            if (!hasDiploma(diploma.getId()))
                 return false;
         }
         return true;
@@ -223,5 +238,24 @@ public class Cursist implements Parcelable {
         }
 
         cursistFoto = parcel.readParcelable(CursistFoto.class.getClassLoader());
+    }
+
+    public String getHoogsteDiploma() {
+
+        if (cursistHeeftDiplomas == null)
+            return "";
+
+        CursistHeeftDiploma chdHolder = null;
+        for (CursistHeeftDiploma cursistHeeftDiploma : cursistHeeftDiplomas) {
+            if (chdHolder == null) {
+                chdHolder = cursistHeeftDiploma;
+            } else if (cursistHeeftDiploma.getDiploma().getNivo() > chdHolder.getDiploma().getNivo()) {
+                chdHolder = cursistHeeftDiploma;
+            }
+        }
+
+        if (chdHolder == null)
+            return "";
+        return chdHolder.getDiploma().toString();
     }
 }

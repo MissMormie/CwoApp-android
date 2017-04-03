@@ -8,6 +8,7 @@ import java.util.List;
 
 /**
  * Created by sonja on 3/14/2017.
+ * Diploma information
  */
 
 public class Diploma implements Parcelable {
@@ -61,7 +62,7 @@ public class Diploma implements Parcelable {
     }
 
     public boolean equals(Diploma diploma) {
-        return (id == diploma.id);
+        return (id.equals(diploma.id));
     }
 
 

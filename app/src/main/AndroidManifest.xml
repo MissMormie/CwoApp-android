@@ -44,7 +44,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-        <!-- TODO Change label once i know what it does ;) -->
         <activity
             android:name=".CursistDetailActivity"
             android:label="@string/cursist"
@@ -73,7 +72,7 @@
         <activity android:name=".CursistBehaaldEisActivity" />
         <activity android:name=".EditCursistActivity" />
         <activity android:name=".DiplomaUitgevenActivity" />
-        <activity android:name=".CreateDiplomaActivity"></activity>
+        <activity android:name=".CursistBehaaldDiplomaActivity" />
     </application>
 
 </manifest>

@@ -80,7 +80,7 @@ public class TrainingActivity extends AppCompatActivity implements TrainingsList
 
     @Override
     public void onClick(DiplomaEis diplomaEis, boolean selected) {
-        if (selected == true) {
+        if (selected) {
             selectedDiplomaEisList.add(diplomaEis);
         } else if (selectedDiplomaEisList.contains(diplomaEis)) {
             selectedDiplomaEisList.remove(diplomaEis);

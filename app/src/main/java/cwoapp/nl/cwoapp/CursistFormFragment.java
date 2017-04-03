@@ -85,7 +85,6 @@ public class CursistFormFragment extends Fragment {
     }
 
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -175,7 +174,7 @@ public class CursistFormFragment extends Fragment {
             cursist.paspoort = null;
         }
         // Check if picture was taken, if so, path to the photo is not null.
-        if (mCurrentPhotoPath != null && mCurrentPhotoPath != "") {
+        if (mCurrentPhotoPath != null && !mCurrentPhotoPath.equals("")) {
             //Bitmap bm = BitmapFactory.decodeFile(mCurrentPhotoPath);
             BitmapDrawable drawable = (BitmapDrawable) fotoImageView.getDrawable();
             Bitmap bm = drawable.getBitmap();
@@ -200,7 +199,7 @@ public class CursistFormFragment extends Fragment {
     public void toggleLoading(boolean currentlyLoading) {
         if (loadingProgressBar == null)
             return;
-        if (currentlyLoading == true)
+        if (currentlyLoading)
             loadingProgressBar.setVisibility(View.VISIBLE);
         else
             loadingProgressBar.setVisibility(View.INVISIBLE);
@@ -214,7 +213,7 @@ public class CursistFormFragment extends Fragment {
      * to the activity and potentially other fragments contained in that
      * activity.
      */
-    public interface OnFragmentInteractionListener {
+    interface OnFragmentInteractionListener {
 
         void saveCursist(Cursist cursist);
 
@@ -286,7 +285,6 @@ public class CursistFormFragment extends Fragment {
         Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
         fotoImageView.setImageBitmap(bitmap);
     }
-
 
 
     @Override

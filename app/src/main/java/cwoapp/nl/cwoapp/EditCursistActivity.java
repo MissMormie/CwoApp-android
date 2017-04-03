@@ -1,18 +1,12 @@
 package cwoapp.nl.cwoapp;
 
-import android.os.AsyncTask;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
-import java.io.IOException;
-import java.net.URL;
-
-import javax.net.ssl.HttpsURLConnection;
-
 import cwoapp.nl.cwoapp.asyncLoadingTasks.SaveCursistAsyncTask;
 import cwoapp.nl.cwoapp.entity.Cursist;
-import cwoapp.nl.cwoapp.utility.NetworkUtils;
 
 public class EditCursistActivity extends AppCompatActivity implements CursistFormFragment.OnFragmentInteractionListener, SaveCursistAsyncTask.SaveCursist {
     Cursist cursist;
@@ -30,41 +24,31 @@ public class EditCursistActivity extends AppCompatActivity implements CursistFor
     @Override
     public void saveCursist(Cursist cursist) {
         this.cursist = cursist;
-        String cursistJson = cursist.simpleCursistToJson();
         new SaveCursistAsyncTask(this).execute(cursist);
     }
 
     @Override
-    public void cursistSaved(int resultCode) {
-        if (resultCode == HttpsURLConnection.HTTP_OK) {
+    public void cursistSaved(Cursist cursist) {
+        if (cursist != null) {
             Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.cursist_opgeslagen), Toast.LENGTH_SHORT);
             toast.show();
+            // TODO set a check that getCursistFoto excist, create it otherwise.
+            cursist.getCursistFoto().setImage(this.cursist.getFotoFileBase64());
         } else {
             Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.error_message), Toast.LENGTH_SHORT);
             toast.show();
         }
+
+        Intent intent = new Intent();
+        intent.putExtra("cursist", cursist);
+        setResult(RESULT_OK, intent);
         finish();
     }
 
-    class saveCursistAsyncTaska extends AsyncTask<Cursist, Void, Integer> {
-
-        @Override
-        protected Integer doInBackground(Cursist... params) {
-
-            URL url = NetworkUtils.buildUrl("cursist");
-            try {
-                return NetworkUtils.uploadToServer(url, cursist.simpleCursistToJson(), "PUT");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Integer s) {
-            super.onPostExecute(s);
-            cursistSaved(s);
-
-        }
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.putExtra("cursist", cursist);
+        setResult(RESULT_CANCELED, intent);
     }
 }

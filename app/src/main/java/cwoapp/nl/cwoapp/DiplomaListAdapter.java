@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 
 import java.util.List;
 
@@ -16,12 +17,12 @@ import cwoapp.nl.cwoapp.entity.Diploma;
  * Uses diploma_list_item to show entered list of Diploma's, including checkbox behaviour.
  */
 
-public class DiplomaListAdapter extends RecyclerView.Adapter<DiplomaListAdapter.DiplomaListAdapterViewHolder> {
+class DiplomaListAdapter extends RecyclerView.Adapter<DiplomaListAdapter.DiplomaListAdapterViewHolder> {
     private List<Diploma> diplomaList;
     final private DiplomaListAdapterOnClickHandler clickHandler;
     Context context;
 
-    public DiplomaListAdapter(DiplomaListAdapterOnClickHandler clickHandler) {
+    DiplomaListAdapter(DiplomaListAdapterOnClickHandler clickHandler) {
         this.clickHandler = clickHandler;
     }
 
@@ -32,8 +33,7 @@ public class DiplomaListAdapter extends RecyclerView.Adapter<DiplomaListAdapter.
         LayoutInflater inflater = LayoutInflater.from(context);
 
         View view = inflater.inflate(layoutIdForListItem, viewGroup, false);
-        DiplomaListAdapter.DiplomaListAdapterViewHolder viewHolder = new DiplomaListAdapter.DiplomaListAdapterViewHolder(view);
-        return viewHolder;
+        return new DiplomaListAdapter.DiplomaListAdapterViewHolder(view);
     }
 
     @Override
@@ -56,9 +56,25 @@ public class DiplomaListAdapter extends RecyclerView.Adapter<DiplomaListAdapter.
     class DiplomaListAdapterViewHolder extends RecyclerView.ViewHolder /* implements View.OnClickListener */ {
         private CheckBox checkBoxDiploma;
 
-        public DiplomaListAdapterViewHolder(View itemView) {
+        DiplomaListAdapterViewHolder(View itemView) {
             super(itemView);
             checkBoxDiploma = (CheckBox) itemView.findViewById(R.id.checkBoxDiploma);
+
+            setListeners();
+        }
+
+        private void setListeners() {
+            checkBoxDiploma.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    int adapterPosition = getAdapterPosition();
+                    Diploma diploma = diplomaList.get(adapterPosition);
+
+                    clickHandler.onClick(diploma, isChecked);
+                }
+            });
+
         }
 
         void bind(int position) {
@@ -68,7 +84,7 @@ public class DiplomaListAdapter extends RecyclerView.Adapter<DiplomaListAdapter.
         }
     }
 
-    public interface DiplomaListAdapterOnClickHandler {
+    interface DiplomaListAdapterOnClickHandler {
         void onClick(Diploma diploma, boolean selected);
 
         boolean isSelectedDiploma(Diploma diploma);

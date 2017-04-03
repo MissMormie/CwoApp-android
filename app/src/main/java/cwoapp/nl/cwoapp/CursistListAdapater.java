@@ -21,25 +21,63 @@ import cwoapp.nl.cwoapp.entity.Cursist;
 
 /**
  * Created by Sonja on 3/9/2017.
+ * Shows listitems of cursisten
  */
 
-public class CursistListAdapater extends RecyclerView.Adapter<CursistListAdapater.CursistListAdapterViewHolder> {
+class CursistListAdapater extends RecyclerView.Adapter<CursistListAdapater.CursistListAdapterViewHolder> {
     // For logging:
     private static final String TAG = CursistListAdapater.class.getSimpleName();
-    protected List<Cursist> cursistList;
+    private List<Cursist> cursistList;
     private final CursistListAdapterOnClickHandler clickHandler;
     private final Context context;
 
 
-    public CursistListAdapater(CursistListAdapterOnClickHandler clickHandler, Context context) {
+    CursistListAdapater(CursistListAdapterOnClickHandler clickHandler, Context context) {
         this.clickHandler = clickHandler;
         this.context = context;
     }
 
-    public void setCursistListData(List<Cursist> cursistList) {
+    // ---------------------------------------- Modify data -------------------------------------------
+
+
+    void setCursistListData(List<Cursist> cursistList) {
         this.cursistList = cursistList;
         notifyDataSetChanged();
     }
+
+    void deleteCursistFromList(Cursist cursist) {
+        // Since the object is recreated I have to check every ID.
+
+        int deleteThis = -1;
+        for (int i = 0; i < cursistList.size(); i++) {
+            if (cursist.id == cursistList.get(i).id) {
+                deleteThis = i;
+                break;
+            }
+        }
+        if (deleteThis != -1) {
+            cursistList.remove(deleteThis);
+            notifyDataSetChanged();
+        }
+    }
+
+
+    public void updateCursistInList(Cursist cursist) {
+        // Since the object is recreated I have to check every ID.
+        int updateThis = -1;
+        for (int i = 0; i < cursistList.size(); i++) {
+            if (cursist.id == cursistList.get(i).id) {
+                updateThis = i;
+                break;
+            }
+        }
+        if (updateThis != -1) {
+            cursistList.set(updateThis, cursist);
+            notifyDataSetChanged();
+        }
+    }
+
+    // ---------------------------------------- Overridden functions ---------------------------------
 
 
     @Override
@@ -50,8 +88,7 @@ public class CursistListAdapater extends RecyclerView.Adapter<CursistListAdapate
         boolean shouldAttachToParentImmediately = false;
 
         View view = inflater.inflate(layoutIdForListItem, viewGroup, shouldAttachToParentImmediately);
-        CursistListAdapterViewHolder viewHolder = new CursistListAdapterViewHolder(view);
-        return viewHolder;
+        return new CursistListAdapterViewHolder(view);
     }
 
     @Override
@@ -62,27 +99,33 @@ public class CursistListAdapater extends RecyclerView.Adapter<CursistListAdapate
 
     @Override
     public int getItemCount() {
-        if(cursistList == null)
+        if (cursistList == null)
             return 0;
         return cursistList.size();
     }
 
+
+    // -------------------------------- Viewholder class --------------------------------------------
+
     class CursistListAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         final TextView cursistItemTextView;
+        final TextView diplomaTextView;
         final ImageView fotoImageView;
         final View view;
 
-        public CursistListAdapterViewHolder(View itemView) {
+        CursistListAdapterViewHolder(View itemView) {
             super(itemView);
             view = itemView;
             cursistItemTextView = (TextView) itemView.findViewById(R.id.tv_cursist_data);
             fotoImageView = (ImageView) itemView.findViewById(R.id.imageViewFoto);
+            diplomaTextView = (TextView) itemView.findViewById(R.id.diplomaTextView);
             itemView.setOnClickListener(this);
         }
 
         void bind(int position) {
             Cursist cursist = cursistList.get(position);
             cursistItemTextView.setText(cursist.nameToString());
+            diplomaTextView.setText(cursist.getHoogsteDiploma());
 
             // Set foto
             if (cursist.getCursistFoto() != null) {
@@ -114,8 +157,9 @@ public class CursistListAdapater extends RecyclerView.Adapter<CursistListAdapate
         }
     }
 
+    // ----------------------------- Interface --------------------------------------------------
 
-    public interface CursistListAdapterOnClickHandler {
+    interface CursistListAdapterOnClickHandler {
         void onClick(Cursist cursist);
     }
 

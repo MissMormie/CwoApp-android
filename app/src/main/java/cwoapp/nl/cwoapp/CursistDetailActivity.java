@@ -5,12 +5,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,8 +24,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.net.ssl.HttpsURLConnection;
 
 import cwoapp.nl.cwoapp.asyncLoadingTasks.DownloadAndSetImageTask;
 import cwoapp.nl.cwoapp.asyncLoadingTasks.SaveCursistAsyncTask;
@@ -39,6 +40,7 @@ public class CursistDetailActivity extends AppCompatActivity implements SaveCurs
     Cursist cursist;
     private RecyclerView recyclerView;
     private CursistBehaaldEisAdapter cursistBehaaldEisAdapter;
+    static final int EDIT_CURSIST = 1;
 
 
     @Override
@@ -55,20 +57,15 @@ public class CursistDetailActivity extends AppCompatActivity implements SaveCurs
         cursistBehaaldEisAdapter = new CursistBehaaldEisAdapter();
         recyclerView.setAdapter(cursistBehaaldEisAdapter);
 
-        Long cursistId = getIntent().getLongExtra("cursistId", 0);
-        loadCursistData(cursistId);
+        cursist = getIntent().getExtras().getParcelable("cursist");
+        displayCursistInfo();
+        loadDiplomaData();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.cursist_detail_menu, menu);
         return true;
-    }
-
-    // TODO at the moment when you come back here after editing the cursist, all info is downloaded again, should be able to pass this back.
-    @Override
-    public void onRestart() {
-        super.onRestart();
     }
 
 
@@ -114,15 +111,23 @@ public class CursistDetailActivity extends AppCompatActivity implements SaveCurs
         Dialog dialog = builder.create();
         dialog.show();
 
-        // TODO make popup 'are you sure'
 
     }
 
     private void cursistDeleted() {
         Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.cursist_verwijderd), Toast.LENGTH_SHORT);
         toast.show();
-
+        Intent intent = new Intent();
+        intent.putExtra("cursist", cursist);
+        setResult(RESULT_CANCELED, intent);
         finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.putExtra("cursist", cursist);
+        setResult(RESULT_OK, intent);
     }
 
     public void toggleLoading(boolean currentlyLoading) {
@@ -140,12 +145,21 @@ public class CursistDetailActivity extends AppCompatActivity implements SaveCurs
         Class destinationClass = EditCursistActivity.class;
         Intent intent = new Intent(context, destinationClass);
         intent.putExtra("cursist", cursist);
-        startActivity(intent);
+        startActivityForResult(intent, EDIT_CURSIST);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == EDIT_CURSIST)
+            if (resultCode == RESULT_OK && data.hasExtra("cursist")) {
+                this.cursist = data.getExtras().getParcelable("cursist");
+                displayCursistInfo();
+            }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
-    private void loadCursistData(Long cursistId) {
-        new FetchCursistTask().execute(cursistId);
+    private void loadDiplomaData() {
+        //new FetchCursistTask().execute(cursistId);
         new FetchCwoEisData().execute();
     }
 
@@ -161,12 +175,18 @@ public class CursistDetailActivity extends AppCompatActivity implements SaveCurs
             activityCursistDetailBinding.textViewPaspoort.setText("ja");
 
         if (cursist.getCursistFoto() != null) {
+            // Check if photo is included in cursist object
+            if (cursist.getCursistFoto().getImage() != null && !cursist.getCursistFoto().getImage().equals("")) {
+                String imgData = cursist.getCursistFoto().getThumbnail();
+                byte[] imgByteArray = Base64.decode(imgData, Base64.NO_WRAP);
+                Bitmap bitmap = BitmapFactory.decodeByteArray(imgByteArray, 0, imgByteArray.length);
+                activityCursistDetailBinding.imageViewFoto.setImageBitmap(bitmap);
+            } else {
 
-            URL fotoUrl = NetworkUtils.buildUrl("foto", cursist.getCursistFoto().getId().toString());
-
-            new DownloadAndSetImageTask(activityCursistDetailBinding.imageViewFoto, getApplicationContext())
-                    .execute(fotoUrl.toString());
-
+                URL fotoUrl = NetworkUtils.buildUrl("foto", cursist.getCursistFoto().getId().toString());
+                new DownloadAndSetImageTask(activityCursistDetailBinding.imageViewFoto, getApplicationContext())
+                        .execute(fotoUrl.toString());
+            }
         }
 
 //            activityCursistDetailBinding.imageViewFoto.setImageBitmap();
@@ -180,10 +200,10 @@ public class CursistDetailActivity extends AppCompatActivity implements SaveCurs
     }
 
     @Override
-    public void cursistSaved(int resultCode) {
+    public void cursistSaved(Cursist cursist) {
         toggleLoading(false);
-        if (resultCode == HttpsURLConnection.HTTP_OK) {
-            String tekst = "";
+        if (cursist != null) {
+            String tekst;
             if (cursist.isVerborgen())
                 tekst = getString(R.string.cursist_verborgen);
             else
@@ -192,43 +212,17 @@ public class CursistDetailActivity extends AppCompatActivity implements SaveCurs
             Toast toast = Toast.makeText(getApplicationContext(), tekst, Toast.LENGTH_SHORT);
             toast.show();
         } else {
-            Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.error_message), Toast.LENGTH_SHORT);
-            toast.show();
+            showErrorMessage();
         }
     }
 
-    class FetchCursistTask extends AsyncTask<Long, Void, Cursist> {
-
-        @Override
-        protected void onPreExecute() {
-            toggleLoading(true);
-            super.onPreExecute();
-        }
-
-        @Override
-        protected Cursist doInBackground(Long... id) {
-            URL curistUrl = NetworkUtils.buildUrl("cursist", id[0].toString());
-
-            try {
-                String jsonCursistResponse = NetworkUtils.getResponseFromHttpUrl(curistUrl);
-                Cursist cursist = OpenJsonUtils.getCursist(jsonCursistResponse);
-                return cursist;
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Cursist cursistObject) {
-            toggleLoading(false);
-            cursist = cursistObject;
-            displayCursistInfo();
-        }
+    void showErrorMessage() {
+        Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.error_message), Toast.LENGTH_LONG);
+        toast.show();
     }
 
-    class DeleteCursistTask extends AsyncTask<Long, Void, Integer> {
+
+    private class DeleteCursistTask extends AsyncTask<Long, Void, Integer> {
 
         @Override
         protected void onPreExecute() {
@@ -249,21 +243,18 @@ public class CursistDetailActivity extends AppCompatActivity implements SaveCurs
             return resultCode;
         }
 
-        /**
-         * @param resultCode
-         */
         @Override
         protected void onPostExecute(Integer resultCode) {
             toggleLoading(false);
             if (resultCode == HttpURLConnection.HTTP_OK) {
                 cursistDeleted();
             } else {
-                //showErrorMessage();
+                showErrorMessage();
             }
         }
     }
 
-    class FetchCwoEisData extends AsyncTask<String, Void, List<Diploma>> {
+    private class FetchCwoEisData extends AsyncTask<String, Void, List<Diploma>> {
 
         @Override
         protected void onPreExecute() {
@@ -277,8 +268,7 @@ public class CursistDetailActivity extends AppCompatActivity implements SaveCurs
 
             try {
                 String jsonDiplomaLijstResponse = NetworkUtils.getResponseFromHttpUrl(diplomaListUrl);
-                List<Diploma> diplomaList = OpenJsonUtils.getDiplomaLijst(jsonDiplomaLijstResponse);
-                return diplomaList;
+                return OpenJsonUtils.getDiplomaLijst(jsonDiplomaLijstResponse);
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;
@@ -296,7 +286,7 @@ public class CursistDetailActivity extends AppCompatActivity implements SaveCurs
 
                 displayDiplomaEisInfo(diplomaEisenLijst);
             } else {
-                //showErrorMessage();
+                showErrorMessage();
             }
         }
     }

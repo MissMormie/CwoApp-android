@@ -32,8 +32,11 @@ public class EditCursistActivity extends AppCompatActivity implements CursistFor
         if (cursist != null) {
             Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.cursist_opgeslagen), Toast.LENGTH_SHORT);
             toast.show();
-            // TODO set a check that getCursistFoto excist, create it otherwise.
-            cursist.getCursistFoto().setImage(this.cursist.getFotoFileBase64());
+            if(cursist.getCursistFoto()!= null)
+                cursist.getCursistFoto().setImage(this.cursist.getFotoFileBase64());
+            // TODO, fix this work around.
+            // For some reason the api returns a different date, it's saved correctly
+            cursist.paspoort = this.cursist.paspoort;
         } else {
             Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.error_message), Toast.LENGTH_SHORT);
             toast.show();
@@ -50,5 +53,6 @@ public class EditCursistActivity extends AppCompatActivity implements CursistFor
         Intent intent = new Intent();
         intent.putExtra("cursist", cursist);
         setResult(RESULT_CANCELED, intent);
+        finish();
     }
 }

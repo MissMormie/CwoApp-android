@@ -2,6 +2,7 @@ package cwoapp.nl.cwoapp;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.databinding.DataBindingUtil;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -21,26 +22,24 @@ import java.util.List;
 
 import cwoapp.nl.cwoapp.asyncLoadingTasks.DownloadAndSetImageTask;
 import cwoapp.nl.cwoapp.asyncLoadingTasks.FetchCursistListAsyncTask;
+import cwoapp.nl.cwoapp.databinding.ActivityCursistChecklistBinding;
 import cwoapp.nl.cwoapp.entity.Cursist;
 import cwoapp.nl.cwoapp.entity.Diploma;
 import cwoapp.nl.cwoapp.utility.NetworkUtils;
 
 public class CursistBehaaldDiplomaActivity extends AppCompatActivity implements FetchCursistListAsyncTask.FetchCursistList {
     List<Diploma> diplomaList;
-    private ProgressBar loadingIndicator;
     private List<Cursist> cursistList;
-    private TextView textViewNaam;
-    private RecyclerView recyclerView;
-    private ImageView imageViewFoto;
     private CursistBehaaldDiplomaAdapter cursistBehaaldDiplomaAdapter;
     private Cursist currentCursist;
     Boolean showAlreadyCompleted = false;
+    ActivityCursistChecklistBinding dataBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // Get activity xml
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_cursist_checklist);
+        dataBinding = DataBindingUtil.setContentView(this, R.layout.activity_cursist_checklist);
 
         // Get parceled info
         Intent intent = getIntent();
@@ -50,19 +49,14 @@ public class CursistBehaaldDiplomaActivity extends AppCompatActivity implements 
             cursistList.add((Cursist) intent.getExtras().getParcelable("cursist"));
         }
 
-        // get variables for elements in layout.
-        textViewNaam = (TextView) findViewById(R.id.textViewNaam);
-        loadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerview_training_lijst);
-        imageViewFoto = (ImageView) findViewById(R.id.imageViewFoto);
 
         // Set up of the recycler view and adapter.
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(layoutManager);
+        dataBinding.recyclerviewTrainingLijst.setLayoutManager(layoutManager);
         // Not all items in list have the same size
-        recyclerView.setHasFixedSize(true);
+        dataBinding.recyclerviewTrainingLijst.setHasFixedSize(true);
         cursistBehaaldDiplomaAdapter = new CursistBehaaldDiplomaAdapter(diplomaList);
-        recyclerView.setAdapter(cursistBehaaldDiplomaAdapter);
+        dataBinding.recyclerviewTrainingLijst.setAdapter(cursistBehaaldDiplomaAdapter);
 
         // Get preference for showing cursisten who already met all eisen.
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -78,7 +72,7 @@ public class CursistBehaaldDiplomaActivity extends AppCompatActivity implements 
         if (cursistList == null)
             new FetchCursistListAsyncTask(this).execute(showAlreadyCompleted);
         else {
-            loadingIndicator.setVisibility(View.GONE);
+            dataBinding.pbLoadingIndicator.setVisibility(View.GONE);
             showNextCursist();
         }
     }
@@ -93,20 +87,28 @@ public class CursistBehaaldDiplomaActivity extends AppCompatActivity implements 
             if (currentCursist.isAlleDiplomasBehaald(diplomaList)) {
                 showNextCursist();
             } else {
-                cursistBehaaldDiplomaAdapter.setCursist(currentCursist);
-                textViewNaam.setText(currentCursist.nameToString());
-
-                // Set photo if available, else set user mockup.
-                if (currentCursist.getCursistFoto() != null) {
-                    URL fotoUrl = NetworkUtils.buildUrl("foto", currentCursist.getCursistFoto().getId().toString());
-                    new DownloadAndSetImageTask(imageViewFoto, getApplicationContext())
-                            .execute(fotoUrl.toString());
-                } else {
-                    Drawable drawable = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_user_image);
-                    imageViewFoto.setImageDrawable(drawable);
-                }
-
+                displayCursistInfo();
             }
+        }
+    }
+
+    private void displayCursistInfo() {
+        cursistBehaaldDiplomaAdapter.setCursist(currentCursist);
+        dataBinding.textViewNaam.setText(currentCursist.nameToString());
+        dataBinding.textViewOpmerking.setText(currentCursist.opmerking);
+        if (currentCursist.paspoort == null)
+            dataBinding.textViewPaspoort.setText(getString(R.string.paspoort) +": " + getString(R.string.nee));
+        else
+            dataBinding.textViewPaspoort.setText(getString(R.string.paspoort) +": " + getString(R.string.ja));
+
+        // Set photo if available, else set user mockup.
+        if (currentCursist.getCursistFoto() != null) {
+            URL fotoUrl = NetworkUtils.buildUrl("foto", currentCursist.getCursistFoto().getId().toString());
+            new DownloadAndSetImageTask(dataBinding.imageViewFoto, getApplicationContext())
+                    .execute(fotoUrl.toString());
+        } else {
+            Drawable drawable = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_user_image);
+            dataBinding.imageViewFoto.setImageDrawable(drawable);
         }
     }
 
@@ -127,7 +129,7 @@ public class CursistBehaaldDiplomaActivity extends AppCompatActivity implements 
             return;
         }
 
-        loadingIndicator.setVisibility(View.GONE);
+        dataBinding.pbLoadingIndicator.setVisibility(View.GONE);
         this.cursistList = cursistList;
         showNextCursist();
     }

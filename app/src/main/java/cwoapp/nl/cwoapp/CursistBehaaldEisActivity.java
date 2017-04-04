@@ -2,6 +2,7 @@ package cwoapp.nl.cwoapp;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.databinding.DataBindingUtil;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -20,43 +21,39 @@ import java.util.List;
 
 import cwoapp.nl.cwoapp.asyncLoadingTasks.DownloadAndSetImageTask;
 import cwoapp.nl.cwoapp.asyncLoadingTasks.FetchCursistListAsyncTask;
+import cwoapp.nl.cwoapp.databinding.ActivityCursistChecklistBinding;
 import cwoapp.nl.cwoapp.entity.Cursist;
 import cwoapp.nl.cwoapp.entity.DiplomaEis;
 import cwoapp.nl.cwoapp.utility.NetworkUtils;
 
 public class CursistBehaaldEisActivity extends AppCompatActivity implements FetchCursistListAsyncTask.FetchCursistList {
+
     // Lijst met diploma eisen die getraind zijn.
     private List<DiplomaEis> diplomaEisList;
-    private ProgressBar loadingIndicator;
     private List<Cursist> cursistList;
-    private TextView textViewNaam;
-    private RecyclerView recyclerView;
     private CursistBehaaldEisAdapter cursistBehaaldEisAdapter;
     private Cursist currentCursist;
-    private ImageView imageViewFoto;
+    ActivityCursistChecklistBinding dataBinding;
     Boolean showAlreadyCompleted = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_cursist_checklist);
+
+        dataBinding = DataBindingUtil.setContentView(this, R.layout.activity_cursist_checklist);
+
         Intent intent = getIntent();
         diplomaEisList = intent.getParcelableArrayListExtra("selectedDiplomaEisList");
 
-        // get variables for elements in layout.
-        textViewNaam = (TextView) findViewById(R.id.textViewNaam);
-        loadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerview_training_lijst);
-        imageViewFoto = (ImageView) findViewById(R.id.imageViewFoto);
+
 
         // Set up of the recycler view and adapter.
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(layoutManager);
-        // Not all items in list have the same size
-        recyclerView.setHasFixedSize(true);
+        dataBinding.recyclerviewTrainingLijst.setLayoutManager(layoutManager);
+        // All items in list have the same size
+        dataBinding.recyclerviewTrainingLijst.setHasFixedSize(true);
         cursistBehaaldEisAdapter = new CursistBehaaldEisAdapter();
-        recyclerView.setAdapter(cursistBehaaldEisAdapter);
+        dataBinding.recyclerviewTrainingLijst.setAdapter(cursistBehaaldEisAdapter);
 
         // Get preference for showing cursisten who already met all eisen.
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -94,16 +91,21 @@ public class CursistBehaaldEisActivity extends AppCompatActivity implements Fetc
 
     private void setCursistData() {
         cursistBehaaldEisAdapter.setCursist(currentCursist);
-        textViewNaam.setText(currentCursist.nameToString());
+        dataBinding.textViewNaam.setText(currentCursist.nameToString());
+        dataBinding.textViewOpmerking.setText(currentCursist.opmerking);
+        if (currentCursist.paspoort == null)
+            dataBinding.textViewPaspoort.setText(getString(R.string.paspoort) +": " + getString(R.string.nee));
+        else
+            dataBinding.textViewPaspoort.setText(getString(R.string.paspoort) +": " + getString(R.string.ja));
 
         // Set photo if available, else set user mockup.
         if (currentCursist.getCursistFoto() != null) {
             URL fotoUrl = NetworkUtils.buildUrl("foto", currentCursist.getCursistFoto().getId().toString());
-            new DownloadAndSetImageTask(imageViewFoto, getApplicationContext())
+            new DownloadAndSetImageTask(dataBinding.imageViewFoto, getApplicationContext())
                     .execute(fotoUrl.toString());
         } else {
             Drawable drawable = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_user_image);
-            imageViewFoto.setImageDrawable(drawable);
+            dataBinding.imageViewFoto.setImageDrawable(drawable);
         }
     }
 
@@ -125,7 +127,7 @@ public class CursistBehaaldEisActivity extends AppCompatActivity implements Fetc
             return;
         }
 
-        loadingIndicator.setVisibility(View.GONE);
+        dataBinding.pbLoadingIndicator.setVisibility(View.GONE);
         this.cursistList = cursistList;
         showFirstCursist();
     }

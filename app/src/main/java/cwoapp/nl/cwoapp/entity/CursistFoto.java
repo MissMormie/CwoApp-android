@@ -55,7 +55,9 @@ public class CursistFoto implements Parcelable {
     private CursistFoto(Parcel parcel) {
         id = parcel.readLong();
         thumbnail = parcel.readString();
-        image = parcel.readString();
+
+        // Image is too large to send through parcelable. It will crash without saying anything.
+        //image = parcel.readString();
     }
 
     @Override
@@ -67,6 +69,6 @@ public class CursistFoto implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(id);
         dest.writeString(thumbnail);
-        dest.writeString(image);
+        //dest.writeString(image);
     }
 }

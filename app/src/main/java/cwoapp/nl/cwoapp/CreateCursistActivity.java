@@ -69,7 +69,7 @@ public class CreateCursistActivity extends AppCompatActivity implements CursistF
         Class destinationClass = CursistBehaaldDiplomaActivity.class;
         Intent intent = new Intent(context, destinationClass);
 
-        // TODO make diploma parcelable.
+
         intent.putParcelableArrayListExtra("selectedDiplomaList", diplomaArrayList);
         ArrayList<Cursist> cursistList = new ArrayList<>();
         cursistList.add(cursist);

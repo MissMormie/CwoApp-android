@@ -41,6 +41,7 @@ public class CursistDetailActivity extends AppCompatActivity implements SaveCurs
     private RecyclerView recyclerView;
     private CursistBehaaldEisAdapter cursistBehaaldEisAdapter;
     static final int EDIT_CURSIST = 1;
+    private List<Diploma> diplomaList;
 
 
     @Override
@@ -62,6 +63,8 @@ public class CursistDetailActivity extends AppCompatActivity implements SaveCurs
         loadDiplomaData();
     }
 
+
+    /// ---------------------------- MENU Functions ------------------------------------------------
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.cursist_detail_menu, menu);
@@ -81,9 +84,32 @@ public class CursistDetailActivity extends AppCompatActivity implements SaveCurs
         } else if (itemThatWasClickedId == R.id.action_delete) {
             deleteCursist();
             return true;
+        } else if(itemThatWasClickedId == R.id.action_diploma) {
+            diplomaUitgeven();
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showEditCursist() {
+        Context context = this;
+        Class destinationClass = EditCursistActivity.class;
+        Intent intent = new Intent(context, destinationClass);
+        intent.putExtra("cursist", cursist);
+        startActivityForResult(intent, EDIT_CURSIST);
+    }
+
+    private void diplomaUitgeven() {
+        Class destinationClass = CursistBehaaldDiplomaActivity.class;
+        Intent intent = new Intent(this, destinationClass);
+
+        ArrayList<Diploma> diplomaArrayList = (ArrayList<Diploma>) diplomaList;
+        intent.putParcelableArrayListExtra("selectedDiplomaList", diplomaArrayList);
+        ArrayList<Cursist> cursistList = new ArrayList<>();
+        cursistList.add(cursist);
+        intent.putExtra("cursist", cursist);
+
+        startActivity(intent);
     }
 
     private void hideCursist() {
@@ -110,8 +136,6 @@ public class CursistDetailActivity extends AppCompatActivity implements SaveCurs
 
         Dialog dialog = builder.create();
         dialog.show();
-
-
     }
 
     private void cursistDeleted() {
@@ -123,30 +147,17 @@ public class CursistDetailActivity extends AppCompatActivity implements SaveCurs
         finish();
     }
 
+    // ---------------------------------------------------------------------------------------------
+    // BACK BEHAVIOUR
+
     @Override
     public void onBackPressed() {
         Intent intent = new Intent();
         intent.putExtra("cursist", cursist);
         setResult(RESULT_OK, intent);
+        finish();
     }
 
-    public void toggleLoading(boolean currentlyLoading) {
-        if (activityCursistDetailBinding.loadingProgressBar == null)
-            return;
-        if (currentlyLoading == true)
-            activityCursistDetailBinding.loadingProgressBar.setVisibility(View.VISIBLE);
-        else
-            activityCursistDetailBinding.loadingProgressBar.setVisibility(View.INVISIBLE);
-
-    }
-
-    private void showEditCursist() {
-        Context context = this;
-        Class destinationClass = EditCursistActivity.class;
-        Intent intent = new Intent(context, destinationClass);
-        intent.putExtra("cursist", cursist);
-        startActivityForResult(intent, EDIT_CURSIST);
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -157,6 +168,21 @@ public class CursistDetailActivity extends AppCompatActivity implements SaveCurs
             }
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+    // ---------------------------------------------------------------------------------------------
+
+    public void toggleLoading(boolean currentlyLoading) {
+        if (activityCursistDetailBinding.loadingProgressBar == null)
+            return;
+        if (currentlyLoading == true)
+            activityCursistDetailBinding.loadingProgressBar.setVisibility(View.VISIBLE);
+        else
+            activityCursistDetailBinding.loadingProgressBar.setVisibility(View.GONE);
+
+    }
+
+
+
 
     private void loadDiplomaData() {
         //new FetchCursistTask().execute(cursistId);
@@ -170,11 +196,11 @@ public class CursistDetailActivity extends AppCompatActivity implements SaveCurs
         activityCursistDetailBinding.textviewNaam.setText(cursist.nameToString());
         activityCursistDetailBinding.textViewOpmerking.setText(cursist.opmerking);
         if (cursist.paspoort == null)
-            activityCursistDetailBinding.textViewPaspoort.setText("nee");
+            activityCursistDetailBinding.textViewPaspoort.setText(getString(R.string.paspoort) +": " + getString(R.string.nee));
         else
-            activityCursistDetailBinding.textViewPaspoort.setText("ja");
+            activityCursistDetailBinding.textViewPaspoort.setText(getString(R.string.paspoort) +": " + getString(R.string.ja));
 
-        if (cursist.getCursistFoto() != null) {
+        if (cursist.getCursistFoto() != null && cursist.getCursistFoto().getThumbnail() != null && !cursist.getCursistFoto().getThumbnail().equals("")) {
             // Check if photo is included in cursist object
             if (cursist.getCursistFoto().getImage() != null && !cursist.getCursistFoto().getImage().equals("")) {
                 String imgData = cursist.getCursistFoto().getThumbnail();
@@ -276,12 +302,13 @@ public class CursistDetailActivity extends AppCompatActivity implements SaveCurs
         }
 
         @Override
-        protected void onPostExecute(List<Diploma> diplomaList) {
+        protected void onPostExecute(List<Diploma> diplomaListResult) {
+            diplomaList = diplomaListResult;
             toggleLoading(false);
-            if (diplomaList != null) {
+            if (diplomaListResult != null) {
                 List<DiplomaEis> diplomaEisenLijst = new ArrayList<>();
-                for (int i = 0; i < diplomaList.size(); i++) {
-                    diplomaEisenLijst.addAll(diplomaList.get(i).getDiplomaEis());
+                for (int i = 0; i < diplomaListResult.size(); i++) {
+                    diplomaEisenLijst.addAll(diplomaListResult.get(i).getDiplomaEis());
                 }
 
                 displayDiplomaEisInfo(diplomaEisenLijst);

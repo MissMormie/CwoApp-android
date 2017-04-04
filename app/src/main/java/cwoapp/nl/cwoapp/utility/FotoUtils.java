@@ -15,7 +15,17 @@ public class FotoUtils {
 
 
     // Heavily borrowed from: http://stackoverflow.com/questions/8232608/fit-image-into-imageview-keep-aspect-ratio-and-then-resize-imageview-to-image-d
+    // Then heavily edited because in xml "scaleType" does the same ;)
     public static void setFoto(ImageView imageView, Bitmap bitmap, Context context) {
+        if(imageView == null || bitmap == null || context == null)
+            return;
+
+//        imageView.setImageBitmap(bitmap);
+        BitmapDrawable result = new BitmapDrawable(context.getResources(), bitmap);
+
+        // Apply the scaled bitmap
+        imageView.setImageDrawable(result);
+/*
         int height = bitmap.getHeight();
         int width = bitmap.getWidth();
 
@@ -30,7 +40,7 @@ public class FotoUtils {
         float yScale = ((float) boundingHeight) / height;
         float scale = (xScale <= yScale) ? xScale : yScale;
 
-        imageView.setImageBitmap(bitmap);
+
 
         // Create a matrix for the scaling and add the scaling data
         Matrix matrix = new Matrix();
@@ -44,7 +54,7 @@ public class FotoUtils {
 
         // Apply the scaled bitmap
         imageView.setImageDrawable(result);
-
+*/
     }
 
 }

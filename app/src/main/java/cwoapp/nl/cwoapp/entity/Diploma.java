@@ -84,7 +84,7 @@ public class Diploma implements Parcelable {
         id = parcel.readLong();
         titel = parcel.readString();
         nivo = parcel.readInt();
-
+        //parcel.readTypedList(diplomaEis, DiplomaEis.CREATOR);
     }
 
     @Override
@@ -97,5 +97,6 @@ public class Diploma implements Parcelable {
         parcel.writeLong(id);
         parcel.writeString(titel);
         parcel.writeInt(nivo);
+        //parcel.writeTypedList(diplomaEis);
     }
 }

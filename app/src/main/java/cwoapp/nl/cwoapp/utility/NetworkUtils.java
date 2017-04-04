@@ -97,11 +97,11 @@ public class NetworkUtils {
     /**
      * Connects to server on the given url, Return response code
      */
-    public static int sendToServer(URL url, String requestMethod) throws IOException {
+    public static int sendToServer(URL url) throws IOException {
         HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();
         httpCon.setDoOutput(true);
         httpCon.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-        httpCon.setRequestMethod(requestMethod);
+        httpCon.setRequestMethod("DELETE");
         httpCon.connect();
         return httpCon.getResponseCode();
     }
@@ -130,7 +130,8 @@ public class NetworkUtils {
                     new InputStreamReader(con.getInputStream(), "utf-8"));
             String line;
             while ((line = br.readLine()) != null) {
-                sb.append(line + "\n");
+                sb.append(line);
+                sb.append("\n");
             }
             br.close();
             return sb.toString();

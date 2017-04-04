@@ -49,13 +49,13 @@ public class Cursist implements Parcelable {
         this.verborgen = verborgen;
     }
 
-    public Cursist(long id, String voornaam, String tussenvoegsel, String achternaam, String opmerking, Date paspoort) {
-        this.opmerking = opmerking;
-        this.paspoort = paspoort;
+    public Cursist(long id, String voornaam) {
+        this.opmerking = "opmerking iets over koud water en wind en zon.";
+        this.paspoort = null;
         this.id = id;
         this.voornaam = voornaam;
-        this.tussenvoegsel = tussenvoegsel;
-        this.achternaam = achternaam;
+        this.tussenvoegsel = "";
+        this.achternaam = "Duijvesteijn";
     }
 
     public boolean isVerborgen() {
@@ -76,6 +76,20 @@ public class Cursist implements Parcelable {
 
     public void setCursistBehaaldEis(List<CursistBehaaldEis> cursistBehaaldEis) {
         this.cursistBehaaldEis = cursistBehaaldEis;
+    }
+
+    /**
+     * Keeps current paspoort date if there is one already.
+     */
+    public void heeftPaspoort(boolean heeftPaspoort) {
+        if(!heeftPaspoort) {
+            paspoort = null;
+            return;
+        }
+        if(paspoort != null)
+            return;
+        paspoort = new Date();
+
     }
 
     public String getFotoFileBase64() {
@@ -221,7 +235,7 @@ public class Cursist implements Parcelable {
     };
 
     // Note, the order IS important, if it's not the same as when parceling it doesn't work.
-    public Cursist(Parcel parcel) {
+    private Cursist(Parcel parcel) {
         id = parcel.readLong();
         voornaam = parcel.readString();
         tussenvoegsel = parcel.readString();
@@ -238,6 +252,7 @@ public class Cursist implements Parcelable {
         }
 
         cursistFoto = parcel.readParcelable(CursistFoto.class.getClassLoader());
+        //parcel.readTypedList(getCursistBehaaldEis(), CursistBehaaldEis.CREATOR);
     }
 
     public String getHoogsteDiploma() {

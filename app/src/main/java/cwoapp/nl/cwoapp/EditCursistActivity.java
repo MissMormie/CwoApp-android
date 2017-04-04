@@ -9,8 +9,8 @@ import cwoapp.nl.cwoapp.asyncLoadingTasks.SaveCursistAsyncTask;
 import cwoapp.nl.cwoapp.entity.Cursist;
 
 public class EditCursistActivity extends AppCompatActivity implements CursistFormFragment.OnFragmentInteractionListener, SaveCursistAsyncTask.SaveCursist {
-    Cursist cursist;
-    CursistFormFragment cursistFormFragment;
+    private Cursist cursist;
+    private CursistFormFragment cursistFormFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

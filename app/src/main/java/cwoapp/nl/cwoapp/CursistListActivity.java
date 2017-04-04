@@ -28,7 +28,7 @@ public class CursistListActivity extends AppCompatActivity implements CursistLis
     private TextView mErrorMessageDisplay;
     private CursistListAdapater cursistListAdapater;
     private MenuItem searchItem;
-    static final int CURSIST_DETAIL = 1;
+    private static final int CURSIST_DETAIL = 1;
 
 
     @Override
@@ -63,7 +63,7 @@ public class CursistListActivity extends AppCompatActivity implements CursistLis
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int itemThatWasClickedId = item.getItemId();
+        //int itemThatWasClickedId = item.getItemId();
         /*if (itemThatWasClickedId == R.id.action_search) {
             // TODO do something searchy ;)
             return true;
@@ -155,7 +155,7 @@ public class CursistListActivity extends AppCompatActivity implements CursistLis
         }
     }
 
-    public void showErrorMessage() {
+    private void showErrorMessage() {
         /* First, hide the currently visible data */
         mRecyclerView.setVisibility(View.INVISIBLE);
         /* Then, show the error */

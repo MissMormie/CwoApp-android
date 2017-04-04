@@ -49,7 +49,7 @@ public final class OpenJsonUtils {
     }
 
 
-    public static Cursist getCursist(JSONObject cursistJson) throws JSONException {
+    private static Cursist getCursist(JSONObject cursistJson) throws JSONException {
         // id & voornaam are required, so no check if they're not null
         Long id = cursistJson.getLong("id");
         String voornaam = cursistJson.getString("voornaam");
@@ -100,14 +100,14 @@ public final class OpenJsonUtils {
         return new Cursist(id, voornaam, tussenvoegsel, achternaam, paspoort, opmerking, cursistBehaaldEisList, cursistHeeftDiplomaList, cursistFoto, verborgen);
     }
 
-    public static CursistFoto getCursistFoto(JSONObject cursistFotoJson) throws JSONException {
+    private static CursistFoto getCursistFoto(JSONObject cursistFotoJson) throws JSONException {
         Long id = cursistFotoJson.getLong("id");
         String thumbString = cursistFotoJson.getString("thumbnail");
 //        byte[] thumbnail = Base64.decode(thumbString, Base64.NO_WRAP);
         return new CursistFoto(id, thumbString);
     }
 
-    public static List<CursistBehaaldEis> getCursistBehaaldEisLijst(JSONArray eisenBehaaldArray) throws JSONException {
+    private static List<CursistBehaaldEis> getCursistBehaaldEisLijst(JSONArray eisenBehaaldArray) throws JSONException {
         List<CursistBehaaldEis> cursistBehaaldEisList = new ArrayList<>();
         for (int i = 0; i < eisenBehaaldArray.length(); i++) {
             JSONObject cursistBehaaldEisJSon = eisenBehaaldArray.getJSONObject(i);
@@ -118,7 +118,7 @@ public final class OpenJsonUtils {
         return cursistBehaaldEisList;
     }
 
-    public static CursistBehaaldEis getCursistBehaaldEis(JSONObject cursistBehaaldEisJson) throws JSONException {
+    private static CursistBehaaldEis getCursistBehaaldEis(JSONObject cursistBehaaldEisJson) throws JSONException {
         Long id = cursistBehaaldEisJson.getLong("id");
         // TODO get date from JSON.
         JSONObject diplomaEisJson = cursistBehaaldEisJson.getJSONObject("diplomaEis");
@@ -126,7 +126,7 @@ public final class OpenJsonUtils {
         return new CursistBehaaldEis(id, diplomaEis);
     }
 
-    public static List<CursistHeeftDiploma> getCursistHeeftDiplomaLijst(JSONArray diplomaBehaaldArray) throws JSONException {
+    private static List<CursistHeeftDiploma> getCursistHeeftDiplomaLijst(JSONArray diplomaBehaaldArray) throws JSONException {
         List<CursistHeeftDiploma> cursistHeeftDiplomaList = new ArrayList();
         for (int i = 0; i < diplomaBehaaldArray.length(); i++) {
             JSONObject cursistHeeftDiplomaJson = diplomaBehaaldArray.getJSONObject(i);
@@ -137,7 +137,7 @@ public final class OpenJsonUtils {
         return cursistHeeftDiplomaList;
     }
 
-    public static CursistHeeftDiploma getCursistHeeftDiploma(JSONObject cursistHeeftDiplomaJson) throws JSONException {
+    private static CursistHeeftDiploma getCursistHeeftDiploma(JSONObject cursistHeeftDiplomaJson) throws JSONException {
         Long id = cursistHeeftDiplomaJson.getLong("id");
         Long cursist = cursistHeeftDiplomaJson.getLong("cursist");
         // TODO add date
@@ -164,7 +164,6 @@ public final class OpenJsonUtils {
 
             diplomaList.add(diploma);
         }
-        int a = 1;
         return diplomaList;
     }
 
@@ -176,7 +175,7 @@ public final class OpenJsonUtils {
      * @return Diploma object
      * @throws JSONException ..
      */
-    public static Diploma getDiploma(JSONObject diplomaJson) throws JSONException {
+    private static Diploma getDiploma(JSONObject diplomaJson) throws JSONException {
         Long id = diplomaJson.getLong("id");
         String titel = diplomaJson.getString("titel");
         int nivo = diplomaJson.getInt("nivo");
@@ -200,7 +199,7 @@ public final class OpenJsonUtils {
     /**
      * Takes a JSONArray of diplomaEis information and returns a list filled with diplomaEis objects
      */
-    public static List<DiplomaEis> getDiplomaEisLijst(JSONArray diplomaEisJsonArray) throws JSONException {
+    private static List<DiplomaEis> getDiplomaEisLijst(JSONArray diplomaEisJsonArray) throws JSONException {
         List<DiplomaEis> diplomaEisList = new ArrayList();
         for (int i = 0; i < diplomaEisJsonArray.length(); i++) {
             JSONObject diplomaEisJson = diplomaEisJsonArray.getJSONObject(i);
@@ -214,11 +213,10 @@ public final class OpenJsonUtils {
     /**
      * takes a JSONObject with diplomaEis information and returns a filled DiplomaEis object
      */
-    public static DiplomaEis getDiplomaEis(JSONObject diplomaEisJson) throws JSONException {
+    private static DiplomaEis getDiplomaEis(JSONObject diplomaEisJson) throws JSONException {
         Long id = diplomaEisJson.getLong("id");
         String titel = diplomaEisJson.getString("titel");
         String omschrijving = diplomaEisJson.getString("omschrijving");
-        Boolean theorie = diplomaEisJson.getBoolean("theorie");
 
         DiplomaEis diplomaEis = new DiplomaEis(id, titel, omschrijving);
 

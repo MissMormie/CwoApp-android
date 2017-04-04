@@ -20,7 +20,7 @@ import cwoapp.nl.cwoapp.entity.Diploma;
 class DiplomaListAdapter extends RecyclerView.Adapter<DiplomaListAdapter.DiplomaListAdapterViewHolder> {
     private List<Diploma> diplomaList;
     final private DiplomaListAdapterOnClickHandler clickHandler;
-    Context context;
+    private Context context;
 
     DiplomaListAdapter(DiplomaListAdapterOnClickHandler clickHandler) {
         this.clickHandler = clickHandler;
@@ -54,7 +54,7 @@ class DiplomaListAdapter extends RecyclerView.Adapter<DiplomaListAdapter.Diploma
     }
 
     class DiplomaListAdapterViewHolder extends RecyclerView.ViewHolder /* implements View.OnClickListener */ {
-        private CheckBox checkBoxDiploma;
+        private final CheckBox checkBoxDiploma;
 
         DiplomaListAdapterViewHolder(View itemView) {
             super(itemView);

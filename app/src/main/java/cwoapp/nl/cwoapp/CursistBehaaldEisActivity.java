@@ -11,9 +11,6 @@ import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.net.URL;
@@ -33,8 +30,8 @@ public class CursistBehaaldEisActivity extends AppCompatActivity implements Fetc
     private List<Cursist> cursistList;
     private CursistBehaaldEisAdapter cursistBehaaldEisAdapter;
     private Cursist currentCursist;
-    ActivityCursistChecklistBinding dataBinding;
-    Boolean showAlreadyCompleted = false;
+    private ActivityCursistChecklistBinding dataBinding;
+    private Boolean showAlreadyCompleted = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +62,7 @@ public class CursistBehaaldEisActivity extends AppCompatActivity implements Fetc
     }
 
     private void loadCursistListData() {
-        new FetchCursistListAsyncTask(this).execute(showAlreadyCompleted);
+        new FetchCursistListAsyncTask(this).execute(false);
     }
 
     private void showFirstCursist() {
@@ -133,7 +130,7 @@ public class CursistBehaaldEisActivity extends AppCompatActivity implements Fetc
     }
 
 
-    public void showErrorMessage() {
+    private void showErrorMessage() {
         Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.error_message), Toast.LENGTH_LONG);
         toast.show();
     }

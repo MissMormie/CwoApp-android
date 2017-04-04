@@ -36,11 +36,10 @@ import cwoapp.nl.cwoapp.utility.OpenJsonUtils;
 
 public class CursistDetailActivity extends AppCompatActivity implements SaveCursistAsyncTask.SaveCursist {
 
-    ActivityCursistDetailBinding activityCursistDetailBinding;
-    Cursist cursist;
-    private RecyclerView recyclerView;
+    private ActivityCursistDetailBinding activityCursistDetailBinding;
+    private Cursist cursist;
     private CursistBehaaldEisAdapter cursistBehaaldEisAdapter;
-    static final int EDIT_CURSIST = 1;
+    private static final int EDIT_CURSIST = 1;
     private List<Diploma> diplomaList;
 
 
@@ -50,7 +49,7 @@ public class CursistDetailActivity extends AppCompatActivity implements SaveCurs
         activityCursistDetailBinding = DataBindingUtil.setContentView(this, R.layout.activity_cursist_detail);
 
         // Set up of the recycler view and adapter.
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerview_training_lijst);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview_training_lijst);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
         // Not all items in list have the same size
@@ -59,8 +58,10 @@ public class CursistDetailActivity extends AppCompatActivity implements SaveCurs
         recyclerView.setAdapter(cursistBehaaldEisAdapter);
 
         cursist = getIntent().getExtras().getParcelable("cursist");
-        displayCursistInfo();
-        loadDiplomaData();
+        // TODO Fix parcelable. Atm it doesn't pass eisen info, so reloading the cursist Info.
+        //displayCursistInfo();
+        new FetchCursistTask().execute(cursist.id);
+//        loadDiplomaData();
     }
 
 
@@ -84,7 +85,7 @@ public class CursistDetailActivity extends AppCompatActivity implements SaveCurs
         } else if (itemThatWasClickedId == R.id.action_delete) {
             deleteCursist();
             return true;
-        } else if(itemThatWasClickedId == R.id.action_diploma) {
+        } else if (itemThatWasClickedId == R.id.action_diploma) {
             diplomaUitgeven();
         }
 
@@ -105,8 +106,6 @@ public class CursistDetailActivity extends AppCompatActivity implements SaveCurs
 
         ArrayList<Diploma> diplomaArrayList = (ArrayList<Diploma>) diplomaList;
         intent.putParcelableArrayListExtra("selectedDiplomaList", diplomaArrayList);
-        ArrayList<Cursist> cursistList = new ArrayList<>();
-        cursistList.add(cursist);
         intent.putExtra("cursist", cursist);
 
         startActivity(intent);
@@ -171,17 +170,15 @@ public class CursistDetailActivity extends AppCompatActivity implements SaveCurs
 
     // ---------------------------------------------------------------------------------------------
 
-    public void toggleLoading(boolean currentlyLoading) {
+    private void toggleLoading(boolean currentlyLoading) {
         if (activityCursistDetailBinding.loadingProgressBar == null)
             return;
-        if (currentlyLoading == true)
+        if (currentlyLoading)
             activityCursistDetailBinding.loadingProgressBar.setVisibility(View.VISIBLE);
         else
             activityCursistDetailBinding.loadingProgressBar.setVisibility(View.GONE);
 
     }
-
-
 
 
     private void loadDiplomaData() {
@@ -196,9 +193,9 @@ public class CursistDetailActivity extends AppCompatActivity implements SaveCurs
         activityCursistDetailBinding.textviewNaam.setText(cursist.nameToString());
         activityCursistDetailBinding.textViewOpmerking.setText(cursist.opmerking);
         if (cursist.paspoort == null)
-            activityCursistDetailBinding.textViewPaspoort.setText(getString(R.string.paspoort) +": " + getString(R.string.nee));
+            activityCursistDetailBinding.textViewPaspoort.setText(getString(R.string.paspoort) + ": " + getString(R.string.nee));
         else
-            activityCursistDetailBinding.textViewPaspoort.setText(getString(R.string.paspoort) +": " + getString(R.string.ja));
+            activityCursistDetailBinding.textViewPaspoort.setText(getString(R.string.paspoort) + ": " + getString(R.string.ja));
 
         if (cursist.getCursistFoto() != null && cursist.getCursistFoto().getThumbnail() != null && !cursist.getCursistFoto().getThumbnail().equals("")) {
             // Check if photo is included in cursist object
@@ -214,14 +211,15 @@ public class CursistDetailActivity extends AppCompatActivity implements SaveCurs
                         .execute(fotoUrl.toString());
             }
         }
-
+        loadDiplomaData();
 //            activityCursistDetailBinding.imageViewFoto.setImageBitmap();
         // Pass information to adapter for eisen met.
-        cursistBehaaldEisAdapter.setCursist(cursist);
+//        cursistBehaaldEisAdapter.setCursist(cursist);
     }
 
     private void displayDiplomaEisInfo(List<DiplomaEis> diplomaEisList) {
         cursistBehaaldEisAdapter.setCwoListData(diplomaEisList);
+        cursistBehaaldEisAdapter.setCursist(cursist);
 
     }
 
@@ -242,7 +240,7 @@ public class CursistDetailActivity extends AppCompatActivity implements SaveCurs
         }
     }
 
-    void showErrorMessage() {
+    private void showErrorMessage() {
         Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.error_message), Toast.LENGTH_LONG);
         toast.show();
     }
@@ -261,7 +259,7 @@ public class CursistDetailActivity extends AppCompatActivity implements SaveCurs
             URL url = NetworkUtils.buildUrl("cursist", cursist.id.toString());
             int resultCode = 0;
             try {
-                resultCode = NetworkUtils.sendToServer(url, "DELETE");
+                resultCode = NetworkUtils.sendToServer(url);
                 return resultCode;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -318,4 +316,34 @@ public class CursistDetailActivity extends AppCompatActivity implements SaveCurs
         }
     }
 
+    class FetchCursistTask extends AsyncTask<Long, Void, Cursist> {
+
+        @Override
+        protected void onPreExecute() {
+            toggleLoading(true);
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Cursist doInBackground(Long... id) {
+            URL curistUrl = NetworkUtils.buildUrl("cursist", id[0].toString());
+
+            try {
+                String jsonCursistResponse = NetworkUtils.getResponseFromHttpUrl(curistUrl);
+                Cursist cursist = OpenJsonUtils.getCursist(jsonCursistResponse);
+                return cursist;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Cursist cursistObject) {
+            toggleLoading(false);
+            cursist = cursistObject;
+            displayCursistInfo();
+        }
+    }
 }

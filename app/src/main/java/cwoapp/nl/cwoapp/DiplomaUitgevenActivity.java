@@ -15,13 +15,16 @@ import java.util.List;
 
 import cwoapp.nl.cwoapp.asyncLoadingTasks.FetchDiplomaAsyncTask;
 import cwoapp.nl.cwoapp.entity.Diploma;
+import cwoapp.nl.cwoapp.entity.DiplomaEis;
 
+/**
+ * Shows list of available diploma's from database. Can pick one as radio button.
+ * TODO: make so you can only pick 1 diploma. Currently it's not a radio button yet.
+ */
 public class DiplomaUitgevenActivity extends AppCompatActivity implements FetchDiplomaAsyncTask.FetchDiploma, DiplomaListAdapter.DiplomaListAdapterOnClickHandler {
     private ProgressBar mLoadingIndicator;
-    private RecyclerView mRecyclerView;
-    private TextView mErrorMessageDisplay;
     private DiplomaListAdapter diplomaListAdapter;
-    private ArrayList<Diploma> selectedDiplomaList = new ArrayList<>();
+    private final ArrayList<Diploma> selectedDiplomaList = new ArrayList<>();
 
 
     @Override
@@ -31,8 +34,8 @@ public class DiplomaUitgevenActivity extends AppCompatActivity implements FetchD
 
         // Link the variables to the view items.
         mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_diploma_lijst);
-        mErrorMessageDisplay = (TextView) findViewById(R.id.tv_error_message_display);
+        RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_diploma_lijst);
+        TextView mErrorMessageDisplay = (TextView) findViewById(R.id.tv_error_message_display);
 
         // Set up of the recycler view and adapter.
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -63,7 +66,7 @@ public class DiplomaUitgevenActivity extends AppCompatActivity implements FetchD
     }
 
     private void showError() {
-        // TODO
+        // TODO create show Error functions.
     }
 
 // ---------------------------- Click ----------------------------------------------------------
@@ -75,14 +78,27 @@ public class DiplomaUitgevenActivity extends AppCompatActivity implements FetchD
     }
 
     private void showCreateDiplomaActivity() {
+        // TODO Make sure we use radiobuttons here.
+        Context context = this;
+        Class destinationClass = CursistenBehalenDiplomaActivity.class;
+        Intent intent = new Intent(context, destinationClass);
+        intent.putExtra("diploma", selectedDiplomaList.get(0));
+        if(selectedDiplomaList.get(0).getDiplomaEis() instanceof ArrayList) {
+            ArrayList<DiplomaEis> diplomaEisArrayList = (ArrayList) selectedDiplomaList.get(0).getDiplomaEis();
+            intent.putExtra("selectedDiplomaEisList", diplomaEisArrayList);
+            startActivity(intent);
+        }
+
+        showError();
+        /*
         Context context = this;
         Class destinationClass = CursistBehaaldDiplomaActivity.class;
         Intent intent = new Intent(context, destinationClass);
 
-        // TODO make diploma parcelable.
         intent.putParcelableArrayListExtra("selectedDiplomaList", selectedDiplomaList);
 
         startActivity(intent);
+        */
     }
 
     // ----------------- DiplomaListAdapterOnClickHandler implementation ---------------------------

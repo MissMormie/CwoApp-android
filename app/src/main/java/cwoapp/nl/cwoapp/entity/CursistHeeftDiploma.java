@@ -11,9 +11,8 @@ import java.util.Date;
  */
 
 public class CursistHeeftDiploma {
-    private Long id;
 
-    private Long cursist;
+    private final Long cursist;
 
     private Diploma diploma;
 
@@ -22,7 +21,7 @@ public class CursistHeeftDiploma {
     private boolean isBehaald; // Holder variable.
 
     public CursistHeeftDiploma(Long id, Long cursist, Diploma diploma) {
-        this.id = id;
+        Long id1 = id;
         this.cursist = cursist;
         this.diploma = diploma;
     }

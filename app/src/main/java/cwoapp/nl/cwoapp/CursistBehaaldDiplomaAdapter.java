@@ -24,7 +24,7 @@ import cwoapp.nl.cwoapp.utility.NetworkUtils;
  */
 
 class CursistBehaaldDiplomaAdapter extends RecyclerView.Adapter<CursistBehaaldDiplomaAdapter.CursistBehaaldDiplomaViewHolder> {
-    private List<Diploma> diplomaList;
+    private final List<Diploma> diplomaList;
     private Cursist cursist;
     private Context context;
     private boolean saveData = true; // OnChangeChecklistener saves data when checkbox is clicked, but also when data is refeshed. Using to as workaround.
@@ -47,9 +47,8 @@ class CursistBehaaldDiplomaAdapter extends RecyclerView.Adapter<CursistBehaaldDi
         // TODO make an actual layout thing for this.
         int layoutIdForListItem = R.layout.diploma_list_item;
         LayoutInflater inflater = LayoutInflater.from(context);
-        boolean shouldAttachToParentImmediately = false;
 
-        View view = inflater.inflate(layoutIdForListItem, viewGroup, shouldAttachToParentImmediately);
+        View view = inflater.inflate(layoutIdForListItem, viewGroup, false);
         return new CursistBehaaldDiplomaViewHolder(view);
     }
 
@@ -68,7 +67,7 @@ class CursistBehaaldDiplomaAdapter extends RecyclerView.Adapter<CursistBehaaldDi
 
 
     class CursistBehaaldDiplomaViewHolder extends RecyclerView.ViewHolder {
-        CheckBox diplomaCheckBox;
+        final CheckBox diplomaCheckBox;
 
         CursistBehaaldDiplomaViewHolder(View itemView) {
             super(itemView);

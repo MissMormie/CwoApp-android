@@ -102,7 +102,7 @@ public class DiplomaEis implements Parcelable {
         }
     };
 
-    public DiplomaEis(Parcel parcel) {
+    private DiplomaEis(Parcel parcel) {
         id = parcel.readLong();
         titel = parcel.readString();
         omschrijving = parcel.readString();

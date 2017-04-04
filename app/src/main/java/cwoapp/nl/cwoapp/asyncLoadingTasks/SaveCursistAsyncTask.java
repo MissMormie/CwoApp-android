@@ -14,7 +14,7 @@ import cwoapp.nl.cwoapp.utility.OpenJsonUtils;
  */
 
 public class SaveCursistAsyncTask extends AsyncTask<Cursist, Void, Cursist> {
-    private SaveCursist saveCursist;
+    private final SaveCursist saveCursist;
 
     public SaveCursistAsyncTask(SaveCursist saveCursist) {
         this.saveCursist = saveCursist;

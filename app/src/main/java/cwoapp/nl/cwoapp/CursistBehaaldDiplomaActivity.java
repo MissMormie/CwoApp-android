@@ -11,9 +11,6 @@ import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.net.URL;
@@ -28,12 +25,12 @@ import cwoapp.nl.cwoapp.entity.Diploma;
 import cwoapp.nl.cwoapp.utility.NetworkUtils;
 
 public class CursistBehaaldDiplomaActivity extends AppCompatActivity implements FetchCursistListAsyncTask.FetchCursistList {
-    List<Diploma> diplomaList;
+    private List<Diploma> diplomaList;
     private List<Cursist> cursistList;
     private CursistBehaaldDiplomaAdapter cursistBehaaldDiplomaAdapter;
     private Cursist currentCursist;
-    Boolean showAlreadyCompleted = false;
-    ActivityCursistChecklistBinding dataBinding;
+    private Boolean showAlreadyCompleted = false;
+    private ActivityCursistChecklistBinding dataBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,7 +131,7 @@ public class CursistBehaaldDiplomaActivity extends AppCompatActivity implements 
         showNextCursist();
     }
 
-    void showErrorMessage() {
+    private void showErrorMessage() {
         Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.error_message), Toast.LENGTH_LONG);
         toast.show();
     }

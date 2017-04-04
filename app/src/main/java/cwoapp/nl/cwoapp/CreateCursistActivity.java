@@ -20,8 +20,8 @@ import cwoapp.nl.cwoapp.utility.NetworkUtils;
 import cwoapp.nl.cwoapp.utility.OpenJsonUtils;
 
 public class CreateCursistActivity extends AppCompatActivity implements CursistFormFragment.OnFragmentInteractionListener, FetchDiplomaAsyncTask.FetchDiploma {
-    CursistFormFragment cursistFormFragment;
-    Cursist cursist;
+    private CursistFormFragment cursistFormFragment;
+    private Cursist cursist;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +40,7 @@ public class CreateCursistActivity extends AppCompatActivity implements CursistF
     }
 
 
-    void cursistSaved(Cursist cursist) {
+    private void cursistSaved(Cursist cursist) {
         this.cursist = cursist;
         Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.cursist_opgeslagen), Toast.LENGTH_SHORT);
         toast.show();
@@ -56,7 +56,7 @@ public class CreateCursistActivity extends AppCompatActivity implements CursistF
         }
     }
 
-    void saveFailed() {
+    private void saveFailed() {
         Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.error_message), Toast.LENGTH_SHORT);
         toast.show();
     }
@@ -71,8 +71,7 @@ public class CreateCursistActivity extends AppCompatActivity implements CursistF
 
 
         intent.putParcelableArrayListExtra("selectedDiplomaList", diplomaArrayList);
-        ArrayList<Cursist> cursistList = new ArrayList<>();
-        cursistList.add(cursist);
+
         intent.putExtra("cursist", cursist);
 
         startActivity(intent);

@@ -73,6 +73,9 @@
         <activity android:name=".EditCursistActivity" />
         <activity android:name=".DiplomaUitgevenActivity" />
         <activity android:name=".CursistBehaaldDiplomaActivity" />
+        <activity
+            android:name=".CursistenBehalenDiplomaActivity"
+            android:label="@string/title_activity_cursisten_behalen_diploma" />
     </application>
 
 </manifest>

@@ -30,7 +30,7 @@ class CursistBehaaldEisAdapter extends RecyclerView.Adapter<CursistBehaaldEisAda
     private List<DiplomaEis> diplomaEisList;
     private Cursist cursist;
     private boolean saveData = true; // OnChangeChecklistener saves data when checkbox is clicked, but also when data is refeshed. Using to as workaround.
-    Context context;
+    private Context context;
 
 
     @Override
@@ -40,9 +40,8 @@ class CursistBehaaldEisAdapter extends RecyclerView.Adapter<CursistBehaaldEisAda
         // TODO make an actual layout thing for this.
         int layoutIdForListItem = R.layout.training_list_item;
         LayoutInflater inflater = LayoutInflater.from(context);
-        boolean shouldAttachToParentImmediately = false;
 
-        View view = inflater.inflate(layoutIdForListItem, viewGroup, shouldAttachToParentImmediately);
+        View view = inflater.inflate(layoutIdForListItem, viewGroup, false);
         return new CursistBehaaldEisAdapter.CursistBehaaldEisViewHolder(view);
     }
 
@@ -60,7 +59,7 @@ class CursistBehaaldEisAdapter extends RecyclerView.Adapter<CursistBehaaldEisAda
 
     void setCwoListData(List<DiplomaEis> diplomaEisList) {
         this.diplomaEisList = diplomaEisList;
-        notifyDataSetChanged();
+        //notifyDataSetChanged();
     }
 
     public void setCursist(Cursist cursist) {
@@ -69,8 +68,8 @@ class CursistBehaaldEisAdapter extends RecyclerView.Adapter<CursistBehaaldEisAda
     }
 
     class CursistBehaaldEisViewHolder extends RecyclerView.ViewHolder {
-        CheckBox cbCwoEis;
-        ImageButton imgButtonInfo;
+        final CheckBox cbCwoEis;
+        final ImageButton imgButtonInfo;
 
         CursistBehaaldEisViewHolder(final View itemView) {
             super(itemView);
@@ -133,6 +132,8 @@ class CursistBehaaldEisAdapter extends RecyclerView.Adapter<CursistBehaaldEisAda
         }
 
         private void setCheckboxIfEisBehaald(DiplomaEis diplomaEis) {
+            if(cursist == null)
+                return;
             // Reset cbCwoEis so it's standard enabled.
             cbCwoEis.setEnabled(true);
             boolean checked;

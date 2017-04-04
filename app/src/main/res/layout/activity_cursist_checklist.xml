@@ -48,6 +48,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="0dp"
+                    android:layout_marginEnd="0dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     tools:text="Sonja surft alleen als het erg warm is, wind maakt minder uit." />

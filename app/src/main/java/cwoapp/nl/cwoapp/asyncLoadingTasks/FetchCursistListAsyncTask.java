@@ -21,6 +21,9 @@ public class FetchCursistListAsyncTask extends AsyncTask<Boolean, Void, List<Cur
         this.responseClass = responseClass;
     }
 
+    /**
+     * verborgen[0] = true also gives results that are hidden.
+     */
     @Override
     protected List<Cursist> doInBackground(Boolean... verborgen) {
         URL diplomaListUrl;

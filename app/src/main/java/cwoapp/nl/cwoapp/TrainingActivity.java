@@ -27,8 +27,7 @@ public class TrainingActivity extends AppCompatActivity implements TrainingsList
     private RecyclerView mRecyclerView;
     private TextView mErrorMessageDisplay;
     private TrainingsListAdapter trainingsListAdapter;
-    private Button volgendeButton;
-    private ArrayList<DiplomaEis> selectedDiplomaEisList = new ArrayList<>();
+    private final ArrayList<DiplomaEis> selectedDiplomaEisList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +38,7 @@ public class TrainingActivity extends AppCompatActivity implements TrainingsList
         mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_training_lijst);
         mErrorMessageDisplay = (TextView) findViewById(R.id.tv_error_message_display);
-        volgendeButton = (Button) findViewById(R.id.buttonVolgende);
+        Button volgendeButton = (Button) findViewById(R.id.buttonVolgende);
 
         // Set up of the recycler view and adapter.
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -57,7 +56,6 @@ public class TrainingActivity extends AppCompatActivity implements TrainingsList
     /**
      * On click method voor volgende button.
      *
-     * @param view
      */
     public void onClickShowVolgende(View view) {
         if (selectedDiplomaEisList.size() > 0) {
@@ -105,7 +103,7 @@ public class TrainingActivity extends AppCompatActivity implements TrainingsList
         }*/
     }
 
-    class FetchCwoEisData extends AsyncTask<String, Void, List<Diploma>> {
+    private class FetchCwoEisData extends AsyncTask<String, Void, List<Diploma>> {
 
         @Override
         protected void onPreExecute() {
@@ -119,8 +117,8 @@ public class TrainingActivity extends AppCompatActivity implements TrainingsList
 
             try {
                 String jsonDiplomaLijstResponse = NetworkUtils.getResponseFromHttpUrl(diplomaListUrl);
-                List<Diploma> diplomaList = OpenJsonUtils.getDiplomaLijst(jsonDiplomaLijstResponse);
-                return diplomaList;
+                return OpenJsonUtils.getDiplomaLijst(jsonDiplomaLijstResponse);
+
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;
@@ -144,7 +142,7 @@ public class TrainingActivity extends AppCompatActivity implements TrainingsList
         }
     }
 
-    public void showErrorMessage() {
+    private void showErrorMessage() {
         /* First, hide the currently visible data */
         mRecyclerView.setVisibility(View.INVISIBLE);
         /* Then, show the error */

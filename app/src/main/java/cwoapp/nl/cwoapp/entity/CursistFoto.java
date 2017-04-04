@@ -9,7 +9,7 @@ import android.os.Parcelable;
  */
 
 public class CursistFoto implements Parcelable {
-    private Long id;
+    private final Long id;
     private String thumbnail;
     private String image;
 

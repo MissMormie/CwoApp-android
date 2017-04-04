@@ -57,5 +57,6 @@
 
     <!-- Error tekst -->
     <string name="opslaan_mislukt">Opslaan mislukt, probeer het later opnieuw.</string>
+    <string name="title_activity_cursisten_behalen_diploma">CursistenBehalenDiplomaActivity</string>
 
 </resources>

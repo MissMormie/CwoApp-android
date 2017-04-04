@@ -1,5 +1,8 @@
 package cwoapp.nl.cwoapp.entity;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -10,7 +13,7 @@ import java.util.Date;
  * CursistBehaaldEis
  */
 
-public class CursistBehaaldEis {
+public class CursistBehaaldEis implements Parcelable{
     private Long id;
     private Cursist cursist;
     private DiplomaEis diplomaEis;
@@ -83,6 +86,42 @@ public class CursistBehaaldEis {
             e.printStackTrace();
         }
         return "";
+
+    }
+
+    // ---------------------------- Support for Parcelable --------------------------------------- //
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int flags) {
+        parcel.writeLong(id);
+
+    }
+
+    public static final Parcelable.Creator<CursistBehaaldEis> CREATOR = new Parcelable.Creator<CursistBehaaldEis>() {
+        // TODO fix parcelable.
+        @Override
+        public CursistBehaaldEis createFromParcel(Parcel source) {
+            return new CursistBehaaldEis(source);
+        }
+
+        @Override
+        public CursistBehaaldEis[] newArray(int size) {
+            return new CursistBehaaldEis[size];
+        }
+    };
+
+    // Note, the order IS important, if it's not the same as when parceling it doesn't work.
+    private CursistBehaaldEis(Parcel parcel) {/*
+        private Long id;
+        private Cursist cursist;
+        private DiplomaEis diplomaEis;
+        private Date datum = new Date();
+        private boolean behaald; */
 
     }
 }

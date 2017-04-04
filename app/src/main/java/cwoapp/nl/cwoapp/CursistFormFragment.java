@@ -55,7 +55,6 @@ public class CursistFormFragment extends Fragment {
     private EditText opmerkingenEditText;
     private CheckBox paspoortCheckbox;
     private ImageView fotoImageView;
-    private ImageButton takeImageButton;
     private Button saveButton;
     private ProgressBar loadingProgressBar;
 
@@ -73,12 +72,12 @@ public class CursistFormFragment extends Fragment {
         fotoImageView = (ImageView) getActivity().findViewById(imageViewFoto);
         saveButton = (Button) getActivity().findViewById(R.id.buttonSave);
         loadingProgressBar = (ProgressBar) getActivity().findViewById(R.id.loadingProgressBar);
-        takeImageButton = (ImageButton) getActivity().findViewById(R.id.imageButtonPhoto);
+        ImageButton takeImageButton = (ImageButton) getActivity().findViewById(R.id.imageButtonPhoto);
         takeImageButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                dispatchTakePictureIntent(v);
+                dispatchTakePictureIntent();
             }
         });
 
@@ -99,7 +98,7 @@ public class CursistFormFragment extends Fragment {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                onClickSaveCursist(v);
+                onClickSaveCursist();
             }
         });
         // Inflate the layout for this fragment
@@ -188,7 +187,7 @@ public class CursistFormFragment extends Fragment {
         }
     }
 
-    public void onClickSaveCursist(View view) {
+    private void onClickSaveCursist() {
         saveButton.setEnabled(false);
         toggleLoading(true);
         readCursist();
@@ -196,7 +195,7 @@ public class CursistFormFragment extends Fragment {
         mListener.saveCursist(cursist);
     }
 
-    public void toggleLoading(boolean currentlyLoading) {
+    private void toggleLoading(boolean currentlyLoading) {
         if (loadingProgressBar == null)
             return;
         if (currentlyLoading)
@@ -221,11 +220,11 @@ public class CursistFormFragment extends Fragment {
 
 
     // ------------------------------------ PHOTO SUPPORT -----------------------------------------------
-    static final int REQUEST_IMAGE_CAPTURE = 1;
-    static final int REQUEST_TAKE_PHOTO = 1;
-    String mCurrentPhotoPath;
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int REQUEST_TAKE_PHOTO = 1;
+    private String mCurrentPhotoPath;
 
-    public void dispatchTakePictureIntent(View view) {
+    private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {

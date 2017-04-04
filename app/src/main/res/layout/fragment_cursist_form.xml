@@ -104,7 +104,8 @@
         app:layout_constraintLeft_toRightOf="@+id/editTextTussenvoegsel"
         android:layout_marginLeft="8dp"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
 
     <ImageButton
         android:id="@+id/imageButtonPhoto"
@@ -117,7 +118,8 @@
         app:layout_constraintRight_toRightOf="@+id/imageViewFoto"
         app:srcCompat="@android:drawable/ic_menu_edit"
         tools:layout_editor_absoluteX="330dp"
-        tools:layout_editor_absoluteY="115dp" />
+        tools:layout_editor_absoluteY="115dp"
+        tools:ignore="ContentDescription" />
 
     <ProgressBar
         android:id="@+id/loadingProgressBar"

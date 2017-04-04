@@ -1,6 +1,8 @@
 package cwoapp.nl.cwoapp;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,16 +25,16 @@ class TrainingsListAdapter extends RecyclerView.Adapter<TrainingsListAdapter.Tra
 
     private List<DiplomaEis> diplomaEisList = null;
     private final TrainingListAdapterOnClickHandler clickHandler;
-    private final Context context;
+    private Context context;
 
     TrainingsListAdapter(TrainingListAdapterOnClickHandler clickHandler, Context context) {
         this.clickHandler = clickHandler;
-        this.context = context;
+        context = context;
     }
 
     @Override
     public TrainingsListAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        Context context = viewGroup.getContext();
+        context = viewGroup.getContext();
         int layoutIdForListItem = R.layout.training_list_item;
         LayoutInflater inflater = LayoutInflater.from(context);
 
@@ -58,8 +60,8 @@ class TrainingsListAdapter extends RecyclerView.Adapter<TrainingsListAdapter.Tra
     }
 
     class TrainingsListAdapterViewHolder extends RecyclerView.ViewHolder /* implements View.OnClickListener */ {
-        CheckBox cbCwoEis;
-        ImageButton imgButtonInfo;
+        final CheckBox cbCwoEis;
+        final ImageButton imgButtonInfo;
 
         TrainingsListAdapterViewHolder(View itemView) {
             super(itemView);
@@ -82,6 +84,26 @@ class TrainingsListAdapter extends RecyclerView.Adapter<TrainingsListAdapter.Tra
                 }
             });
 
+
+            imgButtonInfo.setOnClickListener(new ImageButton.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    int adapterPosition = getAdapterPosition();
+                    DiplomaEis diplomaEis = diplomaEisList.get(adapterPosition);
+
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+                    alertDialogBuilder.setMessage(diplomaEis.getOmschrijving())
+                            .setTitle(diplomaEis.getTitel())
+                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    // We doen niets, maar je moet deze hebben om eruit te komen.
+                                }
+                            });
+                    AlertDialog alertDialog = alertDialogBuilder.create();
+                    alertDialog.show();
+                }
+            });
 
         }
 

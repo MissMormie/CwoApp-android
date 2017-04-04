@@ -17,8 +17,8 @@ import cwoapp.nl.cwoapp.utility.FotoUtils;
  */
 
 public class DownloadAndSetImageTask extends AsyncTask<String, Void, Bitmap> {
-    private ImageView bmImage;
-    private Context context;
+    private final ImageView bmImage;
+    private final Context context;
 
     public DownloadAndSetImageTask(ImageView bmImage, Context context) {
         this.context = context;

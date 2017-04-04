@@ -2,7 +2,6 @@ package cwoapp.nl.cwoapp.utility;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.widget.ImageView;
 

@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -151,8 +152,6 @@ public class CursistFormFragment extends Fragment {
 
             }
 
-            // TODO Set fotoImageview to foto thing somehow.
-            //fotoImageView;
         }
     }
 
@@ -188,11 +187,22 @@ public class CursistFormFragment extends Fragment {
     }
 
     private void onClickSaveCursist() {
+        if(voornaamEditText.getText() == null || voornaamEditText.getText().toString().equals("")) {
+            showMinimumFormDemand();
+            return;
+        }
+
         saveButton.setEnabled(false);
         toggleLoading(true);
         readCursist();
 
         mListener.saveCursist(cursist);
+    }
+
+    private void showMinimumFormDemand() {
+        Toast toast = Toast.makeText(getContext(), getString(R.string.minimum_form_demand), Toast.LENGTH_SHORT);
+        toast.show();
+
     }
 
     private void toggleLoading(boolean currentlyLoading) {
@@ -204,6 +214,7 @@ public class CursistFormFragment extends Fragment {
             loadingProgressBar.setVisibility(View.INVISIBLE);
 
     }
+
 
 
     /**
@@ -291,9 +302,6 @@ public class CursistFormFragment extends Fragment {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
 
             setPic();
-/*            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            fotoImageView.setImageBitmap(imageBitmap);*/
         }
     }
 }

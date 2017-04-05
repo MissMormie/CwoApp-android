@@ -79,7 +79,7 @@ public class CreateCursistActivity extends AppCompatActivity implements CursistF
     }
 
     private class SaveCursistAsyncTask extends AsyncTask<Cursist, Void, Cursist> {
-        // TODO add loading bar
+
 
         @Override
         protected Cursist doInBackground(Cursist... cursist) {

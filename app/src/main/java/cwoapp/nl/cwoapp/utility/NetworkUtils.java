@@ -20,7 +20,8 @@ import java.util.Scanner;
 
 public class NetworkUtils {
 
-    private static final String API_BASE_URL = "http://192.168.1.85:8080";
+//    private static final String API_BASE_URL = "http://192.168.1.85:8080";
+    private static final String API_BASE_URL = "http://cwo.wsvzegerplas.nl:5050";
 
     public static URL buildUrl(String... urlPathpart) {
         // COMPLETED (1) Fix this method to return the URL used to query Open Weather Map's API
@@ -135,9 +136,7 @@ public class NetworkUtils {
             }
             br.close();
             return sb.toString();
-//            System.out.println("" + sb.toString());
         } else {
-//            System.out.println(con.getResponseMessage());
             return null;
         }
     }

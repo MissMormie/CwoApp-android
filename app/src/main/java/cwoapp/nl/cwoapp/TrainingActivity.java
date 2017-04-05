@@ -21,11 +21,11 @@ import cwoapp.nl.cwoapp.entity.DiplomaEis;
 import cwoapp.nl.cwoapp.utility.NetworkUtils;
 import cwoapp.nl.cwoapp.utility.OpenJsonUtils;
 
-// TODO when deselecting a trainingseis remove it from the list.
 public class TrainingActivity extends AppCompatActivity implements TrainingsListAdapter.TrainingListAdapterOnClickHandler {
     private ProgressBar mLoadingIndicator;
     private RecyclerView mRecyclerView;
     private TextView mErrorMessageDisplay;
+    private Button volgendeButton;
     private TrainingsListAdapter trainingsListAdapter;
     private final ArrayList<DiplomaEis> selectedDiplomaEisList = new ArrayList<>();
 
@@ -38,7 +38,7 @@ public class TrainingActivity extends AppCompatActivity implements TrainingsList
         mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_training_lijst);
         mErrorMessageDisplay = (TextView) findViewById(R.id.tv_error_message_display);
-        Button volgendeButton = (Button) findViewById(R.id.buttonVolgende);
+        volgendeButton = (Button) findViewById(R.id.buttonVolgende);
 
         // Set up of the recycler view and adapter.
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -92,15 +92,11 @@ public class TrainingActivity extends AppCompatActivity implements TrainingsList
     }
 
     private void toggleVolgendeButton() {
-        // TODO make this work. So far it doesnt' re-active the button.
-        // Also add activated false back in xml.
-        // maybe take out check for the onclickshow volgende.
-        /*
-        if(selectedDiplomaEisList.size() > 0 && volgendeButton.isActivated() == false) {
-            volgendeButton.setActivated(true);
+        if(selectedDiplomaEisList.size() > 0 ) {
+            volgendeButton.setEnabled(true);
         } else if(selectedDiplomaEisList.size() == 0){
-            volgendeButton.setActivated(false);
-        }*/
+            volgendeButton.setEnabled(false);
+        }
     }
 
     private class FetchCwoEisData extends AsyncTask<String, Void, List<Diploma>> {
@@ -136,7 +132,6 @@ public class TrainingActivity extends AppCompatActivity implements TrainingsList
 
                 trainingsListAdapter.setCwoData(diplomaEisenLijst);
             } else {
-                // TODO hide volgende button.
                 showErrorMessage();
             }
         }

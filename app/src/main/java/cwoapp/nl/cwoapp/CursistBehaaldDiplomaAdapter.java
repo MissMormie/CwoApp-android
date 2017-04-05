@@ -44,7 +44,6 @@ class CursistBehaaldDiplomaAdapter extends RecyclerView.Adapter<CursistBehaaldDi
     public CursistBehaaldDiplomaViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         context = viewGroup.getContext();
 
-        // TODO make an actual layout thing for this.
         int layoutIdForListItem = R.layout.diploma_list_item;
         LayoutInflater inflater = LayoutInflater.from(context);
 
@@ -85,6 +84,7 @@ class CursistBehaaldDiplomaAdapter extends RecyclerView.Adapter<CursistBehaaldDi
                     Diploma diploma = diplomaList.get(adapterPosition);
 
                     CursistHeeftDiploma cursistHeeftDiploma = new CursistHeeftDiploma(cursist.id, diploma, isChecked);
+                    cursist.addOrRemoveDiploma(cursistHeeftDiploma);
 
                     new SaveDiplomaBehaaldTask().execute(cursistHeeftDiploma);
                 }
@@ -163,8 +163,6 @@ class CursistBehaaldDiplomaAdapter extends RecyclerView.Adapter<CursistBehaaldDi
                 Toast.makeText(context, "" + error, Toast.LENGTH_SHORT).show();
 
             }
-            // TODO determine what needs to happen when this is finished. Especially in case of errors.
-            // Step 1 done, do i need to do something else?
         }
     }
 

@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -90,8 +91,7 @@ public class CursistenBehalenDiplomaActivity extends AppCompatActivity
     }
 
     private void setListeners() {
-        // TODO must be smarter way to access this in inner class.
-        final CursistenBehalenDiplomaActivity thingie = this;
+        final CursistenBehalenDiplomaActivity outerClass = this;
         diplomaCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
             @Override
@@ -100,7 +100,7 @@ public class CursistenBehalenDiplomaActivity extends AppCompatActivity
                     return;
 
                 CursistHeeftDiploma cursistHeeftDiploma = new CursistHeeftDiploma(currentCursist.id, diploma, isChecked);
-                new SaveDiplomaBehaaldAsyncTask(thingie).execute(cursistHeeftDiploma);
+                new SaveDiplomaBehaaldAsyncTask(outerClass).execute(cursistHeeftDiploma);
             }
         });
 
@@ -112,7 +112,7 @@ public class CursistenBehalenDiplomaActivity extends AppCompatActivity
                     return;
 
                 currentCursist.heeftPaspoort(isChecked);
-                new SaveCursistAsyncTask(thingie).execute(currentCursist);
+                new SaveCursistAsyncTask(outerClass).execute(currentCursist);
 
             }
         });
@@ -177,7 +177,7 @@ public class CursistenBehalenDiplomaActivity extends AppCompatActivity
     }
 
     private void showErrorMessage() {
-        // TODO
+        Toast.makeText(this, getString(R.string.error_message), Toast.LENGTH_SHORT).show();
     }
 
     public void onClickShowVolgendeCursist(View view) {

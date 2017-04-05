@@ -41,6 +41,7 @@ public class CursistDetailActivity extends AppCompatActivity implements SaveCurs
     private CursistBehaaldEisAdapter cursistBehaaldEisAdapter;
     private static final int EDIT_CURSIST = 1;
     private List<Diploma> diplomaList;
+    private MenuItem verbergenMenu;
 
 
     @Override
@@ -69,27 +70,41 @@ public class CursistDetailActivity extends AppCompatActivity implements SaveCurs
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.cursist_detail_menu, menu);
+        verbergenMenu = menu.findItem(R.id.action_verbergen);
+        setMenuTitle();
         return true;
+    }
+
+    private void setMenuTitle() {
+        if(!cursist.isVerborgen()) {
+            verbergenMenu.setTitle(getString(R.string.verbergen));
+        } else{
+            verbergenMenu.setTitle(getString(R.string.niet_verbergen));
+        }
+
     }
 
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int itemThatWasClickedId = item.getItemId();
-        if (itemThatWasClickedId == R.id.action_edit) {
-            showEditCursist();
-            return true;
-        } else if (itemThatWasClickedId == R.id.action_verbergen) {
-            hideCursist();
-            return true;
-        } else if (itemThatWasClickedId == R.id.action_delete) {
-            deleteCursist();
-            return true;
-        } else if (itemThatWasClickedId == R.id.action_diploma) {
-            diplomaUitgeven();
+        switch (item.getItemId()) {
+            case R.id.action_edit:
+                showEditCursist();
+                break;
+            case R.id.action_verbergen:
+                hideCursist();
+                break;
+            case R.id.action_delete:
+                deleteCursist();
+                break;
+            case R.id.action_diploma:
+                diplomaUitgeven();
+                break;
+            case android.R.id.home:
+                onBackPressed();
+                break;
         }
-
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
     private void showEditCursist() {
@@ -115,8 +130,7 @@ public class CursistDetailActivity extends AppCompatActivity implements SaveCurs
         toggleLoading(true);
         cursist.toggleVerborgen();
         new SaveCursistAsyncTask(this).execute(cursist);
-
-        // TODO
+        setMenuTitle();
     }
 
     private void deleteCursist() {
@@ -156,6 +170,7 @@ public class CursistDetailActivity extends AppCompatActivity implements SaveCurs
         setResult(RESULT_OK, intent);
         finish();
     }
+
 
 
     @Override

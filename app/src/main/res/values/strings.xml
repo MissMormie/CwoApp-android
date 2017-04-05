@@ -25,18 +25,20 @@
     <!-- Cursist detail -->
     <string name="cursist">Cursist</string>
     <string name="echt_verwijderen">Weet je zeker dat je deze cursist wil verwijderen?</string>
+    <string name="cursist_wijzigen">Cursist wijzigen</string>
 
     <!-- Cursist form -->
     <string name="voornaam">Voornaam</string>
     <string name="tussenvoegsel">Tussenvoegsel</string>
     <string name="achternaam">Achternaam</string>
     <string name="opmerkingen">Opmerkingen</string>
-    <string name="paspoort">Paspoort uitgegeven: </string>
+    <string name="paspoort">Paspoort uitgegeven</string>
     <string name="opslaan">Opslaan</string>
     <string name="cursist_opgeslagen">Curist opgeslagen</string>
     <string name="cursist_verwijderd">Cursist verwijderd</string>
     <string name="cursist_verborgen">Cursist verborgen</string>
     <string name="cursist_niet_verborgen">Cursist niet meer verborgen</string>
+    <string name="minimum_form_demand">Vul op z\'n minst de voornaam van de cursist in.</string>
 
     <!-- Training list -->
     <string name="volgende">Volgende</string>
@@ -47,10 +49,8 @@
     <string name="edit">Edit</string>
     <string name="delete">Verwijderen</string>
     <string name="verbergen">Verbergen</string>
+    <string name="niet_verbergen">Niet meer verbergen</string>
     <string name="search">Zoeken</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <!-- Diploma uitgeven -->
     <string name="diploma_uitgeven_tekst">Kies welk diploma je wil uitgeven.</string>
@@ -58,5 +58,8 @@
     <!-- Error tekst -->
     <string name="opslaan_mislukt">Opslaan mislukt, probeer het later opnieuw.</string>
     <string name="title_activity_cursisten_behalen_diploma">CursistenBehalenDiplomaActivity</string>
+
+
+    <!-- titel labels -->
 
 </resources>

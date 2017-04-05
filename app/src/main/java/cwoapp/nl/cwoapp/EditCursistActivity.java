@@ -3,6 +3,7 @@ package cwoapp.nl.cwoapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import cwoapp.nl.cwoapp.asyncLoadingTasks.SaveCursistAsyncTask;
@@ -46,6 +47,16 @@ public class EditCursistActivity extends AppCompatActivity implements CursistFor
         intent.putExtra("cursist", cursist);
         setResult(RESULT_OK, intent);
         finish();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+        }
+        return true;
     }
 
     @Override

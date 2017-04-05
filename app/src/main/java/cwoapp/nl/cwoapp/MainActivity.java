@@ -17,7 +17,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setupSharedPreferences();
     }
 
     @Override
@@ -30,14 +29,6 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    // TODO this function is only here to check if i can get the data from the shared preferences
-    // and keep it as a reminder. Remove once it's in it's correct place.
-    private void setupSharedPreferences() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        Boolean showAlreadyCompleted = sharedPreferences.getBoolean(getString(R.string.pref_show_already_completed_key),
-                getResources().getBoolean(R.bool.pref_show_already_completed_default));
-        System.out.println("Preference show already completed: " + showAlreadyCompleted);
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

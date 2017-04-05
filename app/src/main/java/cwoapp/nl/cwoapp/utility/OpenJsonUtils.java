@@ -20,8 +20,8 @@ import cwoapp.nl.cwoapp.entity.DiplomaEis;
  * Changes Json Strings into objects
  */
 
-// TODO check what a final class is exactly.
-public final class OpenJsonUtils {
+
+public class OpenJsonUtils {
 
     public static List<Cursist> getCursistLijst(String cursistLijstString) throws JSONException {
         if (cursistLijstString == null || cursistLijstString.equals(""))
@@ -73,7 +73,6 @@ public final class OpenJsonUtils {
         if (cursistJson.has("verborgen") && !cursistJson.isNull("verborgen"))
             verborgen = cursistJson.getBoolean("verborgen");
 
-        // TODO get date from json.
         Date paspoort = null;
         if (cursistJson.has("paspoort") && !cursistJson.isNull("paspoort"))
             paspoort = DateUtil.stringToDate(cursistJson.getString("paspoort"));
@@ -120,7 +119,6 @@ public final class OpenJsonUtils {
 
     private static CursistBehaaldEis getCursistBehaaldEis(JSONObject cursistBehaaldEisJson) throws JSONException {
         Long id = cursistBehaaldEisJson.getLong("id");
-        // TODO get date from JSON.
         JSONObject diplomaEisJson = cursistBehaaldEisJson.getJSONObject("diplomaEis");
         DiplomaEis diplomaEis = getDiplomaEis(diplomaEisJson);
         return new CursistBehaaldEis(id, diplomaEis);
@@ -140,8 +138,7 @@ public final class OpenJsonUtils {
     private static CursistHeeftDiploma getCursistHeeftDiploma(JSONObject cursistHeeftDiplomaJson) throws JSONException {
         Long id = cursistHeeftDiplomaJson.getLong("id");
         Long cursist = cursistHeeftDiplomaJson.getLong("cursist");
-        // TODO add date
-        //Date diplomaBehaald =
+
         Diploma diploma = null;
         if (cursistHeeftDiplomaJson.has("diploma") && !cursistHeeftDiplomaJson.isNull("diploma")) {
             JSONObject diplomaJson = cursistHeeftDiplomaJson.getJSONObject("diploma");
@@ -151,7 +148,7 @@ public final class OpenJsonUtils {
     }
 
     public static List<Diploma> getDiplomaLijst(String diplomaLijstString) throws JSONException {
-        // TODO see if i should do some extra error checking here?
+
         if (diplomaLijstString == null || diplomaLijstString.equals(""))
             return null;
 

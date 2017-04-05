@@ -93,7 +93,6 @@ class CursistListAdapater extends RecyclerView.Adapter<CursistListAdapater.Cursi
     @Override
     public void onBindViewHolder(CursistListAdapterViewHolder holder, int position) {
         holder.bind(position);
-//        holder.view.setBackgroundColor(Color.RED);
     }
 
     @Override
@@ -140,7 +139,7 @@ class CursistListAdapater extends RecyclerView.Adapter<CursistListAdapater.Cursi
             // Set background color in case cursist is hidden.
             // TODO get this from colors class. needs getResources().
             if (cursist.isVerborgen())
-                this.view.setBackgroundColor(Color.GRAY);
+                this.view.setBackgroundColor(Color.LTGRAY);
             else
                 this.view.setBackgroundColor(Color.WHITE);
 

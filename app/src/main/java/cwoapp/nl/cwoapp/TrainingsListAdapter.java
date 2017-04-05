@@ -29,7 +29,7 @@ class TrainingsListAdapter extends RecyclerView.Adapter<TrainingsListAdapter.Tra
 
     TrainingsListAdapter(TrainingListAdapterOnClickHandler clickHandler, Context context) {
         this.clickHandler = clickHandler;
-        context = context;
+        this.context = context;
     }
 
     @Override

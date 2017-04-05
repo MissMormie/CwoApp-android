@@ -37,19 +37,6 @@ public class FetchDiplomaAsyncTask extends AsyncTask<String, Void, List<Diploma>
     @Override
     protected void onPostExecute(List<Diploma> diplomaList) {
         fetchDiploma.setDiploma(diplomaList);
-/*
-        mLoadingIndicator.setVisibility(View.GONE);
-        if (diplomaList != null) {
-            List<DiplomaEis> diplomaEisenLijst = new ArrayList<>();
-            for (int i = 0; i < diplomaList.size(); i++) {
-                diplomaEisenLijst.addAll(diplomaList.get(i).getDiplomaEis());
-            }
-
-            trainingsListAdapter.setCwoData(diplomaEisenLijst);
-        } else {
-            // TODO hide volgende button.
-            showErrorMessage();
-        } */
     }
 
     public interface FetchDiploma {

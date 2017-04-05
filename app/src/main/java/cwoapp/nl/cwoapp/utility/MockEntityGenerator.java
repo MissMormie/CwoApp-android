@@ -13,10 +13,6 @@ import cwoapp.nl.cwoapp.entity.DiplomaEis;
  * Mock entity generator
  */
 
-// TODO list
-// TODO Info knop activeren bij diplomaEisen
-// TODO Diploma's uitgeven
-// TODO foto's maken en opslaan toevoegen
 
 
 class MockEntityGenerator {

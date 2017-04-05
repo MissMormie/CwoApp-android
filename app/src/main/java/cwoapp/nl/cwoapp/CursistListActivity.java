@@ -112,14 +112,8 @@ public class CursistListActivity extends AppCompatActivity implements CursistLis
                 }
             }
 
-//       super.onActivityResult(requestCode, resultCode, data);
     }
 
-    // TODO at the moment when you come back here after editing the cursist, all info is downloaded again, should be able to pass this back. -- is it?
-    @Override
-    public void onRestart() {
-        super.onRestart();
-    }
 
 
     private class FetchCursistListTask extends AsyncTask<String, Void, List<Cursist>> {

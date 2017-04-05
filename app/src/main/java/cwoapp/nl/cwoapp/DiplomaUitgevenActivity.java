@@ -7,8 +7,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,12 +21,13 @@ import cwoapp.nl.cwoapp.entity.DiplomaEis;
 
 /**
  * Shows list of available diploma's from database. Can pick one as radio button.
- * TODO: make so you can only pick 1 diploma. Currently it's not a radio button yet.
  */
-public class DiplomaUitgevenActivity extends AppCompatActivity implements FetchDiplomaAsyncTask.FetchDiploma, DiplomaListAdapter.DiplomaListAdapterOnClickHandler {
+public class DiplomaUitgevenActivity extends AppCompatActivity implements FetchDiplomaAsyncTask.FetchDiploma, DiplomaUitgevenListAdapter.DiplomaListAdapterOnClickHandler {
     private ProgressBar mLoadingIndicator;
-    private DiplomaListAdapter diplomaListAdapter;
+    private DiplomaUitgevenListAdapter diplomaListAdapter;
+    private Diploma selectedDiploma;
     private final ArrayList<Diploma> selectedDiplomaList = new ArrayList<>();
+    private Button volgendeButton;
 
 
     @Override
@@ -36,13 +39,14 @@ public class DiplomaUitgevenActivity extends AppCompatActivity implements FetchD
         mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
         RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_diploma_lijst);
         TextView mErrorMessageDisplay = (TextView) findViewById(R.id.tv_error_message_display);
+        volgendeButton = (Button) findViewById(R.id.buttonVolgende);
 
         // Set up of the recycler view and adapter.
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(layoutManager);
         // Not all items in list have the same size
         mRecyclerView.setHasFixedSize(true);
-        diplomaListAdapter = new DiplomaListAdapter(this);
+        diplomaListAdapter = new DiplomaUitgevenListAdapter(this);
         mRecyclerView.setAdapter(diplomaListAdapter);
 
         loadCwoEisData();
@@ -53,7 +57,6 @@ public class DiplomaUitgevenActivity extends AppCompatActivity implements FetchD
     private void loadCwoEisData() {
         new FetchDiplomaAsyncTask(this).execute();
     }
-
 
     @Override
     public void setDiploma(List<Diploma> diplomaList) {
@@ -66,19 +69,23 @@ public class DiplomaUitgevenActivity extends AppCompatActivity implements FetchD
     }
 
     private void showError() {
-        // TODO create show Error functions.
+        Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.error_message), Toast.LENGTH_LONG);
+        toast.show();
     }
 
 // ---------------------------- Click ----------------------------------------------------------
 
     public void onClickShowVolgende(View view) {
-        if (selectedDiplomaList.size() > 0) {
+        if (selectedDiploma != null) {
             showCreateDiplomaActivity();
         }
     }
 
     private void showCreateDiplomaActivity() {
-        // TODO Make sure we use radiobuttons here.
+        // Because we're now only allowing a single diploma we're adding that specific one to the list.
+        // TODO make this just pass a diploma as parcelable, not this ugly code ;)
+        selectedDiplomaList.add(selectedDiploma);
+
         Context context = this;
         Class destinationClass = CursistenBehalenDiplomaActivity.class;
         Intent intent = new Intent(context, destinationClass);
@@ -90,31 +97,32 @@ public class DiplomaUitgevenActivity extends AppCompatActivity implements FetchD
         }
 
         showError();
-        /*
-        Context context = this;
-        Class destinationClass = CursistBehaaldDiplomaActivity.class;
-        Intent intent = new Intent(context, destinationClass);
-
-        intent.putParcelableArrayListExtra("selectedDiplomaList", selectedDiplomaList);
-
-        startActivity(intent);
-        */
     }
+
+
+
 
     // ----------------- DiplomaListAdapterOnClickHandler implementation ---------------------------
 
     @Override
     public void onClick(Diploma diploma, boolean selected) {
-        if (selected && !selectedDiplomaList.contains(diploma)) {
-            selectedDiplomaList.add(diploma);
-        } else if (!selected && selectedDiplomaList.contains(diploma)) {
-            selectedDiplomaList.remove(diploma);
-        }
+        selectedDiploma = diploma;
+        toggleVolgendeButton();
     }
 
     @Override
     public boolean isSelectedDiploma(Diploma diploma) {
-        return selectedDiplomaList != null && selectedDiplomaList.contains(diploma);
+        if(selectedDiploma != null)
+            return diploma.equals(selectedDiploma);
+        return false;
+    }
+
+    private void toggleVolgendeButton() {
+        if(selectedDiploma != null) {
+            volgendeButton.setEnabled(true);
+        } else {
+            volgendeButton.setEnabled(false);
+        }
     }
 }
 

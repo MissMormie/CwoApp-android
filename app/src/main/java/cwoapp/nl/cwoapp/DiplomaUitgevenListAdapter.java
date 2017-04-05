@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.RadioButton;
 
 import java.util.List;
 
@@ -17,23 +18,23 @@ import cwoapp.nl.cwoapp.entity.Diploma;
  * Uses diploma_list_item to show entered list of Diploma's, including checkbox behaviour.
  */
 
-class DiplomaListAdapter extends RecyclerView.Adapter<DiplomaListAdapter.DiplomaListAdapterViewHolder> {
+class DiplomaUitgevenListAdapter extends RecyclerView.Adapter<DiplomaUitgevenListAdapter.DiplomaListAdapterViewHolder> {
     private List<Diploma> diplomaList;
     final private DiplomaListAdapterOnClickHandler clickHandler;
     private Context context;
 
-    DiplomaListAdapter(DiplomaListAdapterOnClickHandler clickHandler) {
+    DiplomaUitgevenListAdapter(DiplomaListAdapterOnClickHandler clickHandler) {
         this.clickHandler = clickHandler;
     }
 
     @Override
     public DiplomaListAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         context = viewGroup.getContext();
-        int layoutIdForListItem = R.layout.diploma_list_item;
+        int layoutIdForListItem = R.layout.diploma_radio_button_item;
         LayoutInflater inflater = LayoutInflater.from(context);
 
         View view = inflater.inflate(layoutIdForListItem, viewGroup, false);
-        return new DiplomaListAdapter.DiplomaListAdapterViewHolder(view);
+        return new DiplomaUitgevenListAdapter.DiplomaListAdapterViewHolder(view);
     }
 
     @Override
@@ -54,17 +55,33 @@ class DiplomaListAdapter extends RecyclerView.Adapter<DiplomaListAdapter.Diploma
     }
 
     class DiplomaListAdapterViewHolder extends RecyclerView.ViewHolder /* implements View.OnClickListener */ {
-        private final CheckBox checkBoxDiploma;
+        private final RadioButton diplomaRadioButton;
 
         DiplomaListAdapterViewHolder(View itemView) {
             super(itemView);
-            checkBoxDiploma = (CheckBox) itemView.findViewById(R.id.checkBoxDiploma);
+            diplomaRadioButton = (RadioButton) itemView.findViewById(R.id.radioButtonDiploma);
 
-            setListeners();
+            setListeners(itemView);
         }
 
-        private void setListeners() {
-            checkBoxDiploma.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        private void setListeners(View itemView) {
+            View.OnClickListener clickListener = new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    int adapterPosition = getAdapterPosition();
+                    Diploma diploma = diplomaList.get(adapterPosition);
+
+                    clickHandler.onClick(diploma, true);
+                    notifyItemRangeChanged(0, getItemCount());
+
+                }
+            };
+            diplomaRadioButton.setOnClickListener(clickListener);
+
+
+            /*
+            diplomaRadioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -74,13 +91,13 @@ class DiplomaListAdapter extends RecyclerView.Adapter<DiplomaListAdapter.Diploma
                     clickHandler.onClick(diploma, isChecked);
                 }
             });
-
+            */
         }
 
         void bind(int position) {
             Diploma diploma = diplomaList.get(position);
-            checkBoxDiploma.setChecked(clickHandler.isSelectedDiploma(diploma));
-            checkBoxDiploma.setText(diploma.getTitel() + " " + diploma.getNivo());
+            diplomaRadioButton.setChecked(clickHandler.isSelectedDiploma(diploma));
+            diplomaRadioButton.setText(diploma.getTitel() + " " + diploma.getNivo());
         }
     }
 

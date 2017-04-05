@@ -20,7 +20,7 @@ public class DiplomaEis implements Parcelable {
 
 
     // Used to save whether the checkbox for this eis is checked.
-    // TODO determine if this belongs here or should move to a seperate class that holds this info.
+    // determine if this belongs here or should move to a seperate class that holds this info.
     // since it doesn't fit in the model well.
     private boolean checked;
 

@@ -26,22 +26,27 @@
     <!-- Loading circle -->
     <ProgressBar
         android:id="@+id/pb_loading_indicator"
-        android:layout_height="42dp"
         android:layout_width="42dp"
+        android:layout_height="42dp"
         android:layout_gravity="center"
         android:visibility="visible" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerview_diploma_lijst"
+    <RadioGroup
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:scrollbars="vertical"
-        tools:listitem="@layout/diploma_list_item" />
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerview_diploma_lijst"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scrollbars="vertical"
+            tools:listitem="@layout/diploma_list_item" />
+    </RadioGroup>
 
     <LinearLayout
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <View
             android:layout_width="0dp"
@@ -52,12 +57,12 @@
             android:id="@+id/buttonVolgende"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:enabled="true"
+            android:layout_alignParentRight="true"
             android:layout_marginBottom="@dimen/activity_horizontal_margin"
             android:layout_marginEnd="@dimen/activity_vertical_margin"
             android:layout_marginRight="@dimen/activity_vertical_margin"
+            android:enabled="false"
             android:onClick="onClickShowVolgende"
             android:text="@string/volgende" />
 

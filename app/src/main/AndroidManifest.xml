@@ -28,18 +28,18 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:launchMode="singleTop">
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!-- TODO uitzoeken of ik launchmode nodig heb hier -->
         <activity
             android:name=".CursistListActivity"
             android:label="@string/cursisten_lijst"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".MainActivity"
+            android:launchMode="singleTask">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
@@ -68,14 +68,37 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-        <activity android:name=".TrainingActivity" />
-        <activity android:name=".CursistBehaaldEisActivity" />
-        <activity android:name=".EditCursistActivity" />
-        <activity android:name=".DiplomaUitgevenActivity" />
+        <activity
+            android:name=".TrainingActivity"
+            android:label="@string/nieuwe_training">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity android:name=".CursistBehaaldEisActivity"
+            android:label=""/>
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value=".TrainingActivity" />
+        <activity
+            android:name=".EditCursistActivity"
+            android:label="@string/cursist_wijzigen">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".CursistDetailActivity" />
+        </activity>
+
+        <activity
+            android:name=".DiplomaUitgevenActivity"
+            android:label="@string/diploma_uitgeven">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
         <activity android:name=".CursistBehaaldDiplomaActivity" />
         <activity
             android:name=".CursistenBehalenDiplomaActivity"
-            android:label="@string/title_activity_cursisten_behalen_diploma" />
+            android:label="@string/diploma_uitgeven" />
     </application>
 
 </manifest>

@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -145,13 +146,11 @@ public class Cursist implements Parcelable {
 
             return jsonObject.toString();
         } catch (JSONException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
             return "";
         }
     }
 
-    // TODO Make this smarter with a map so i don't have to run through everything every time. Only the first time. (together with isAlleEisenBehaald)
+    // Make this smarter with a map so i don't have to run through everything every time. Only the first time. (together with isAlleEisenBehaald)
     // Low prio, low numbers make this not very slow.
     public boolean isEisBehaald(DiplomaEis diplomaEis) {
         if (cursistBehaaldEis == null)
@@ -213,12 +212,14 @@ public class Cursist implements Parcelable {
         parcel.writeString(tussenvoegsel);
         parcel.writeString(achternaam);
         parcel.writeString(opmerking);
+        parcel.writeValue(verborgen);
         if (paspoort != null) {
             parcel.writeLong(paspoort.getTime());
         } else {
             parcel.writeLong(0L);
         }
         parcel.writeParcelable(cursistFoto, 0);
+
 
     }
 
@@ -241,6 +242,7 @@ public class Cursist implements Parcelable {
         tussenvoegsel = parcel.readString();
         achternaam = parcel.readString();
         opmerking = parcel.readString();
+        verborgen = (Boolean) parcel.readValue(null);
 
         // Get around paspoort sometimes being null.
         Long paspoortTemp = parcel.readLong();
@@ -255,6 +257,7 @@ public class Cursist implements Parcelable {
         //parcel.readTypedList(getCursistBehaaldEis(), CursistBehaaldEis.CREATOR);
     }
 
+    // ---------------------------------------------------------------------------------------------
     public String getHoogsteDiploma() {
 
         if (cursistHeeftDiplomas == null)
@@ -272,5 +275,36 @@ public class Cursist implements Parcelable {
         if (chdHolder == null)
             return "";
         return chdHolder.getDiploma().toString();
+    }
+
+    /**
+     * Checks cursistHeeftDiploma isBehaald, if it is it makes sure it's on the list on behaalde diploma's, otherwise it removes it.
+     */
+    public void addOrRemoveDiploma(CursistHeeftDiploma cursistHeeftDiploma) {
+        if(cursistHeeftDiplomas == null)
+            cursistHeeftDiplomas = new ArrayList<>();
+        if(cursistHeeftDiploma.isBehaald())
+            cursistHeeftDiplomas.add(cursistHeeftDiploma);
+        else
+            for(CursistHeeftDiploma chd: cursistHeeftDiplomas) {
+                if(chd.getDiploma().getId().equals(cursistHeeftDiploma.getDiploma().getId()))
+                    cursistHeeftDiplomas.remove(chd);
+            }
+    }
+
+    /**
+     * Checks CursistBehaaldEis isBehaald, if it is it makes sure it's on the list, otherwise it removes it.
+     */
+    public void addOrRemoveDiplomaEis(CursistBehaaldEis newCursistBehaaldEis) {
+        if(cursistBehaaldEis == null)
+            cursistBehaaldEis = new ArrayList<>();
+        if(newCursistBehaaldEis.isBehaald())
+            this.cursistBehaaldEis.add(newCursistBehaaldEis);
+        else
+            for(CursistBehaaldEis cbe: cursistBehaaldEis) {
+                if(cbe.getDiplomaEis().getId().equals(newCursistBehaaldEis.getDiplomaEis().getId()))
+                    cursistBehaaldEis.remove(cbe);
+            }
+
     }
 }
